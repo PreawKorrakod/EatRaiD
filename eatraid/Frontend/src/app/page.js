@@ -1,5 +1,4 @@
 import styles from "./page.module.css";
-import supabase from "../supabaseClient.js";
 
 import supabase from './config/supabaseClient.js';
 
