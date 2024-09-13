@@ -4,7 +4,8 @@ import styles from "./page.module.css";
 export default function Home() {
   return (
     <div className={styles.page}>
-      EatRaiD mairuuka
+      EatRaiD
+      by Barley
     </div>
   );
 }
