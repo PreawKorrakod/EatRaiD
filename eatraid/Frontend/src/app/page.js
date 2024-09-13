@@ -6,6 +6,7 @@ export default function Home() {
     <div className={styles.page}>
       EatRaiD
       by Barley
+      mairuuka
     </div>
   );
 }
