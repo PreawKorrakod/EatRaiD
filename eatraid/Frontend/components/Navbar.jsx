@@ -6,7 +6,7 @@ export default function Navbar() {
         <div className={styles.AllBar}>
             <div className={styles.Leftside}>
                 <div className={styles.Logo}>
-
+                    EatRaiD
                 </div>
             </div>
             <div className={styles.Rightside}>
