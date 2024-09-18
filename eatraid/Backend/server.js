@@ -58,6 +58,7 @@ app.post("/get-fav-list", async (req, res) => {
     .from('Favorite')
     .select('*')
     .eq('UserId', user)
+    .order('Id', { ascending: true })
 
     if (error) {
       res.status(400).json(error);
