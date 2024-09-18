@@ -14,19 +14,40 @@ const supabaseKey = process.env.ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 
-app.post("/addname", async (req, res) => {
-    const { name } = req.body;
+app.post("/verify-OTP", async (req, res) => {
+    const { email,OTP } = req.body;
     console.log('Request body:', req.body);
 
-    const { data, error } = await supabase.from("test").insert({ name: name }) .select();;
+    const { data: { session }, error } = await supabase.auth.verifyOtp({
+        email: email,
+        token: OTP,
+        type: 'email',
+      });
+      
+      if (error) {
+        console.error('Error:', error);
+      } else {
+        console.log('User is now signed up!', session);
+      }
+      
+});
+
+app.post("/login", async (req, res) => {
+    const { email,password } = req.body;
+    console.log('Request body:', req.body);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+    });
+    
     if (error) {
-        res.status(500).json({ error });
+        return res.status(401).json({ message: 'Login failed', error: error.message });
     } else {
-        res.status(200).json(data);
-        console.log('Inserted data:', data);
-        console.log('Name:', name);
+        return res.status(200).json({ message: 'Login successful', user: data.user, session: data.session });
     }
 });
+
 
 
 
