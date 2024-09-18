@@ -7,26 +7,52 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for easy to test with Postman
-const port= 3300;
+const port = 3300;
 
 const supabaseUrl = 'https://gemuxctpjqhmwbtxrpul.supabase.co'
 const supabaseKey = process.env.ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 
-app.post("/addname", async (req, res) => {
-    const { name } = req.body;
-    console.log('Request body:', req.body);
-
-    const { data, error } = await supabase.from("test").insert({ name: name }) .select();;
+//signup customer
+app.post("/signup-as-customer", async (req, res) => {
+    const { email, password } = req.body;
+    const {error} = await supabase.auth.signInWithOtp({
+        email: email,
+        password: password,
+        options: {
+            shouldCreateUser: false,
+        },
+    });
     if (error) {
-        res.status(500).json({ error });
-    } else {
-        res.status(200).json(data);
-        console.log('Inserted data:', data);
-        console.log('Name:', name);
+        res.status(500).json(error);
+    }
+    else {
+        const { data, error } = await supabase.from('User').insert([{ Email: email, Password: password, Role: "customer" }]).select("*");
+        if (error) {
+            res.status(400).json(error);
+        }
+        else {
+            res.status(200).json(data);
+        }
     }
 });
+
+
+
+
+app.delete("/delete-user", async (req, res) => {
+    const { data, error } = await supabase.auth.admin.deleteUser(
+        '6761abe7-7ca1-4406-80ba-18ac1288a871'
+    )
+    if (error) {
+        res.status(400).json(error);
+    }
+    else {
+        res.status(200).json(data);
+    }
+});
+
 
 
 
