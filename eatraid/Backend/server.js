@@ -28,7 +28,9 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/verify-OTP", async (req, res) => {
-    const { email,OTP,role,Name, Contact, OpenTime, CloseTime, Location, Coordinate } = req.body;
+    const { email,OTP,role
+      // ,Name, Contact, OpenTime, CloseTime, Location, Coordinate
+     } = req.body;
 
     const { data: { session }, error } = await supabase.auth.verifyOtp({
         email: email,
@@ -38,26 +40,27 @@ app.post("/verify-OTP", async (req, res) => {
       if (error) {
         res.status(400).json(error);
       } else {
-        console.log(session)
-        const { data, error } = await supabase.from('User').insert([{ Id: session.id, Role: role }]).select("*");
+        console.log(session.user.id)
+        // const { data, error } = await supabase.from('User').insert([{ Id: session.user.id, Role: role }]).select("*");
+        const { data, error } = await supabase.from('User').insert([{ Id: '4c36a831-52fe-4dae-831a-a5b8f8621159', Role: role }]).select("*");
           if (error) {
               res.status(400).json(error);
           }
           else {
             
-            if (role === 'owner'){
-              const { data, error } = await supabase.from('Restaurant').insert([{ Id: session.id, Name: Name, Contact: Contact, 
-                OpenTime: OpenTime, CloseTime: CloseTime, Location: Location, Coordinate: Coordinate }]).select("*");
-              if (error) {
-                  res.status(400).json(error);
-              }
-              else {
-                console.log(session.id)
-                res.status(200).json({"verify email": session, "insert data to table user": data})
-              }
-            } else {
+            // if (role === 'owner'){
+            //   const { data, error } = await supabase.from('Restaurant').insert([{ Id: session.id, Name: Name, Contact: Contact, 
+            //     OpenTime: OpenTime, CloseTime: CloseTime, Location: Location, Coordinate: Coordinate }]).select("*");
+            //   if (error) {
+            //       res.status(400).json(error);
+            //   }
+            //   else {
+            //     console.log(session.id)
+            //     res.status(200).json({"verify email": session, "insert data to table user": data})
+            //   }
+            // } else {
               res.status(200).json({"verify email": session, "insert data to table user": data})
-            }
+            // }
           }}
 });
 
