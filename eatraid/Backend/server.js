@@ -54,7 +54,7 @@ app.post("/verify-OTP", async (req, res) => {
 app.post("/get-fav-list", async (req, res) => {
   const { user } = req.body;
 
-  const { data: { fav }, error } = await supabase
+  const { data: fav, error } = await supabase
     .from('Favorite')
     .select('*')
     .eq('UserId', user)
