@@ -49,6 +49,25 @@ app.post("/verify-OTP", async (req, res) => {
           }}
 });
 
+// ===========================favorite===========================
+
+app.post("/get-fav-list", async (req, res) => {
+  const { user } = req.body;
+
+  const { data: { fav }, error } = await supabase
+    .from('Favorite')
+    .select('*')
+    .eq('UserId', user)
+
+    if (error) {
+      res.status(400).json(error);
+    } else {
+      res.status(200).json(fav)
+    }
+});
+
+// ===========================test===========================
+
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
       '723b7ddf-38c9-4eac-8a2e-07f87e09e418'
