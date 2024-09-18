@@ -13,41 +13,6 @@ const supabaseUrl = 'https://gemuxctpjqhmwbtxrpul.supabase.co'
 const supabaseKey = process.env.ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-app.post("/signup-as-customer", async (req, res) => {
-  const { email, password } = req.body;
-  let { data, error } = await supabase.auth.signUp({
-    email: email,
-    password: password
-  })
-  if (error) {
-      res.status(500).json(error);
-  }
-  else {
-      res.status(200).json(data);
-  }
-});
-
-app.post("/verify-OTP", async (req, res) => {
-    const { email,OTP } = req.body;
-
-    const { data: { session }, error } = await supabase.auth.verifyOtp({
-        email: email,
-        token: OTP,
-        type: 'email',
-      });
-      
-      if (error) {
-        res.status(400).json(error);
-      } else {
-        const { data, error } = await supabase.from('User').insert([{ Id: session.id, Role: "customer" }]).select("*");
-          if (error) {
-              res.status(400).json(error);
-          }
-          else {
-            console.log(session.id)
-            res.status(200).json({"verify email": session, "insert data to table user": data})
-          }}
-});
 
 // ===========================favorite===========================
 
@@ -64,6 +29,23 @@ app.post("/get-fav-list", async (req, res) => {
       res.status(400).json(error);
     } else {
       res.status(200).json(fav)
+    }
+});
+
+app.post("/add-to-fav", async (req, res) => {
+  const { user, restaurant } = req.body;
+  console.log(user, restaurant)
+  const { data, error } = await supabase
+    .from('Favorite')
+    .insert([
+      { RestaurantId: restaurant, UserId: user },
+    ])
+    .select()
+
+    if (error) {
+      res.status(400).json(error);
+    } else {
+      res.status(200).json(data)
     }
 });
 
