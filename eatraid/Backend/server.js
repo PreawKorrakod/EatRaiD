@@ -40,9 +40,9 @@ app.post("/verify-OTP", async (req, res) => {
       if (error) {
         res.status(400).json(error);
       } else {
-        console.log(session.user.id)
+        console.log(session.user.id, role)
         // const { data, error } = await supabase.from('User').insert([{ Id: session.user.id, Role: role }]).select("*");
-        const { data, error } = await supabase.from('User').insert([{ Id: '4c36a831-52fe-4dae-831a-a5b8f8621159', Role: role }]).select("*");
+        const { insert_data, error } = await supabase.from('User').insert([{ Id: session.user.id, Role: role }]).select("*");
           if (error) {
               res.status(400).json(error);
           }
@@ -59,14 +59,40 @@ app.post("/verify-OTP", async (req, res) => {
             //     res.status(200).json({"verify email": session, "insert data to table user": data})
             //   }
             // } else {
-              res.status(200).json({"verify email": session, "insert data to table user": data})
+              res.status(200).json({"insert data to table user": insert_data})
             // }
           }}
 });
 
+app.post("/OTP", async (req, res) => {
+  const { email,OTP,role
+    // ,Name, Contact, OpenTime, CloseTime, Location, Coordinate
+   } = req.body;
+      const { data, error } = await supabase.from('User').insert([{ Id: '5fa16697-a2b7-4c15-a8eb-0acbe1357dce', Role: role }]).select("*");
+        if (error) {
+            res.status(400).json(error);
+        }
+        else {
+          
+          if (role === 'owner'){
+            const { data, error } = await supabase.from('Restaurant').insert([{ Id: session.id, Name: Name, Contact: Contact, 
+              OpenTime: OpenTime, CloseTime: CloseTime, Location: Location, Coordinate: Coordinate }]).select("*");
+            if (error) {
+                res.status(400).json(error);
+            }
+            else {
+              console.log(session.id)
+              res.status(200).json({"verify email": session, "insert data to table user": data})
+            }
+          } else {
+            res.status(200).json({"insert data to table user": data})
+          }
+        }
+});
+
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
-      '7ccf33f9-e62e-453a-8712-f59741fc1853'
+      'd5a7820b-65f7-41f0-81a5-0f0d4132f99a'
   )
   if (error) {
     res.status(400).json(error);
