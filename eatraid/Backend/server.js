@@ -59,14 +59,25 @@ app.get("/allrestaurant", async (req, res) => {
   }
 });
 
-app.get("/category", async (req, res) => {
-    const {category} = req.body;
-    let { data, error } = await supabase.from('Restaurant').select('*')
+app.put("/editprofile", async (req, res) => {
+    const {RestaurantId,Name,Contact,OpenTime,CloseTime,Location,Latitude,Longitude} = req.body;
+    let { data, error } = await supabase.from('Restaurant')
+    .update({
+      Name,
+      Contact,
+      OpenTime,
+      CloseTime,
+      Location,
+      Latitude,
+      Longitude})
+      .eq('RestaurantId', RestaurantId)
+      .select("*")
     if (error) {
         res.status(500).json(error);
     }
     else {
-        res.status(200).json(data);
+      console.log(Name);
+      res.status(200).json(data);
     }
   });
 
