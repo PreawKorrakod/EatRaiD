@@ -49,6 +49,29 @@ app.post("/verify-OTP", async (req, res) => {
           }}
 });
 
+app.get("/allrestaurant", async (req, res) => {
+  let { data, error } = await supabase.from('typerestaurant').select("*")
+  if (error) {
+      res.status(500).json(error);
+  }
+  else {
+      res.status(200).json(data);
+  }
+});
+
+app.get("/category", async (req, res) => {
+    const {category} = req.body;
+    let { data, error } = await supabase.from('Restaurant').select('*')
+    if (error) {
+        res.status(500).json(error);
+    }
+    else {
+        res.status(200).json(data);
+    }
+  });
+
+
+
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
       '723b7ddf-38c9-4eac-8a2e-07f87e09e418'
