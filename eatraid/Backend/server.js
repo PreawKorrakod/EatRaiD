@@ -49,6 +49,23 @@ app.post("/add-to-fav", async (req, res) => {
     }
 });
 
+app.delete("/delete-fav", async (req, res) => {
+  const { user, restaurant } = req.body;
+  
+  const { error } = await supabase
+  .from('Favorite')
+  .delete()
+  .eq('UserId', user)
+  .eq('RestaurantId', restaurant);
+        
+  if (error) {
+    res.status(400).json(error);
+  }
+  else {
+      res.status(200).json({'msg': "delete user's fav restaurant successfully"});
+  }
+});
+
 // ===========================test===========================
 
 app.delete("/delete-user", async (req, res) => {
