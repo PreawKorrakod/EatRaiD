@@ -21,7 +21,7 @@ app.post("/get-fav-list", async (req, res) => {
 
   const { data: fav, error } = await supabase
     .from('Favorite')
-    .select('*')
+    .select('Id,Restaurant(*)')
     .eq('UserId', user)
     .order('Id', { ascending: true })
 
