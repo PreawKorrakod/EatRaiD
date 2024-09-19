@@ -94,7 +94,7 @@ export default function Navbar() {
                             <Link href={`/`} className={styles.homebtn_User}>
                                 Home
                             </Link>
-                            <Link href={`/Favourite`} className={styles.favouritebtn}>
+                            <Link href={`/favourite`} className={styles.favouritebtn}>
                                 Favourite List
                             </Link>
                             <div
