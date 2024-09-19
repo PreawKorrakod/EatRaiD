@@ -9,12 +9,15 @@
 
 .big-container {
     width: 70vw;
-    height: 80vh;
+    height: 85vh;
+    /* background-color: #a35b13; */
     background-color: #FFFBF7;
     border-radius: 50px;
     padding: 30px;
     margin: auto;
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
 }
 
 .title {
@@ -35,12 +38,31 @@
     /* background-color: rgb(72, 16, 33); */
 }
 
-.textfield-big-container {
-    width: 30vw;
+.input-container {
+    width: 62vw;
+    height:50vh;
+    display: flex;
+    flex-direction: row;
+    margin: 2rem;
+    background-color: rgb(34, 154, 70);
+}
+
+.textfield-big-container-l {
+    width: 36vw;
     height:60vh;
     display: flex;
     flex-direction: column;
-    margin: 2rem;
+    /* margin: 2rem; */
+    /* background-color: aqua; */
+}
+
+.textfield-big-container-r {
+    width: 28vw;
+    height:60vh;
+    display: flex;
+    flex-direction: column;
+    /* margin: 2rem; */
+    /* background-color: rgb(64, 19, 28); */
 }
 
 .textfield-sub-container {
@@ -48,15 +70,36 @@
     height:5vh;
     display: flex;
     flex-direction: row;
-    margin: 20px;
-    /* background-color: aqua; */
+    margin: 13px;
+    /* background-color: rgb(45, 85, 79); */
     align-items: center;
+}
+
+.textfield-sub-container-r {
+    width: 27vw;
+    height:5vh;
+    display: flex;
+    flex-direction: row;
+    margin: 10px 20px 10px 0px;
+    /* background-color: rgb(173, 119, 167); */
+    align-items: center;
+}
+
+.pic-big-container {
+    width: 27vw;
+    height:10vh;
+    display: flex;
+    flex-direction: row;
+    margin: 13px;
+    /* background-color: rgb(139, 50, 130); */
+    /* align-items: center; */
 }
 
 .textfield-style{
     height:5vh;
-    flex: 1;
-    flex-direction: column;
+    /* flex: 1;
+    flex-direction: column; */
+    width: 100%;
     /* background-color: rgb(16, 65, 65); */
     margin-left: 10px;
     margin-right: 10px;
@@ -64,6 +107,10 @@
     border: none;
     border-radius: 5px;
     box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    color: #527853;
 }
 
 .textfield-style-mini{
@@ -78,21 +125,156 @@
     border: none;
     border-radius: 5px;
     box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    color: #527853;
 }
-
-.dropdown-with-icon {
-    position: relative;
-  }
   
-  .textfield-style {
+.dd-textfield-style {
     width: 100%;
-  }
+    padding: 10px 30px 10px 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #EEE2D8;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* appearance: none;  Remove default select arrow */
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
   
-  .dropdown-icon {
+.dd-textfield-style:focus {
+    border-color: #7f7f7f;  /* Border color when focused */
+}
+  
+ 
+.dropdown-icon {
     position: absolute;
-    right: 10px;
+    right: 1px;
     top: 50%;
     transform: translateY(-50%);
+    font-size: 20px;
+    color: #527853;
     pointer-events: none;
-  }
+}
   
+  /* Style for the options within the select dropdown */
+select.dd-textfield-style option {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #EEE2D8;
+    color: #333;
+}
+
+.map-container {
+    width: 25vw;
+    height:18vh;
+    margin: 0px 0px 10px 20px;
+    background-color: #EEE2D8;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+}
+
+.picture-container {
+    width: 15vw;
+    height:15vh;
+    margin-left: 10px;
+    background-color: #EEE2D8;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    /* display:none */
+    
+}
+
+.location-textfield{
+    width: 25vw;
+    height:10vh;
+    /* background-color: rgb(16, 65, 65); */
+    margin: -10px 10px 20px 20px;
+    background-color: #EEE2D8;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    color: #527853;
+}
+
+.icon-style {
+    font-size: 80px;
+    color: black;
+    margin-left: 20px;
+}
+
+
+/* Hide the original file input */
+.file-input-hidden {
+    display: none;
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Custom label for file input */
+.custom-file-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #EEE2D8;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #527853;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    width: 100%;
+}
+
+/* Style for the picture icon */
+.custom-file-icon {
+    font-size: 20px;
+    margin-right: 5px;
+    color: #527853;
+    width: 15vw;
+    height:15vh;
+    margin-left: 10px;
+    background-color: #EEE2D8;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+}
+
+/* Add some hover effect to the custom file input */
+.custom-file-label:hover {
+    background-color: #d4c5b1;
+}
+
+.confirm-button {
+    background-color: #527853;
+    color: #FFF4EB;
+    border-radius: 10px;
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    /* width: max-content; */
+}
+
+.confirm-button:hover {
+    background-color: #466A47;
+} 
+
