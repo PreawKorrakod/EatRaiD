@@ -135,7 +135,20 @@ app.get("/showinfo", async (req, res) => {
   }
 });
 
-// ===========================test===========================
+app.post("/login", async (req, res) => {
+  const { email,password } = req.body;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+  });
+  
+  if (error) {
+      return res.status(401).json({ message: 'Login failed', error: error.message });
+  } else {
+      return res.status(200).json({ message: 'Login successful', user: data.user, session: data.session });
+  }
+});
 
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
