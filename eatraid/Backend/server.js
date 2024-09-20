@@ -13,6 +13,23 @@ const supabaseUrl = 'https://gemuxctpjqhmwbtxrpul.supabase.co'
 const supabaseKey = process.env.ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
+// ===========================user management===========================
+
+app.post("/login", async (req, res) => {
+  const { email,password } = req.body;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+  });
+  
+  if (error) {
+      return res.status(401).json({ message: 'Login failed', error: error.message });
+  } else {
+      return res.status(200).json({ message: 'Login successful', user: data.user, session: data.session });
+  }
+});
+
 // ===========================favorite===========================
 
 app.post("/get-fav-list", async (req, res) => {
@@ -132,21 +149,6 @@ app.get("/showinfo", async (req, res) => {
     res.status(500).json({ error });
   } else {
     res.status(200).json(data);
-  }
-});
-
-app.post("/login", async (req, res) => {
-  const { email,password } = req.body;
-
-  const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-  });
-  
-  if (error) {
-      return res.status(401).json({ message: 'Login failed', error: error.message });
-  } else {
-      return res.status(200).json({ message: 'Login successful', user: data.user, session: data.session });
   }
 });
 
