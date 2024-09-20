@@ -92,6 +92,28 @@ app.put("/editmenu", async (req, res) => {
   }
 });
 
+app.get("/showmenu", async (req, res) => {
+  const {RestaurantId} = req.body;
+  const { data, error } = await supabase.from("Menu").select('NameFood,Type(Name),Price').eq("RestaurantId", RestaurantId);
+  if (error) {
+    res.status(500).json({ error });
+  } else {
+    res.status(200).json(data);
+  }
+});
+
+app.get("/showinfo", async (req, res) => {
+  const { RestaurantId, Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay } = req.body;
+  const { data, error } = await supabase.from("Restaurant")
+  .select('Name,Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay')
+  .eq("RestaurantId", RestaurantId);
+  if (error) {
+    res.status(500).json({ error });
+  } else {
+    res.status(200).json(data);
+  }
+});
+
 
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
