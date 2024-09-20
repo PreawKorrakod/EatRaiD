@@ -14,17 +14,13 @@ const supabaseKey = process.env.ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 
-app.post("/addname", async (req, res) => {
-    const { name } = req.body;
-    console.log('Request body:', req.body);
-
-    const { data, error } = await supabase.from("test").insert({ name: name }) .select();;
+app.put("/editmenu", async (req, res) => {
+    const {Id,TypeID,NameFood,Price} = req.body;
+    const { data, error } = await supabase.from("Menu").update({TypeID,NameFood,Price}).eq("Id",Id).select();
     if (error) {
         res.status(500).json({ error });
     } else {
         res.status(200).json(data);
-        console.log('Inserted data:', data);
-        console.log('Name:', name);
     }
 });
 
