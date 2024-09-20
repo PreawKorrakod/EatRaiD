@@ -29,13 +29,11 @@ app.post("/signup-as-customer", async (req, res) => {
 
 app.post("/verify-OTP", async (req, res) => {
     const { email,OTP } = req.body;
-
     const { data: { session }, error } = await supabase.auth.verifyOtp({
         email: email,
         token: OTP,
         type: 'email',
       });
-      
       if (error) {
         res.status(400).json(error);
       } else {
@@ -82,7 +80,14 @@ app.put("/editprofile", async (req, res) => {
     }
   });
 
-
+app.put("/editmenu", async (req, res) => {
+    const {Id,TypeID,NameFood,Price} = req.body;
+    const { data, error } = await supabase.from("Menu").update({TypeID,NameFood,Price}).eq("Id",Id).select();
+    if (error) {
+        res.status(500).json({ error });
+    } else {
+        res.status(200).json(data);
+      
 
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
