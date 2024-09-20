@@ -13,7 +13,6 @@ const supabaseUrl = 'https://gemuxctpjqhmwbtxrpul.supabase.co'
 const supabaseKey = process.env.ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-
 // ===========================favorite===========================
 
 app.post("/get-fav-list", async (req, res) => {
@@ -26,9 +25,9 @@ app.post("/get-fav-list", async (req, res) => {
     .order('Id', { ascending: true })
 
     if (error) {
-    res.status(400).json(error);
+      res.status(400).json(error);
     } else {
-    res.status(200).json(fav)
+      res.status(200).json(fav)
     }
 });
 
@@ -64,26 +63,9 @@ app.delete("/delete-fav", async (req, res) => {
   else {
       res.status(200).json({'msg': "delete user's fav restaurant successfully"});
   }
-app.post("/verify-OTP", async (req, res) => {
-  const { email, OTP } = req.body;
-  const { data: { session }, error } = await supabase.auth.verifyOtp({
-    email: email,
-    token: OTP,
-    type: 'email',
-  });
-  if (error) {
-    res.status(400).json(error);
-  } else {
-    const { data, error } = await supabase.from('User').insert([{ Id: session.id, Role: "customer" }]).select("*");
-    if (error) {
-      res.status(400).json(error);
-    }
-    else {
-      console.log(session.id)
-      res.status(200).json({ "verify email": session, "insert data to table user": data })
-    }
-  }
 });
+
+// ===========================home===========================
 
 app.get("/allrestaurant", async (req, res) => {
   let { data, error } = await supabase.from('typerestaurant').select("*")
@@ -95,7 +77,65 @@ app.get("/allrestaurant", async (req, res) => {
   }
 });
 
+// ===========================profile - restaurant===========================
 
+app.put("/editprofile", async (req, res) => {
+  const { RestaurantId, Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay } = req.body;
+  let { data, error } = await supabase.from('Restaurant')
+    .update({
+      Name,
+      Contact,
+      OpenTime,
+      CloseTime,
+      Location,
+      Latitude,
+      Longitude,
+      BusinessDay
+    })
+    .eq('RestaurantId', RestaurantId)
+    .select("*")
+  if (error) {
+    res.status(500).json(error);
+  }
+  else {
+    console.log(Name);
+    res.status(200).json(data);
+  }
+});
+
+app.put("/editmenu", async (req, res) => {
+  const { Id, TypeID, NameFood, Price } = req.body;
+  const { data, error } = await supabase.from("Menu").update({ TypeID, NameFood, Price }).eq("Id", Id).select();
+  if (error) {
+    res.status(500).json({ error });
+  } else {
+    res.status(200).json(data);
+  }
+});
+
+app.get("/showmenu", async (req, res) => {
+  const {RestaurantId} = req.body;
+  const { data, error } = await supabase.from("Menu").select('NameFood,Type(Name),Price').eq("RestaurantId", RestaurantId);
+  if (error) {
+    res.status(500).json({ error });
+  } else {
+    res.status(200).json(data);
+  }
+});
+
+app.get("/showinfo", async (req, res) => {
+  const { RestaurantId, Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay } = req.body;
+  const { data, error } = await supabase.from("Restaurant")
+  .select('Name,Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay')
+  .eq("RestaurantId", RestaurantId);
+  if (error) {
+    res.status(500).json({ error });
+  } else {
+    res.status(200).json(data);
+  }
+});
+
+// ===========================test===========================
 
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
