@@ -60,7 +60,7 @@ app.get("/allrestaurant", async (req, res) => {
 });
 
 app.put("/editprofile", async (req, res) => {
-    const {RestaurantId,Name,Contact,OpenTime,CloseTime,Location,Latitude,Longitude} = req.body;
+    const {RestaurantId,Name,Contact,OpenTime,CloseTime,Location,Latitude,Longitude,BusinessDay} = req.body;
     let { data, error } = await supabase.from('Restaurant')
     .update({
       Name,
@@ -69,7 +69,8 @@ app.put("/editprofile", async (req, res) => {
       CloseTime,
       Location,
       Latitude,
-      Longitude})
+      Longitude,
+      BusinessDay})
       .eq('RestaurantId', RestaurantId)
       .select("*")
     if (error) {
