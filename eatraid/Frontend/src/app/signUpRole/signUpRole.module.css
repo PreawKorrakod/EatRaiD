@@ -1,0 +1,132 @@
+.mainBg {
+    width: 100vw;
+    height: 100vh;
+    background-color: #F9E8D9;
+}
+
+.bigContainer {
+    width: 65vw;
+    height: 65vh;
+    background-color: #FFFBF7;
+    border-radius: 50px;
+    padding: 30px;
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 80px;
+    align-items: center;
+}
+
+.subContainer {
+    width: 45vw;
+    height: 23vh;
+    margin: 35px;
+    display: flex;
+    flex-direction: row;
+}
+
+.bottomContainer {
+    width: 45vw;
+    height: max-content;
+    margin: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.title {
+    font-family: 'Poppins';
+    font-size: 42px;
+    font-weight: 800;
+    color: #527853;
+    padding-top: 20px;
+}
+
+.normalText {
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-weight: normal;
+    color: #527853;
+    width: max-content;
+}
+
+.LoginButton {
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-weight: bold;
+    color: #527853;
+    text-decoration: underline;
+    margin-left: 5px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: color 0.3s ease;
+}
+
+.LoginButton:hover {
+    color: #3b5234;
+}
+
+
+.iconStyle {
+    font-size: 80px;
+    color: #527853;
+    margin-bottom: 10px;
+}
+
+.iconStyleActive {
+    font-size: 80px;
+    color: #F9E8D9;
+    margin-bottom: 10px;
+}
+
+.roleButton {
+    width: 20vw;
+    height: 20vh;
+    background-color: #EEEEE7;
+    color: #527853;
+    border-radius: 10px;
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    padding: 20px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 20px;
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.roleButton:focus {
+    background-color: #466A47;
+    color: #F9E8D9;
+    box-shadow: 0 0 5px 5px rgba(141, 140, 140, 0.835);
+}
+
+.confirmButton {
+    background-color: #527853;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    margin: 15px;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.confirmButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.confirmButton:hover:not(:disabled) {
+    background-color: #3b5234;
+}
