@@ -4,13 +4,16 @@
     background-color: #F9E8D9;
 }
 
-.container{
+
+.container {
     width: 50vw;
     height: 50%;
-    align-items: center;
     background-color: #FFFBF7;
-    padding: 2rem;
-    margin-top: 3rem;
+    margin-top: 4rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: row;
+    box-shadow: 0px 4px 4px 0px rgba(214, 204, 187, 0.352);
 }
 
 .content_wrapper{
@@ -18,5 +21,130 @@
     height: auto;
     justify-content: center;
     display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.From_Login{
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+
+.From_Login_header{
+    color: #527853;
+    font-weight: 800;
+    font-size: 40px;
+    margin-top: 1rem;
+}
+
+.From_Login_input{
+    width: 100%;
+    padding-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    color: #527853;
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 2.5rem;
+    /* margin-left: 1.5rem; */
+}
+
+.From_Login_input_Email{
+    margin-top: 0.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.From_Login_input_Password{
+    margin-top: 0.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.Loginblock{
+    width: 100%;
+    border: none;
+    border-radius: 0.2rem;
+    background-color: #EEE2D8;
+    font-size: 18px;
+    padding-left: 0.5rem;
+    padding-right: 0.2rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    /* box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.502); */
+    font-size: 16px;
+    color: #0b0b0bd9;
+}
+
+.Loginblock::placeholder {
+    color: #888888a7;
+}
+
+.Loginblock:focus {
+    outline: none; 
+    box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.42);; 
+}
+
+.Loginbtn_wrapper{
+    margin-bottom: 1rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.Loginbtn{
+    width: max-content;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    font-size: 18px;
+    color: #FFFBF7;
+    background-color: #527853;
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.Loginbtn:hover{
+    background-color: #486949;
+    box-shadow: 0px 4px 4px 0px rgba(214, 204, 187, 0.352);
+    cursor: pointer;
+    scale: 1.1;
+    transition: .3s fade-in;
+}
+
+.last_Login_container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    color: #486949;
+    font-size: small;
+}
+
+.Signup_link{
+    margin-left: 0.2rem;
+    font-weight: 700;
+    color: #486949;
+}
+
+.Login_Picture{
+    width: 50%;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem ;
+    margin-left: 0.5rem;
+    overflow: hidden; 
+    display: flex; 
+    justify-content: center;
     align-items: center;
 }
