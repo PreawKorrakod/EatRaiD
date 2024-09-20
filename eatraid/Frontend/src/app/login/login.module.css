@@ -12,3 +12,11 @@
     padding: 2rem;
     margin-top: 3rem;
 }
+
+.content_wrapper{
+    width: 100%;
+    height: auto;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
