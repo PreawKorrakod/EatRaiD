@@ -28,9 +28,7 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/verify-OTP", async (req, res) => {
-    const { email,OTP,role
-      // ,Name, Contact, OpenTime, CloseTime, Location, Coordinate
-     } = req.body;
+    const { email,OTP} = req.body;
 
     const { data: { session }, error } = await supabase.auth.verifyOtp({
         email: email,
@@ -40,54 +38,41 @@ app.post("/verify-OTP", async (req, res) => {
       if (error) {
         res.status(400).json(error);
       } else {
-        console.log(session.user.id, role)
-        // const { data, error } = await supabase.from('User').insert([{ Id: session.user.id, Role: role }]).select("*");
-        const { insert_data, error } = await supabase.from('User').insert([{ Id: session.user.id, Role: role }]).select("*");
+        res.status(200).json({"insert data to table user": session})
+      }
+});
+
+app.post("/add-account-info", async (req, res) => {
+  const { role,user
+    ,Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay
+   } = req.body;
+    if (role === 'customer' || role == 'owner'){
+      const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role }]).select("*");
+      if (error) {
+          res.status(400).json(error);
+      }
+      else {
+        
+        if (role === 'owner'){
+          const { restaurant_data, error } = await supabase.from('Restaurant').insert([{ RestaurantId: user, Name: Name, 
+            Contact: Contact, OpenTime: OpenTime, CloseTime: CloseTime, 
+            Location: Location, Latitude: Latitude, Longitude: Longitude, 
+            BusinessDay: BusinessDay 
+          }]).select("*")
           if (error) {
               res.status(400).json(error);
           }
           else {
-            
-            // if (role === 'owner'){
-            //   const { data, error } = await supabase.from('Restaurant').insert([{ Id: session.id, Name: Name, Contact: Contact, 
-            //     OpenTime: OpenTime, CloseTime: CloseTime, Location: Location, Coordinate: Coordinate }]).select("*");
-            //   if (error) {
-            //       res.status(400).json(error);
-            //   }
-            //   else {
-            //     console.log(session.id)
-            //     res.status(200).json({"verify email": session, "insert data to table user": data})
-            //   }
-            // } else {
-              res.status(200).json({"insert data to table user": insert_data})
-            // }
-          }}
-});
-
-app.post("/OTP", async (req, res) => {
-  const { email,OTP,role
-    // ,Name, Contact, OpenTime, CloseTime, Location, Coordinate
-   } = req.body;
-      const { data, error } = await supabase.from('User').insert([{ Id: '5fa16697-a2b7-4c15-a8eb-0acbe1357dce', Role: role }]).select("*");
-        if (error) {
-            res.status(400).json(error);
-        }
-        else {
-          
-          if (role === 'owner'){
-            const { data, error } = await supabase.from('Restaurant').insert([{ Id: session.id, Name: Name, Contact: Contact, 
-              OpenTime: OpenTime, CloseTime: CloseTime, Location: Location, Coordinate: Coordinate }]).select("*");
-            if (error) {
-                res.status(400).json(error);
-            }
-            else {
-              console.log(session.id)
-              res.status(200).json({"verify email": session, "insert data to table user": data})
-            }
-          } else {
-            res.status(200).json({"insert data to table user": data})
+            console.log(restaurant_data)
+            res.status(200).json("insert restaurant data to table user successfully")
           }
+        } else {
+          res.status(200).json({"insert custommer data to table user successfully": data})
         }
+      }
+    } else {
+      res.status(400).json('wrong role');
+    }
 });
 
 app.delete("/delete-user", async (req, res) => {
