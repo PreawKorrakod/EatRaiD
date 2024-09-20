@@ -152,6 +152,8 @@ app.get("/showinfo", async (req, res) => {
   }
 });
 
+// ===========================test===========================
+
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
     '723b7ddf-38c9-4eac-8a2e-07f87e09e418'
