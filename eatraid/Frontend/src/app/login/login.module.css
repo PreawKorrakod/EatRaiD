@@ -13,7 +13,7 @@
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
-    box-shadow: 0px 4px 4px 0px rgba(214, 204, 187, 0.352);
+    box-shadow: 0px 4px 4px 0px rgba(116, 115, 113, 0.582);
 }
 
 .content_wrapper{
@@ -52,7 +52,7 @@
     color: #527853;
     font-weight: 500;
     font-size: 18px;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     /* margin-left: 1.5rem; */
 }
 
@@ -63,7 +63,6 @@
 
 .From_Login_input_Password{
     margin-top: 0.2rem;
-    margin-bottom: 0.5rem;
 }
 
 .Loginblock{
@@ -74,7 +73,7 @@
     font-size: 18px;
     padding-left: 0.5rem;
     padding-right: 0.2rem;
-    padding-top: 0.5rem;
+    padding-top: 0.4rem;
     padding-bottom: 0.5rem;
     /* box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.502); */
     font-size: 16px;
@@ -91,7 +90,8 @@
 }
 
 .Loginbtn_wrapper{
-    margin-bottom: 1rem;
+    margin-top: 3rem;
+    margin-bottom: 0.5rem;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -126,7 +126,6 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-top: 1rem;
     padding-bottom: 1rem;
     color: #486949;
     font-size: small;
@@ -147,4 +146,18 @@
     display: flex; 
     justify-content: center;
     align-items: center;
+}
+
+.ErrorChecking{
+    color: #CD1616;
+    font-size: small;
+    display: flex;
+    justify-content: center ;
+    align-items: center;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.Alerticon{
+    margin-right: 0.2rem;
 }
