@@ -173,3 +173,39 @@
     max-height: 100%; /* จำกัดไม่ให้เกินขอบ */
     object-fit: cover;
 }
+
+.checkIcon{
+    color: #27ca2d;
+    width: 20px;
+    height: 20px;
+}
+
+.passwordSuccess{
+    color: #27ca2d;
+}
+
+.xIcon{
+    color: #CD1616;
+    width: 20px;
+    height: 20px; 
+}
+
+.passwordCheckIcon{
+    margin-top: 0.2rem;
+    display: flex;
+    flex-direction: row;
+    font-size: small;
+    align-items: center;
+}
+
+.passwordWarning{
+    color: #CD1616;
+}
+
+.passwordCheckIcon{
+    margin-top: 0.2rem;
+    display: flex;
+    flex-direction: row;
+    font-size: small;
+    align-items: center;
+}

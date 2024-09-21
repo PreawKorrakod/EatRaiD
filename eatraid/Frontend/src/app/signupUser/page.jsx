@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
 
-export default function signupUser() {
+export default function SignupUser() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const minPasswordLength = 6;
@@ -23,6 +23,24 @@ export default function signupUser() {
     const isPasswordValid = password.length >= minPasswordLength;
     const isPasswordMatching = password === confirmPassword && isPasswordValid;
 
+    const handleSubmit = (e) => {
+        const form = e.target;
+        
+        // ตรวจสอบว่าฟอร์มมีข้อมูลครบหรือไม่
+        if (!form.checkValidity()) {
+            return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
+        }
+
+        e.preventDefault(); // ใช้หลังจากตรวจสอบ valid แล้วเท่านั้น
+
+        // Backend logic
+        try {
+            console.log("Submitting form");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <div className={styles.main}>
             <Topbar></Topbar>
@@ -33,14 +51,15 @@ export default function signupUser() {
                     </Link>
                     <div className={styles.From_Login}>
                         <div className={styles.From_Login_header}>Sign up - User</div>
-                        <form className={styles.From_Login_input}>
+                        <form className={styles.From_Login_input} onSubmit={handleSubmit}>
                             Email
                             <div className={styles.From_Login_input_Email}>
                                 <input
                                     className={styles.Loginblock}
                                     placeholder="Email"
-                                    type="text"
+                                    type="email"
                                     name="email"
+                                    // value={email}
                                     required
                                 />
                             </div>
@@ -67,8 +86,7 @@ export default function signupUser() {
                                         <>
                                             <BsX className={styles.xIcon} />
                                             <p className={styles.passwordWarning}>
-                                                {minPasswordLength - password.length} more character(s)
-                                                needed.
+                                                {minPasswordLength - password.length} more character(s) needed.
                                             </p>
                                         </>
                                     )}
@@ -86,21 +104,16 @@ export default function signupUser() {
                                     required
                                 />
                                 <div className={styles.passwordCheckIcon}>
-                                    {/* แสดงผลเมื่อเริ่มกรอก confirmPassword */}
                                     {confirmPassword && (
                                         isPasswordMatching ? (
                                             <>
                                                 <BsCheck className={styles.checkIcon} />
-                                                <p className={styles.passwordSuccess}>
-                                                    Passwords match.
-                                                </p>
+                                                <p className={styles.passwordSuccess}>Passwords match.</p>
                                             </>
                                         ) : (
                                             <>
                                                 <BsX className={styles.xIcon} />
-                                                <p className={styles.passwordWarning}>
-                                                    Passwords do not match.
-                                                </p>
+                                                <p className={styles.passwordWarning}>Passwords do not match.</p>
                                             </>
                                         )
                                     )}
@@ -110,7 +123,6 @@ export default function signupUser() {
                                 <button
                                     type="submit"
                                     className={styles.Loginbtn}
-                                    disabled={password.length < minPasswordLength || !isPasswordMatching}
                                 >
                                     Sign up
                                 </button>
@@ -118,9 +130,7 @@ export default function signupUser() {
                         </form>
                         <div className={styles.last_Login_container}>
                             <p>Already have an account?</p>
-                            <Link href={`/login`} className={styles.Signup_link}>
-                                Log in
-                            </Link>
+                            <Link href={`/login`} className={styles.Signup_link}>Log in</Link>
                         </div>
                     </div>
                     <div className={styles.Login_Picture}>
