@@ -10,13 +10,12 @@ function SignUpRole() {
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleSelection = (option) => {
-    setSelectedOption(option); // Update the selected option
+    setSelectedOption(option); 
   };
 
   const handleConfirm = () => {
     if (selectedOption) {
       alert(`You have selected: ${selectedOption}`);
-      // Trigger further actions, such as submitting the selection
     }
   };
 
@@ -26,14 +25,6 @@ function SignUpRole() {
       <div className={styles.bigContainer}>
         <h1 className={styles.title}>Sign Up</h1>
         <div className={styles.subContainer}>
-          {/* <button className={styles.roleButton}>
-            <AiOutlineUser className={styles.iconStyle} />
-            User
-          </button>
-          <button className={styles.roleButton}>
-            <BsShop className={styles.iconStyle} />
-            Restaurant
-          </button> */}
             <button
             className={`${styles.roleButton} ${
               selectedOption === "User" ? styles.activeButton : ""
