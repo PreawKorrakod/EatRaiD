@@ -18,70 +18,78 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 // ===========================user management===========================
 
-app.post("/login", async (req, res) => {
+app.post("/signup", async (req, res) => {
   const { email, password } = req.body;
-
-  const { data, error } = await supabase.auth.signInWithPassword({
+  let { data, error } = await supabase.auth.signUp({
     email: email,
-    password: password,
-  });
-
+    password: password
+  })
   if (error) {
-    return res.status(401).json({ message: 'Login failed', error: error.message });
-  } else {
-    return res.status(200).json({ message: 'Login successful', user: data.user, session: data.session });
-  }
-});
-
-// ===========================favorite===========================
-
-app.post("/get-fav-list", async (req, res) => {
-  const { user } = req.body;
-
-  const { data: fav, error } = await supabase
-    .from('Favorite')
-    .select('Id,Restaurant(*)')
-    .eq('UserId', user)
-    .order('Id', { ascending: true })
-
-  if (error) {
-    res.status(400).json(error);
-  } else {
-    res.status(200).json(fav)
-  }
-});
-
-app.post("/add-to-fav", async (req, res) => {
-  const { user, restaurant } = req.body;
-  console.log(user, restaurant)
-  const { data, error } = await supabase
-    .from('Favorite')
-    .insert([
-      { RestaurantId: restaurant, UserId: user },
-    ])
-    .select()
-
-  if (error) {
-    res.status(400).json(error);
-  } else {
-    res.status(200).json(data)
-  }
-});
-
-app.delete("/delete-fav", async (req, res) => {
-  const { user, restaurant } = req.body;
-
-  const { error } = await supabase
-    .from('Favorite')
-    .delete()
-    .eq('UserId', user)
-    .eq('RestaurantId', restaurant);
-
-  if (error) {
-    res.status(400).json(error);
+      res.status(500).json(error);
   }
   else {
-    res.status(200).json({ 'msg': "delete user's fav restaurant successfully" });
+      res.status(200).json(data);
+  }
+});
+
+app.post("/verify-OTP", async (req, res) => {
+  const { email,OTP} = req.body;
+   const { data: { session }, error } = await supabase.auth.verifyOtp({
+      email: email,
+      token: OTP,
+      type: 'email',
+    });
+    if (error) {
+      res.status(400).json(error);
+    } else {
+      res.status(200).json({"insert data to table user": session})
+    }
+
+app.post("/add-account-info", async (req, res) => {
+const { role,user
+  ,Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay
+ } = req.body;
+  if (role === 'customer' || role == 'owner'){
+    const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role }]).select("*");
+    if (error) {
+        res.status(400).json(error);
+    }
+    else {
+      
+      if (role === 'owner'){
+        const { restaurant_data, error } = await supabase.from('Restaurant').insert([{ RestaurantId: user, Name: Name, 
+          Contact: Contact, OpenTime: OpenTime, CloseTime: CloseTime, 
+          Location: Location, Latitude: Latitude, Longitude: Longitude, 
+          BusinessDay: BusinessDay 
+        }]).select("*")
+        if (error) {
+            res.status(400).json(error);
+        }
+        else {
+          console.log(restaurant_data)
+          res.status(200).json("insert restaurant data to table user successfully")
+        }
+      } else {
+        res.status(200).json({"insert custommer data to table user successfully": data})
+      }
+    }
+  } else {
+    res.status(400).json('wrong role');
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { email,password } = req.body;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+  });
+  
+  if (error) {
+      return res.status(401).json({ message: 'Login failed', error: error.message });
+  } else {
+      return res.status(200).json({ message: 'Login successful', user: data.user, session: data.session });
   }
 });
 
@@ -178,6 +186,58 @@ app.get("/showinfo", async (req, res) => {
     res.status(500).json({ error });
   } else {
     res.status(200).json(data);
+  }
+
+
+// ===========================favorite===========================
+
+app.post("/get-fav-list", async (req, res) => {
+  const { user } = req.body;
+
+  const { data: fav, error } = await supabase
+    .from('Favorite')
+    .select('Id,Restaurant(*)')
+    .eq('UserId', user)
+    .order('Id', { ascending: true })
+
+    if (error) {
+      res.status(400).json(error);
+    } else {
+      res.status(200).json(fav)
+    }
+});
+
+app.post("/add-to-fav", async (req, res) => {
+  const { user, restaurant } = req.body;
+  console.log(user, restaurant)
+  const { data, error } = await supabase
+    .from('Favorite')
+    .insert([
+      { RestaurantId: restaurant, UserId: user },
+    ])
+    .select()
+
+    if (error) {
+      res.status(400).json(error);
+    } else {
+      res.status(200).json(data)
+    }
+});
+
+app.delete("/delete-fav", async (req, res) => {
+  const { user, restaurant } = req.body;
+  
+  const { error } = await supabase
+  .from('Favorite')
+  .delete()
+  .eq('UserId', user)
+  .eq('RestaurantId', restaurant);
+        
+  if (error) {
+    res.status(400).json(error);
+  }
+  else {
+      res.status(200).json({'msg': "delete user's fav restaurant successfully"});
   }
 });
 
