@@ -109,7 +109,7 @@
     box-shadow: 0 0 5px 5px rgba(141, 140, 140, 0.835);
 }
 
-.confirmButton {
+.continueButton {
     background-color: #527853;
     color: white;
     padding: 10px 20px;
@@ -122,12 +122,12 @@
     box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
 }
 
-.confirmButton:disabled {
+.continueButton:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
 }
 
-.confirmButton:hover:not(:disabled) {
+.continueButton:hover:not(:disabled) {
     background-color: #3b5234;
 }
 
