@@ -153,6 +153,7 @@
     top: 0;
     margin-left: 3vh;
     margin-top: 2vh;
+    cursor: pointer;
 }
 
 .Login_Picture {
