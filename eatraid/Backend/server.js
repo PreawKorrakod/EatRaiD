@@ -44,6 +44,7 @@ app.post("/verify-OTP", async (req, res) => {
     } else {
       res.status(200).json({"insert data to table user": session})
     }
+  });
 
 app.post("/add-account-info", async (req, res) => {
 const { role,user
@@ -187,6 +188,7 @@ app.get("/showinfo", async (req, res) => {
   } else {
     res.status(200).json(data);
   }
+});
 
 
 // ===========================favorite===========================
@@ -254,4 +256,5 @@ app.delete("/delete-user", async (req, res) => {
     res.status(200).json(data);
   }
 });
+
 app.listen(port, () => console.log(`Server is running on port ${port}`));
