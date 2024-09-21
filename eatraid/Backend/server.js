@@ -46,36 +46,67 @@ app.post("/verify-OTP", async (req, res) => {
     }
   });
 
-app.post("/add-account-info", async (req, res) => {
-  const { role,user,pic
+app.post("/add-account-info", upload.single("file"), async (req, res) => {
+  const file = req.file;
+  const { role,user
     ,Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay
    } = req.body;
-    if (role === 'customer' || role == 'owner'){
-      const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: pic}]).select("*");
-      if (error) {
-          res.status(400).json(error);
-      }
+
+   
+  if (file == undefined) {
+    res.status(400).json("no profile picture");
+  } else {
+      const newminetype = "image/jpeg";
+      const newfilename = `profile_${user}.jpeg`;
+      const { data: updateData, error: uploadError } = await supabase.storage
+        .from("Profile")
+        .upload(newfilename, file.buffer, {
+          contentType: newminetype,
+          upsert: true,
+        });
+
+      if (uploadError) throw uploadError;
       else {
-        
-        if (role === 'owner'){
-          const { restaurant_data, error } = await supabase.from('Restaurant').insert([{ RestaurantId: user, Name: Name, 
-            Contact: Contact, OpenTime: OpenTime, CloseTime: CloseTime, 
-            Location: Location, Latitude: Latitude, Longitude: Longitude, 
-            BusinessDay: BusinessDay 
-          }]).select("*")
+        const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
+
+        if (role === 'customer' || role == 'owner'){
+          const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: ProfilePic}]).select("*");
           if (error) {
               res.status(400).json(error);
           }
           else {
-            console.log(restaurant_data)
-            res.status(200).json("insert restaurant data to table user successfully")
+            
+            if (role === 'owner'){
+              const { restaurant_data, error } = await supabase.from('Restaurant').insert([{ RestaurantId: user, Name: Name, 
+                Contact: Contact, OpenTime: OpenTime, CloseTime: CloseTime, 
+                Location: Location, Latitude: Latitude, Longitude: Longitude, 
+                BusinessDay: BusinessDay 
+              }]).select("*")
+              if (error) {
+                  const { error: delete_error } = await supabase 
+                    .from('User')
+                    .delete()
+                    .eq('Id', user) ;
+                    if (delete_error) {
+                      res.status(400).json({
+                        "error to delete data": delete_error, 
+                        "error to insert reataurant data data": error});
+                    } else {
+                      res.status(400).json({"error in inserting data so delete error data": error})
+                    }
+              }
+              else {
+                res.status(200).json({"insert restaurant data to table user successfully": data})
+              }
+            } else {
+              res.status(200).json({"insert custommer data to table user successfully": data})
+            }
           }
         } else {
-          res.status(200).json({"insert custommer data to table user successfully": data})
+          res.status(400).json('wrong role');
         }
       }
-    } else {
-      res.status(400).json('wrong role');
+
     }
 });
 
