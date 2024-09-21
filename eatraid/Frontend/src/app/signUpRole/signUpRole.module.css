@@ -130,3 +130,12 @@
 .confirmButton:hover:not(:disabled) {
     background-color: #3b5234;
 }
+
+.activeButton {
+    background-color: #527853;
+    color: #ffffff;
+}
+
+.activeIcon {
+    color: #f9e8d9;
+}
