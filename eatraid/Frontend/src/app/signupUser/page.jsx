@@ -8,9 +8,14 @@ import { useState } from "react";
 import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
 
 export default function SignupUser() {
+    const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const minPasswordLength = 6;
+
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value); 
+    };
 
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
@@ -23,27 +28,24 @@ export default function SignupUser() {
     const isPasswordValid = password.length >= minPasswordLength;
     const isPasswordMatching = password === confirmPassword && isPasswordValid;
 
-    const handleSubmit = (e) => {
-        const form = e.target;
-        
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // ป้องกันไม่ให้ page reload
+
         // ตรวจสอบว่าฟอร์มมีข้อมูลครบหรือไม่
-        if (!form.checkValidity()) {
+        if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
         }
-
-        e.preventDefault(); // ใช้หลังจากตรวจสอบ valid แล้วเท่านั้น
-
-        // Backend logic
+        
         try {
-            console.log("Submitting form");
+            
         } catch (error) {
-            console.log(error);
+            console.log("Error:", error);
         }
     };
 
     return (
         <div className={styles.main}>
-            <Topbar></Topbar>
+            <Topbar />
             <div className={styles.content_wrapper}>
                 <div className={styles.container}>
                     <Link href={`/SignupRole`}>
@@ -59,7 +61,8 @@ export default function SignupUser() {
                                     placeholder="Email"
                                     type="email"
                                     name="email"
-                                    // value={email}
+                                    value={email}
+                                    onChange={handleEmailChange} 
                                     required
                                 />
                             </div>
