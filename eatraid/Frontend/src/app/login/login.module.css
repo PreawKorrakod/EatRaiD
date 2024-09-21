@@ -10,10 +10,11 @@
     height: 50%;
     background-color: #FFFBF7;
     margin-top: 4rem;
-    border-radius: 1rem;
+    border-radius: 1.5rem;
     display: flex;
     flex-direction: row;
     box-shadow: 0px 4px 4px 0px rgba(116, 115, 113, 0.582);
+    position: relative;
 }
 
 .content_wrapper{
@@ -160,4 +161,16 @@
 
 .Alerticon{
     margin-right: 0.2rem;
+}
+
+.back_icon{
+    width: 30px;
+    height: 30px;
+    color: #527853;
+    font-weight: bolder;
+    position: absolute;
+    top: 0;
+    margin-left: 3vh;
+    margin-top: 2.5vh;
+    cursor: pointer;
 }

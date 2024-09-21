@@ -5,7 +5,7 @@ import Topbar from '../../../components/Topbar';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { BsExclamationCircle } from "react-icons/bs";
+import { BsExclamationCircle,BsArrowLeft } from "react-icons/bs";
 
 export default function login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -45,6 +45,9 @@ export default function login() {
             <Topbar></Topbar>
             <div className={styles.content_wrapper}>
                 <div className={styles.container}>
+                    <Link href={`/`}>
+                        <BsArrowLeft className={styles.back_icon} />
+                    </Link>
                     <div className={styles.From_Login}>
                         <div className={styles.From_Login_header}>
                             Log in
