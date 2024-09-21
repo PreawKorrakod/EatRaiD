@@ -3,6 +3,9 @@ require("dotenv").config();
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 const app = express();
+const { v4: uuid4 } = require('uuid');
+const multer = require("multer");
+const upload = multer();
 
 app.use(cors());
 app.use(express.json());
@@ -31,8 +34,7 @@ app.post("/signup", async (req, res) => {
 
 app.post("/verify-OTP", async (req, res) => {
   const { email,OTP} = req.body;
-
-  const { data: { session }, error } = await supabase.auth.verifyOtp({
+   const { data: { session }, error } = await supabase.auth.verifyOtp({
       email: email,
       token: OTP,
       type: 'email',
@@ -42,7 +44,6 @@ app.post("/verify-OTP", async (req, res) => {
     } else {
       res.status(200).json({"insert data to table user": session})
     }
-});
 
 app.post("/add-account-info", async (req, res) => {
 const { role,user
@@ -106,6 +107,32 @@ app.get("/allrestaurant", async (req, res) => {
 
 // ===========================profile - restaurant===========================
 
+app.put("/editprofilepicture", upload.single("file"), async (req, res) => {
+  try {
+    const file = req.file;
+    const { id } = req.body;
+    const newminetype = "image/jpeg";
+    const newfilename = `profile_${id}_${uuid4()}.jpeg`;
+    const { data: updateData, error: uploadError } = await supabase.storage
+      .from("Profile")
+      .upload(newfilename, file.buffer, {
+        contentType: newminetype,
+        upsert: true,
+      });
+    if (uploadError) throw uploadError;
+    else {
+      const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
+      console.log(ProfilePic);
+      const { data: postData, error: postError } = await supabase.from("User").update({ ProfilePic }).eq("id", id).select();
+      if (postError) throw postError;
+      res.status(200).json(postData);
+      console.log(postData);
+    }
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
+
 app.put("/editprofile", async (req, res) => {
   const { RestaurantId, Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay } = req.body;
   let { data, error } = await supabase.from('Restaurant')
@@ -141,7 +168,7 @@ app.put("/editmenu", async (req, res) => {
 });
 
 app.get("/showmenu", async (req, res) => {
-  const {RestaurantId} = req.body;
+  const { RestaurantId } = req.body;
   const { data, error } = await supabase.from("Menu").select('NameFood,Type(Name),Price').eq("RestaurantId", RestaurantId);
   if (error) {
     res.status(500).json({ error });
@@ -153,46 +180,14 @@ app.get("/showmenu", async (req, res) => {
 app.get("/showinfo", async (req, res) => {
   const { RestaurantId, Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay } = req.body;
   const { data, error } = await supabase.from("Restaurant")
-  .select('Name,Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay')
-  .eq("RestaurantId", RestaurantId);
+    .select('Name,Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay')
+    .eq("RestaurantId", RestaurantId);
   if (error) {
     res.status(500).json({ error });
   } else {
     res.status(200).json(data);
   }
 
-app.post("/add-account-info", async (req, res) => {
-  const { role,user
-    ,Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay
-   } = req.body;
-    if (role === 'customer' || role == 'owner'){
-      const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role }]).select("*");
-      if (error) {
-          res.status(400).json(error);
-      }
-      else {
-        
-        if (role === 'owner'){
-          const { restaurant_data, error } = await supabase.from('Restaurant').insert([{ RestaurantId: user, Name: Name, 
-            Contact: Contact, OpenTime: OpenTime, CloseTime: CloseTime, 
-            Location: Location, Latitude: Latitude, Longitude: Longitude, 
-            BusinessDay: BusinessDay 
-          }]).select("*")
-          if (error) {
-              res.status(400).json(error);
-          }
-          else {
-            console.log(restaurant_data)
-            res.status(200).json("insert restaurant data to table user successfully")
-          }
-        } else {
-          res.status(200).json({"insert custommer data to table user successfully": data})
-        }
-      }
-    } else {
-      res.status(400).json('wrong role');
-    }
-});
 
 // ===========================favorite===========================
 
@@ -259,5 +254,4 @@ app.delete("/delete-user", async (req, res) => {
     res.status(200).json(data);
   }
 });
-
 app.listen(port, () => console.log(`Server is running on port ${port}`));
