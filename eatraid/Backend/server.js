@@ -43,11 +43,11 @@ app.post("/verify-OTP", async (req, res) => {
 });
 
 app.post("/add-account-info", async (req, res) => {
-  const { role,user
+  const { role,user,pic
     ,Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay
    } = req.body;
     if (role === 'customer' || role == 'owner'){
-      const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role }]).select("*");
+      const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: pic}]).select("*");
       if (error) {
           res.status(400).json(error);
       }
