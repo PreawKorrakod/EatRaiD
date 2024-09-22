@@ -92,7 +92,7 @@
 }
 
 .Loginbtn_wrapper{
-    margin-top: 3rem;
+    margin-top: 2rem;
     margin-bottom: 0.5rem;
     align-items: center;
     justify-content: center;
@@ -128,7 +128,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-bottom: 1rem;
+    padding-bottom: 2rem;
     color: #486949;
     font-size: small;
 }
