@@ -2,7 +2,7 @@
 import styles from './RestaurantCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BsHeartFill,BsHeart } from "react-icons/bs";
+import { BsHeartFill, BsHeart } from "react-icons/bs";
 
 
 const RestaurantCard = (props) => {
@@ -17,7 +17,10 @@ const RestaurantCard = (props) => {
                         </div>
                         <div className={styles.destFooter}>
                             <div className={styles.destText}>
-                                {name}
+                                <p>{name}</p>
+                            </div>
+                            <div className={styles.favorite}>
+                                <BsHeartFill className={styles.heart_icon}/>
                             </div>
                         </div>
                     </div>

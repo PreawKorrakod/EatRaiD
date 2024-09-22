@@ -14,21 +14,17 @@
 }
 
 .main_content{
-    width: 100%;
-    height: 100%;
-    position: relative;
     display: flex;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    text-align: start;
 }
 
 
 .singleDest{
-    position: relative;
     overflow: hidden;
     height: 250px;
-    width: 100%;
+    width: 16vw;
+    min-width: 16vw;
     border-radius: 1rem;
     padding-right: 1rem;
     padding-left: 1rem;
@@ -46,14 +42,12 @@
 }
 
 .dastImage{
-    position: relative;
     width: 100%;
     height: 50%;
     overflow: hidden;
 }
 
 .Imagecover{
-    position: relative;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -62,73 +56,41 @@
 }
 
 
-.dastFooter{
+.dastFooter {
     display: flex;
-    flex-direction: column;
-    padding-right: 2rem; 
-    padding-left: 2rem; 
-    padding-top: 2rem;
+    justify-content: space-between; /* This will push the heart to the right */
+    align-items: center;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
     width: 100%;
-    height: 100%;
+    height: min-content;
 }
 
-.destText{
+.destText {
     color: black;
-    padding: 1rem; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    height: 50px;
+    width: 80%;
+}
+
+.destText p{ 
+    font-size: larger; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+.favorite {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    height: 5rem;
-    font-weight: 600px;
+    justify-content: flex-end;
+    right: 0;
+    height: 20%;
+    margin-left: auto; /* Ensures the heart icon stays on the right */
 }
 
-.destText a{
-    color: black;
-    font-size: 1rem;
-    font-family: Poppins;
-    width: 100%;
-}
-
-
-.userwrite{
-    display: flex;
-    margin-left: 1rem;
-    padding-bottom: 2rem;
-}
-
-.name{
-    display: flex;
-    width: 100%;
-    margin-left: 0.5rem;
-    color: rgba(64, 102, 156, 1);
-}
-
-.Category{
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    width: 100%; 
-    height: 100%;
-}
-
-
-.Category_box{
-    margin-top: 1rem;
-    border-top: solid 3.5px rgba(202, 202, 202, 0.326);
-    width: 100%; 
-    height: 100%;
-    margin-bottom: 1.5rem;
-    padding: 0.5rem;
-    display: flex;
-}
-
-.Catagory_text{
-    background-color: rgba(213, 213, 213, 1);
-    font-size: smaller;
-    padding: 0.2rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    border-radius: 1rem;
-    color: rgba(0, 0, 0, 0.5);
-    width: fit-content;
+.heart_icon {
+    color: #D6195D;
+    width: 25px;
+    height: 25px;
 }
