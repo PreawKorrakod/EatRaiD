@@ -9,7 +9,7 @@ import image3 from '../../../public/imgTest1.png';
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 
 // ข้อมูลปลอม
-// backend นำข้อมูลมาใส่ตรง ตัวแปร data
+// backend นำข้อมูลมาใส่ตรง ตัวแปร data เลยนะ
 const data = [
     { id: 1, name: 'Restaurant A', image: image1 },
     { id: 2, name: 'Restaurant B', image: image2 },
@@ -90,38 +90,45 @@ export default function FavoriteList() {
                     <div className={styles.header}>
                         Favorite List
                     </div>
-                    <div className={styles.content_grid}>
-                        {currentItems.map((restaurant) => (
-                            <RestaurantCard
-                            // ใส่ตัวแปรต่างๆตามชื่อคอลัมน์ เป็น resturant.(ชื่อคอลัมน์)
-                                key={restaurant.id}
-                                img={restaurant.image}
-                                name={restaurant.name}
-                                id={restaurant.id}
-                            />
-                        ))}
-                    </div>
-
+                    {currentItems.length > 0 ? (
+                        <div className={styles.content_grid}>
+                            {/* backend มาเชื่อมให้ใส่ข้อมูล restaurant.(ชื่อคอลัมน์) นะ */}
+                            {currentItems.map((restaurant) => (
+                                <RestaurantCard
+                                    key={restaurant.id}
+                                    img={restaurant.image}
+                                    name={restaurant.name}
+                                    id={restaurant.id}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className={styles.content_empty}>
+                              <p className={styles.emptyMessage}>No favorite restaurants added yet.</p>
+                        </div>
+                    )}
                     {/* Pagination Controls */}
-                    <div className={styles.pagination}>
-                        <button
-                            className={styles.pageButton}
-                            onClick={handlePreviousPage}
-                            disabled={currentPage === 1}
-                        >
-                            <BsChevronDoubleLeft className={styles.Arrow}/>
-                        </button>
+                    {data.length > 0 && (
+                        <div className={styles.pagination}>
+                            <button
+                                className={styles.pageButton}
+                                onClick={handlePreviousPage}
+                                disabled={currentPage === 1}
+                            >
+                                <BsChevronDoubleLeft className={styles.Arrow} />
+                            </button>
 
-                        {renderPageNumbers()}
+                            {renderPageNumbers()}
 
-                        <button
-                            className={styles.pageButton}
-                            onClick={handleNextPage}
-                            disabled={currentPage === totalPages}
-                        >
-                            <BsChevronDoubleRight className={styles.Arrow} />
-                        </button>
-                    </div>
+                            <button
+                                className={styles.pageButton}
+                                onClick={handleNextPage}
+                                disabled={currentPage === totalPages}
+                            >
+                                <BsChevronDoubleRight className={styles.Arrow} />
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
