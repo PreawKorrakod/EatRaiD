@@ -11,7 +11,7 @@ import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 // ข้อมูลปลอม
 // backend นำข้อมูลมาใส่ตรง ตัวแปร data เลยนะ
 const data = [
-    { id: 1, name: 'Restaurant AEEEEEEEEEEEEEEE', image: image1 },
+    { id: 1, name: 'Restaurant A', image: image1 },
     { id: 2, name: 'Restaurant B', image: image2 },
     { id: 3, name: 'Restaurant C', image: image3 },
     { id: 4, name: 'Restaurant A', image: image1 },

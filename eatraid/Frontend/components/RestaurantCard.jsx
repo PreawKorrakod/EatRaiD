@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react'; // Import useState จาก React
+import { useState } from 'react';
 import styles from './RestaurantCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,18 +10,23 @@ const RestaurantCard = (props) => {
     const [isLoading, setIsLoading] = useState(false); // State สำหรับสถานะการรอ
     const [isSuccess, setIsSuccess] = useState(false); // State สำหรับการลบสำเร็จ
 
-    // ฟังก์ชันลบ
+    // ฟังก์ชันลบ  backend ตรงนี้นะ
     const handleRemove = async () => {
-        setIsLoading(true); // เริ่มโหลด
+        setIsLoading(true); // เริ่มโหลด เป็นการตั้งสถานะโหลดของ frontend 
         try {
-            // สมมติว่าคุณมีฟังก์ชันลบที่นี่ เช่น การลบข้อมูลจาก API
-            await new Promise((resolve) => setTimeout(resolve, 2000)); // ใช้เวลา 2 วินาทีเพื่อจำลองการลบ
+            // เวลา 2 วินาทีจำลองการลบ ตรงนี้เอาออกได้เลย สามารถเขียนโค้ด Backend ลบข้อมูลตรงนี้ได้
+            await new Promise((resolve) => 
+            setTimeout(resolve, 2000)); 
+            // เป็นการจำลอง
+
+            // อันนี้จำเป็นต้องวางไว้หลังจากลบข้อมูล โค้ดของ Backend ถ้าเกิดลบสำเร็จ
             setIsLoading(false); // หยุดโหลด
             setIsSuccess(true); // ลบสำเร็จ
             setTimeout(() => {
                 setIsAlertModalOpen(false);
                 setIsSuccess(false); // รีเซ็ตสถานะการลบสำเร็จ
             }, 2000); // ซ่อน modal หลังจากแสดงข้อความสำเร็จ 2 วินาที
+
         } catch (error) {
             setIsLoading(false); // หยุดโหลดถ้าเกิดข้อผิดพลาด
             alert("Error occurred while removing"); // แสดงข้อผิดพลาดถ้ามี
@@ -45,7 +50,7 @@ const RestaurantCard = (props) => {
                             <p>Are you sure you want to unfavorite this restaurant?</p>
                         )}
                         <div className={styles.clearfix}>
-                            {!isSuccess && ( // ซ่อนปุ่มเมื่อการลบสำเร็จ
+                            {!isSuccess && (
                                 <>
                                     <button
                                         type="button"
@@ -80,7 +85,6 @@ const RestaurantCard = (props) => {
             <div className={styles.content}>
                 <div className={styles.main_content}>
                     <div className={styles.singleDest}>
-                        {/* ลิงก์ครอบเนื้อหาของการ์ดเท่านั้น */}
                         <Link href={`/ProfileRestaurant/${id}`} className={styles.link_blog}>
                             <div className={styles.dastImage}>
                                 <Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover} width={300} height={200} />
@@ -104,7 +108,6 @@ const RestaurantCard = (props) => {
                 </div>
             </div >
 
-            {/* Modal ที่แสดงเมื่อเปิด */}
             {isAlertModalOpen && renderAlertModal()}
         </>
     );
