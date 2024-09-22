@@ -10,17 +10,18 @@ const data ={
 
 }
 
-export default function favouriteList() {
+export default function favoriteList() {
     return (
         <div className={styles.main}>
             <Navbar></Navbar>
             <div className={styles.container}>
                 <div className={styles.Favourite_wrapper}>
                     <div className={styles.header}>
-                        Favourite List
+                        Favorite List
                     </div>
                     <div className={styles.content_grid}>
-                        <RestaurantCard />
+                        <RestaurantCard 
+                        />
                     </div>
                 </div>
 
