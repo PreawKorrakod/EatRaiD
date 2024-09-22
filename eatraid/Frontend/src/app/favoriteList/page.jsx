@@ -9,6 +9,7 @@ import image3 from '../../../public/imgTest1.png';
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 
 // ข้อมูลปลอม
+// backend นำข้อมูลมาใส่ตรง ตัวแปร data
 const data = [
     { id: 1, name: 'Restaurant A', image: image1 },
     { id: 2, name: 'Restaurant B', image: image2 },
@@ -92,6 +93,7 @@ export default function FavoriteList() {
                     <div className={styles.content_grid}>
                         {currentItems.map((restaurant) => (
                             <RestaurantCard
+                            // ใส่ตัวแปรต่างๆตามชื่อคอลัมน์ เป็น resturant.(ชื่อคอลัมน์)
                                 key={restaurant.id}
                                 img={restaurant.image}
                                 name={restaurant.name}
