@@ -4,6 +4,7 @@ import styles from './RestaurantCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BsHeartFill, BsXSquareFill, BsFillTrashFill } from "react-icons/bs";
+import { MdHeartBroken } from "react-icons/md";
 
 const RestaurantCard = (props) => {
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
@@ -39,7 +40,7 @@ const RestaurantCard = (props) => {
             <div id="logoutModal" className={styles.modal}>
                 <form className={styles.modal_content}>
                     <div className={styles.container}>
-                        <BsFillTrashFill className={styles.Alerticon} />
+                        <MdHeartBroken className={styles.Alerticon} />
                         <BsXSquareFill className={styles.close} onClick={() => setIsAlertModalOpen(false)} />
                         <h2>Unfavorite</h2>
                         {isLoading ? (

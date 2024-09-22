@@ -136,10 +136,10 @@
 }
 
 .Alerticon{
-    width: 20%;
-    height: 20%;
+    width: 12vw;
+    height: 12vh;
     margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
     color: #f44336; 
 }
 
@@ -176,6 +176,7 @@
     width: auto;
     border-radius: 5px;
 }
+
 .Removebtn {
     margin-top: 1rem;
     background-color: #f44336; 
