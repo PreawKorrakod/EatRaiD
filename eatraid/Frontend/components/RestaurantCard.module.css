@@ -5,6 +5,11 @@
     height: 60%;
 }
 
+.link_blog2{
+    text-decoration: none;
+    color: black;
+    width: 80%;
+}
 .content{
     width: 100%;
     height: 100%;
@@ -31,7 +36,6 @@
     padding-top: 1rem;
     box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.45);
     margin: 1.2rem;
-    cursor: pointer;
     background-color: white;
 }
 
@@ -70,7 +74,7 @@
     overflow: hidden; 
     text-overflow: ellipsis; 
     width: 80%;
-    margin-right: 1vw;
+    margin-right: 2vw;
 }
 
 .destText p{ 
@@ -79,6 +83,13 @@
     text-overflow: ellipsis; 
 }
 
+.favorite{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 20%;
+    margin-right: 0.2vw;
+}
 
 .heart_icon {
     color: #D6195D;
@@ -87,6 +98,7 @@
 }
 
 .heart_icon:hover{
+    cursor: pointer;
     color: #c61a59;
     scale: 1.1;
 }
@@ -164,7 +176,7 @@
     width: auto;
     border-radius: 5px;
 }
-.Logoutbtn {
+.Removebtn {
     margin-top: 1rem;
     background-color: #f44336; 
     color: white;
@@ -175,7 +187,7 @@
     border-radius: 5px;
 }
 
-.cancelbtn:hover, .Logoutbtn:hover {
+.cancelbtn:hover, .Removebtn:hover {
     opacity: 0.8;
 }
 
@@ -189,4 +201,16 @@
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+.cancelbtn:disabled,
+.Removebtn:disabled {
+    background-color: #d3d3d3;
+    color: #a9a9a9;
+    cursor: not-allowed; 
+    opacity: 0.6; 
+}
+
+.SuccessfulText{
+    color: #27ca2d;
 }
