@@ -292,7 +292,7 @@ app.delete("/delete-fav", async (req, res) => {
 
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
-    'e047b739-eca4-4231-832f-a66b3da18950'
+    'c3785615-1c1e-4499-806a-80505261da77'
   )
   if (error) {
     res.status(400).json(error);

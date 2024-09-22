@@ -15,6 +15,7 @@ export default function SignupUser() {
     const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showError, setShowError] = useState('');
     const minPasswordLength = 6;
 
     const router = useRouter();
@@ -41,22 +42,25 @@ export default function SignupUser() {
         if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
         }
+        
+        if (isPasswordMatching) {
+            try {
+                axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
+                    email: email,
+                    password: password
 
-        try {
-            axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
-                email: email,
-                password: password
-
-            }).then(async res => {
-                // console.log(session)
-                console.log("signup successful navigate to login(?)", res)
-                // navigate("/home");
-            }).catch(error => {
-                console.error('Error during signup:', error.response.data.message);
-                // setError('This email already register. Please try again.');
-            });
-        } catch (error) {
-            console.log("Error:", error);
+                }).then(async res => {
+                    // console.log(session)
+                    console.log("signup successful navigate to login(?)", res)
+                    router.push(`/verify`);
+                }).catch(error => {
+                    console.error('Error during signup:', error.response.data.message);
+                    setShowError('This email already register. Please try again.');
+                    alert('This email already register. Please try again.')
+                });
+            } catch (error) {
+                console.log("Error:", error);
+            }
         }
     };
 
@@ -137,6 +141,7 @@ export default function SignupUser() {
                                             </>
                                         )
                                     )}
+                                    {/* <p className={styles.passwordWarning}>${showError}</p> */}
                                 </div>
                             </div>
                             <div className={styles.Loginbtn_wrapper}>
