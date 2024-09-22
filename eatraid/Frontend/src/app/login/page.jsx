@@ -9,7 +9,7 @@ import { useContext, useState } from 'react';
 import { BsExclamationCircle,BsArrowLeft } from "react-icons/bs";
 import { redirect, useRouter } from "next/navigation";
 
-import { NEXT_PUBLIC_BASE_API_URL} from '../../../src/app/config/supabaseClient.js';
+import { NEXT_PUBLIC_BASE_API_URL,NEXT_PUBLIC_BASE_WEB_URL} from '../../../src/app/config/supabaseClient.js';
 // import { General, supabase } from '../../../session';
 
 export default function Login() {
@@ -40,7 +40,7 @@ export default function Login() {
             }).then(async res => {
                 
                 console.log("navigate to home", res)
-                router.push(`/`);
+                router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
             }).catch(error => {
                 
                 console.error('Error during login:', error);
