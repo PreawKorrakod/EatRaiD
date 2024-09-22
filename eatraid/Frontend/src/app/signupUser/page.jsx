@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
+import { useRouter } from "next/navigation";
 
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
@@ -15,6 +16,8 @@ export default function SignupUser() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const minPasswordLength = 6;
+
+    const router = useRouter();
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value); 
