@@ -7,6 +7,9 @@ import Image from "next/image";
 import { useState } from "react";
 import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
 
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+
 export default function SignupUser() {
     const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email
     const [password, setPassword] = useState("");
@@ -35,9 +38,20 @@ export default function SignupUser() {
         if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
         }
-        
+
         try {
-            
+            axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
+                email: email,
+                password: password
+
+            }).then(async res => {
+                // console.log(session)
+                console.log("signup successful navigate to login(?)", res)
+                // navigate("/home");
+            }).catch(error => {
+                console.error('Error during signup:', error.response.data.message);
+                // setError('This email already register. Please try again.');
+            });
         } catch (error) {
             console.log("Error:", error);
         }

@@ -25,10 +25,24 @@ app.post("/signup", async (req, res) => {
     password: password
   })
   if (error) {
-      res.status(500).json(error);
+      res.status(500).json({ message: error.message });
   }
   else {
-      res.status(200).json(data);
+    let { data: User, error } = await supabase
+      .from('User')
+      .select("*")
+      .eq('Email', email)
+
+    if (error) {
+      res.status(500).json({ message: error.message });
+    }
+    else {
+      if (User.length != 0) {
+        res.status(400).json({message: 'This email already register. Please try again.', data:data})
+      } else {
+        res.status(200).json({ message: 'go to verify page' });
+      }
+    }
   }
 });
 
@@ -278,7 +292,7 @@ app.delete("/delete-fav", async (req, res) => {
 
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
-    '723b7ddf-38c9-4eac-8a2e-07f87e09e418'
+    'e047b739-eca4-4231-832f-a66b3da18950'
   )
   if (error) {
     res.status(400).json(error);
