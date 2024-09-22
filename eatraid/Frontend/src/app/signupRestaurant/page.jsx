@@ -5,7 +5,7 @@ import Topbar from "../../../components/Topbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
+import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";                                                       
 
 export default function signupRestaurant() {
     const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email

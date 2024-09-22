@@ -5,7 +5,7 @@ import Topbar from "../../../components/Topbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
+import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle} from "react-icons/bs";
 import { useRouter } from "next/navigation";
 
 import axios from 'axios';
@@ -15,13 +15,13 @@ export default function SignupUser() {
     const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [showError, setShowError] = useState('');
+    const [error, setError] = useState('');
     const minPasswordLength = 6;
 
     const router = useRouter();
 
     const handleEmailChange = (e) => {
-        setEmail(e.target.value); 
+        setEmail(e.target.value);
     };
 
     const handlePasswordChange = (e) => {
@@ -42,7 +42,9 @@ export default function SignupUser() {
         if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
         }
-        
+
+        setError('');
+
         if (isPasswordMatching) {
             try {
                 axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
@@ -55,8 +57,8 @@ export default function SignupUser() {
                     router.push(`/verify`);
                 }).catch(error => {
                     console.error('Error during signup:', error.response.data.message);
-                    setShowError('This email already register. Please try again.');
-                    alert('This email already register. Please try again.')
+                    setError('This email already register. Please try again.');
+                    // alert('This email already register. Please try again.')
                 });
             } catch (error) {
                 console.log("Error:", error);
@@ -83,7 +85,7 @@ export default function SignupUser() {
                                     type="email"
                                     name="email"
                                     value={email}
-                                    onChange={handleEmailChange} 
+                                    onChange={handleEmailChange}
                                     required
                                 />
                             </div>
@@ -141,8 +143,13 @@ export default function SignupUser() {
                                             </>
                                         )
                                     )}
-                                    {/* <p className={styles.passwordWarning}>${showError}</p> */}
                                 </div>
+                                {error && (
+                                    <div className={styles.ErrorChecking}>
+                                        <BsExclamationCircle className={styles.Alerticon} />
+                                        {error}
+                                    </div>
+                                )}
                             </div>
                             <div className={styles.Loginbtn_wrapper}>
                                 <button
