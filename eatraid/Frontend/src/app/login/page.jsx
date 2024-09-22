@@ -1,4 +1,5 @@
 'use client';
+import axios from 'axios';
 import styles from './login.module.css';
 import image1 from '../../../public/DecPic1.png';
 import Topbar from '../../../components/Topbar';
@@ -6,16 +7,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useContext, useState } from 'react';
 import { BsExclamationCircle,BsArrowLeft } from "react-icons/bs";
+import { redirect, useRouter } from "next/navigation";
 
-// import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+import { NEXT_PUBLIC_BASE_API_URL} from '../../../src/app/config/supabaseClient.js';
 // import { General, supabase } from '../../../session';
 
 export default function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
-
+    const router = useRouter();
     // const navigate = useNavigate();
 
     // const { session } = useContext(General);
@@ -33,24 +33,20 @@ export default function Login() {
 
         // Backend
         try {
-            // const loginSuccessful = false; // แทนการเช็ค backend
             axios.post(`${NEXT_PUBLIC_BASE_API_URL}/login`, {
                 email: formData.email,
                 password: formData.password
 
             }).then(async res => {
-                // console.log(session)
-                console.log("navigate to home", res.data.user.id)
-                // navigate("/home");
+                
+                console.log("navigate to home", res)
+                router.push(`/`);
             }).catch(error => {
-                // console.error('Error during login:', error.response.data);
+                
                 console.error('Error during login:', error);
-                setError('Your email or password is incorrect. Please try again.');
+                setError('Your email or password is incorrect. Try again.');
             });
 
-            // if (!loginSuccessful) {
-            //     setError('Your email or password is incorrect. Try again.');
-            // }
         } catch (error) {
             console.log(error);
         }
