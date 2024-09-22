@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useContext, useState } from 'react';
 import { BsExclamationCircle,BsArrowLeft } from "react-icons/bs";
 
+// import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 // import { General, supabase } from '../../../session';
@@ -14,6 +15,8 @@ import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient
 export default function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
+
+    // const navigate = useNavigate();
 
     // const { session } = useContext(General);
     
@@ -38,6 +41,7 @@ export default function Login() {
             }).then(async res => {
                 // console.log(session)
                 console.log("navigate to home", res.data.user.id)
+                // navigate("/home");
             }).catch(error => {
                 // console.error('Error during login:', error.response.data);
                 console.error('Error during login:', error);
