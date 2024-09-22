@@ -13,7 +13,7 @@ function SignUpRole() {
     setSelectedOption(option); 
   };
 
-  const handleConfirm = () => {
+  const handleContinue = () => {
     if (selectedOption) {
       alert(`You have selected: ${selectedOption}`);
     }
@@ -53,9 +53,9 @@ function SignUpRole() {
           </button>
         </div>
         <button 
-          className={styles.confirmButton}
-          onClick={handleConfirm}
-        >Confirm</button>
+          className={styles.continueButton}
+          onClick={handleContinue}
+        >Continue</button>
         <div className={styles.bottomContainer}>
           <h2 className={styles.normalText}>Already have an account?</h2>
           <Link href="/login" className={styles.LoginButton}>
