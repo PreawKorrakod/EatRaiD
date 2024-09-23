@@ -1,13 +1,16 @@
+// pages/signup/role.js
 "use client";
 import styles from "./signUpRole.module.css";
 import React, { useState } from "react";
 import Topbar from "../../../components/Topbar";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { AiOutlineUser } from "react-icons/ai";
 import { BsShop } from "react-icons/bs";
 
 function SignUpRole() {
   const [selectedOption, setSelectedOption] = useState(null);
+  const router = useRouter();
 
   const handleSelection = (option) => {
     setSelectedOption(option); 
@@ -15,7 +18,8 @@ function SignUpRole() {
 
   const handleContinue = () => {
     if (selectedOption) {
-      alert(`You have selected: ${selectedOption}`);
+      const route = selectedOption === "User" ? "/signupUser" : "/signupRestaurant";
+      router.push(route);
     }
   };
 
@@ -25,7 +29,7 @@ function SignUpRole() {
       <div className={styles.bigContainer}>
         <h1 className={styles.title}>Sign Up</h1>
         <div className={styles.subContainer}>
-            <button
+          <button
             className={`${styles.roleButton} ${
               selectedOption === "User" ? styles.activeButton : ""
             }`}
