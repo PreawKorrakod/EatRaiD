@@ -49,19 +49,8 @@ export default function signupRestaurant() {
                     password: password
 
                 }).then(async res => {
-                    axios.post(`${NEXT_PUBLIC_BASE_API_URL}/add-account-info`, {
-                        role: 'owner',
-                        user: 'b251e172-fdee-46d3-a507-8e47d6cf9dac'
-    
-                    }).then(async res => {
-                        // console.log(session)
-                        console.log("signup successful navigate to login(?)", res)
-                        router.push(`/verify`);
-                    }).catch(error => {
-                        console.error('Error inserting data:', error.response.data.message);
-                        setError('This email already register. Please try again.');
-                        // alert('This email already register. Please try again.')
-                    });
+                    console.log("signup successful navigate to login(?)", res)
+                    router.push(`/verify`);
                 }).catch(error => {
                     console.error('Error during signup:', error.response.data.message);
                     setError('This email already register. Please try again.');

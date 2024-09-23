@@ -125,20 +125,20 @@ app.post("/verify-OTP", async (req, res) => {
 // });
 
 app.post("/add-account-info", async (req, res) => {
-  const { role, user } = req.body;
-
-  if (role === 'customer' || role == 'owner') {
-    const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null }]).select("*");
-    if (error) {
-      res.status(400).json(error);
-    }
-    else {
-      res.status(200).json({ message: "insert custommer data to table user successfully", data: data })
-    }
-  } else {
-    res.status(400).json({ message: 'wrong role' });
-  }
-});
+    const { role,user, email } = req.body;
+  
+      if (role === 'customer' || role == 'owner'){
+        const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email}]).select("*");
+        if (error) {
+            res.status(400).json(error);
+        }
+        else {
+          res.status(200).json({message: "insert custommer data to table user successfully", data: data})
+        }
+      } else {
+        res.status(400).json({message: 'wrong role'});
+      }
+  });
 
 app.post("/add-restaurant-info", async (req, res) => {
   const { role, user
