@@ -38,9 +38,9 @@ app.post("/signup", async (req, res) => {
     }
     else {
       if (User.length != 0) {
-        res.status(400).json({message: 'This email already register. Please try again.', data:data})
+        res.status(400).json({message: 'This email already register. Please try again.'})
       } else {
-        res.status(200).json({ message: 'go to verify page' });
+        res.status(200).json({ message: 'go to verify page', data:data });
       }
     }
   }
@@ -336,8 +336,9 @@ app.delete("/delete-fav", async (req, res) => {
 // ===========================test===========================
 
 app.delete("/delete-user", async (req, res) => {
+  const { user } = req.body;
   const { data, error } = await supabase.auth.admin.deleteUser(
-    'd74e2585-8aea-4298-806b-1b28f573c2d1'
+    user
   )
   if (error) {
     res.status(400).json(error);
