@@ -33,7 +33,6 @@ const MenuCard = (props) => {
                                     Edit
                                 </button>
                             </div>
-
                         </div>
                     </div>
                 </div>
