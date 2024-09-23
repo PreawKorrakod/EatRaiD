@@ -17,6 +17,8 @@ export default function SignupUser() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState('');
     const minPasswordLength = 6;
+    
+    const role = 'customer';
 
     const router = useRouter();
 
@@ -52,8 +54,12 @@ export default function SignupUser() {
                     password: password
 
                 }).then(async res => {
+                    const id = res.data.data.user.id;
+                    const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
+                    console.log("signup successful navigate to verify", userID);
                     console.log("signup successful navigate to login(?)", res.data.data.user.id, response)
-                    router.push(`/verify`);
+                    router.push(`/verify/${JSON.stringify(userID)}`);
+                    
                 }).catch(error => {
                     console.error('Error during signup:', error.response.data.message);
                     setError('This email already register. Please try again.');

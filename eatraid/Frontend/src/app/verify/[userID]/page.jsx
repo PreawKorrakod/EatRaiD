@@ -8,7 +8,7 @@ import { BsExclamationCircle } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 
 export default function Verify({ params }) {
-  const { email: initialEmail, userID, role } = params; // Destructure role from params
+  const { email: initialEmail,role,userID } = params; // Destructure role from params
   const [email, setEmail] = useState(initialEmail || "");
   const inputRefs = useRef([]);
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function Verify({ params }) {
       console.log("Verifying OTP:", otp.join(""));
 
       // Navigate based on role
-      if (role === "user") {
+      if (role === "customer") {
         router.push("/"); // Redirect to home page
       } else if (role === "owner") {
         router.push("/signupdetail"); 

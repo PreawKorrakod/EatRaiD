@@ -17,10 +17,12 @@ export default function signupRestaurant() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const minPasswordLength = 6;
 
+    const role = 'owner';
+
     const router = useRouter();
 
     const handleEmailChange = (e) => {
-        setEmail(e.target.value); 
+        setEmail(e.target.value);
     };
 
     const handlePasswordChange = (e) => {
@@ -41,7 +43,7 @@ export default function signupRestaurant() {
         if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
         }
-        
+
         try {
             try {
                 axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
@@ -49,8 +51,12 @@ export default function signupRestaurant() {
                     password: password
 
                 }).then(async res => {
+                    const id = res.data.data.user.id;
+                    const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
+                    console.log("signup successful navigate to verify", userID);
                     console.log("signup successful navigate to login(?)", res)
-                    router.push(`/verify`);
+                    router.push(`/verify/${JSON.stringify(userID)}`);
+                    // router.push(`/verify/${userID}`);
                 }).catch(error => {
                     console.error('Error during signup:', error.response.data.message);
                     setError('This email already register. Please try again.');
@@ -59,7 +65,7 @@ export default function signupRestaurant() {
             } catch (error) {
                 console.log("Error:", error);
             }
-            // router.push(`/verify`);
+
         } catch (error) {
             console.log("Error:", error);
         }
@@ -84,7 +90,7 @@ export default function signupRestaurant() {
                                     type="email"
                                     name="email"
                                     value={email}
-                                    onChange={handleEmailChange} 
+                                    onChange={handleEmailChange}
                                     required
                                 />
                             </div>
