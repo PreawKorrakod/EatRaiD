@@ -6,19 +6,60 @@ import Link from 'next/link';
 import { BsPersonCircle, BsBoxArrowRight,  BsExclamationCircle, BsXSquareFill } from "react-icons/bs";
 import Image from 'next/image';
 
-const user_login = true;
-const user = "User";
-const Email_User = "Owner@email.com";
-const profileImageUrl = "";
+
 
 export default function Navbar() {
     const [isOpen_Profile, setIsOpen_Profile] = useState(false);
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState(user_login);
-    const [isOwnerLoggedIn, setIsOwnerLoggedIn] = useState(user === "Owner");
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [isOwnerLoggedIn, setIsOwnerLoggedIn] = useState(false);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); 
 
     const profileRef = useRef(null);
 
+    useEffect(() => {
+        // Fetch current user login status from backend when component mounts
+        const fetchUserStatus = async () => {
+            try {
+                const response = await fetch('/api/user-status'); // Fetch user login status
+                const data = await response.json();
+                setIsUserLoggedIn(data.isLoggedIn);
+                setIsOwnerLoggedIn(data.isOwner);
+            } catch (error) {
+                console.error("Error fetching user status:", error);
+            }
+        };
+        fetchUserStatus();
+
+        // Handle click outside profile to close dropdown
+        const handleClickOutside = (event) => {
+            if (profileRef.current && !profileRef.current.contains(event.target)) {
+                setIsOpen_Profile(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    // ฟังก์ชัน Logout ตรงนี้เลยคับ
+    const handleLogout = async () => {
+        try {
+           
+           
+            if (response.ok) {
+                setIsUserLoggedIn(false); // ทำให้ User ที่มีสถานะ login เป็นไม่ได้ login แล้ว
+                setIsLogoutModalOpen(false); // ปิด model สำหรับการยืนยันการ logout กรณี logout สำเร็จ
+            } else {
+                console.error('Failed to log out');
+            }
+        } catch (error) {
+            console.error("Error logging out:", error);
+        }
+    };
+
+    // ส่วนของ front ในการเปิดปิด dropdown
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -52,8 +93,8 @@ export default function Navbar() {
                             <button
                                 className={styles.Logoutbtn}
                                 onClick={() => {
-                                    setIsUserLoggedIn(false);
-                                    setIsLogoutModalOpen(false);
+                                    // เรียกใช้ฟังก์ชัน sign out ตรงนี้
+                                    onClick={handleLogout}
                                 }}
                             >
                                 Sign out
@@ -83,7 +124,8 @@ export default function Navbar() {
                                 Menu
                             </Link>
                             <div>
-                                <button className={styles.SignOutbtn} onClick={() => setIsLogoutModalOpen(true)}>
+                                <button className={styles.SignOutbtn} onClick={() => 
+                                    setIsLogoutModalOpen(true)}>
                                     <BsBoxArrowRight size={30} className={styles.SignOuticon} />
                                     Sign out
                                 </button>
