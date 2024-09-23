@@ -18,7 +18,7 @@ function SignUpRole() {
 
   const handleContinue = () => {
     if (selectedOption) {
-      const route = selectedOption === "User" ? "/signupUser" : "/signupRestaurant";
+      const route = selectedOption === "customer" ? "/signupUser" : "/signupRestaurant";
       router.push(route);
     }
   };
@@ -31,13 +31,13 @@ function SignUpRole() {
         <div className={styles.subContainer}>
           <button
             className={`${styles.roleButton} ${
-              selectedOption === "User" ? styles.activeButton : ""
+              selectedOption === "customer" ? styles.activeButton : ""
             }`}
-            onClick={() => handleSelection("User")}
+            onClick={() => handleSelection("customer")}
           >
             <AiOutlineUser
               className={`${styles.iconStyle} ${
-                selectedOption === "User" ? styles.activeIcon : ""
+                selectedOption === "customer" ? styles.activeIcon : ""
               }`}
             />
             User

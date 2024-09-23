@@ -109,7 +109,7 @@ export default function Login() {
                             <p>
                                 Don't have an account?
                             </p>
-                            <Link href={`/signupUser`} className={styles.Signup_link} >
+                            <Link href={`/signUpRole`} className={styles.Signup_link} >
                                 Sign up
                             </Link>
                         </div>
