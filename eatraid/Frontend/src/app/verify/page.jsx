@@ -7,6 +7,9 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { BsExclamationCircle } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+
 export default function Verify() {
   const [userID, setUserID] = useState(null);
   const inputRefs = useRef([]);
@@ -19,12 +22,13 @@ export default function Verify() {
     const storedUserID = sessionStorage.getItem('userID');
     if (storedUserID) {
       setUserID(JSON.parse(storedUserID)); // แปลง JSON string เป็น object
-      console.log(userID.role ,userID.email ,userID.id)
+      console.log(JSON.parse(storedUserID))
     }
   }, []);
+    
 
   if (!userID) return <div>Loading...</div>; // แสดง Loading หากยังไม่มีข้อมูล
-
+  console.log('userID',userID)
   const handleInputChange = (e, index) => {
     const value = e.target.value;
     if (/^[0-9]*$/.test(value) && value.length <= 1) {
@@ -51,11 +55,25 @@ export default function Verify() {
       // Implement verification logic here
       console.log("Verifying OTP:", otp.join(""));
 
-      // Navigate based on role
-      if (userID.role === "customer") {
-        router.push("/"); // Redirect to home page
-      } else if (userID.role === "owner") {
-        router.push("/signupdetail");
+      try {
+        axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
+          email: userID.email, 
+          OTP: otp.join("")
+
+          }).then(async res => {
+              console.log("Navigate based on role", res)
+              // Navigate based on role
+              if (userID.role === "customer") {
+                router.push("/"); // Redirect to home page
+              } else if (userID.role === "owner") {
+                router.push("/signupdetail"); 
+              }
+          }).catch(error => {
+              console.error('Error during verify OTP:', error);
+              setError('Wrong OTP. Try again.');
+          });
+        } catch (error) {
+          console.log(error);
       }
 
       setError("");
