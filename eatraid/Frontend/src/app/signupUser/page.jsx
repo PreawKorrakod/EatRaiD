@@ -5,7 +5,7 @@ import Topbar from "../../../components/Topbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle} from "react-icons/bs";
+import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 
 import axios from 'axios';
@@ -17,7 +17,7 @@ export default function SignupUser() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState('');
     const minPasswordLength = 6;
-    
+
     const role = 'customer';
 
     const router = useRouter();
@@ -54,12 +54,19 @@ export default function SignupUser() {
                     password: password
 
                 }).then(async res => {
+                    // const id = res.data.data.user.id;
+                    // const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
+                    // console.log("signup successful navigate to verify", userID);
+                    // console.log("signup successful navigate to login(?)", res.data.data.user.id, response)
+                    // router.push(`/verify/${JSON.stringify(userID)}`);
                     const id = res.data.data.user.id;
-                    const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
-                    console.log("signup successful navigate to verify", userID);
-                    console.log("signup successful navigate to login(?)", res.data.data.user.id, response)
-                    router.push(`/verify/${JSON.stringify(userID)}`);
-                    
+                    const userID = id; // เก็บเฉพาะ userID
+                    const role = 'customer'; // กำหนด role
+                    router.push({
+                        pathname: `/verify/${userID}`, // ส่งเฉพาะ userID ใน URL
+                        query: { email, role } // ส่ง email และ role ใน query หรือ state
+                    });
+
                 }).catch(error => {
                     console.error('Error during signup:', error.response.data.message);
                     setError('This email already register. Please try again.');
@@ -76,7 +83,7 @@ export default function SignupUser() {
             <Topbar />
             <div className={styles.content_wrapper}>
                 <div className={styles.container}>
-                    <Link href={`/SignupRole`}>
+                    <Link href={`/signUpRole`}>
                         <BsArrowLeft className={styles.back_icon} />
                     </Link>
                     <div className={styles.From_Login}>

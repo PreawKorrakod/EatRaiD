@@ -7,14 +7,23 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { BsExclamationCircle } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 
-export default function Verify({ params }) {
-  const { email: initialEmail,role,userID } = params; // Destructure role from params
-  const [email, setEmail] = useState(initialEmail || "");
+export default function Verify() {
+  // const { email: initialEmail,role,userID } = params; // Destructure role from params
+  // const [email, setEmail] = useState(initialEmail || "");
   const inputRefs = useRef([]);
   const router = useRouter();
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [error, setError] = useState(""); 
 
+  const { userID } = router.query; // ดึง userID จาก URL params
+  const { email, role } = router.query; // ดึง email และ role จาก state/query
+
+  useEffect(() => {
+    if (!email || !role || !userID) {
+      setError("Missing required information. Please sign up again.");
+    }
+  }, [email, role, userID]);
+  
   const handleInputChange = (e, index) => {
     const value = e.target.value;
     if (/^[0-9]*$/.test(value) && value.length <= 1) {
