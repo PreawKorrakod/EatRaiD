@@ -1,30 +1,19 @@
 "use client";
 import styles from "./verify.module.css";
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Topbar from "../../../components/Topbar";
+import Link from "next/link";
 import { MdMarkEmailUnread } from "react-icons/md";
 import { FaArrowLeft } from "react-icons/fa6";
-import { BsExclamationCircle } from "react-icons/bs";
-import { useRouter } from "next/navigation";
 
-export default function Verify({ params }) {
-  const { email: initialEmail, userID, role } = params; // Destructure role from params
-  const [email, setEmail] = useState(initialEmail || "");
+export default function Verify() {
+  const [email, setEmail] = useState("");
   const inputRefs = useRef([]);
-  const router = useRouter();
-  const [otp, setOtp] = useState(Array(6).fill(""));
-  const [error, setError] = useState(""); 
 
   const handleInputChange = (e, index) => {
     const value = e.target.value;
-    if (/^[0-9]*$/.test(value) && value.length <= 1) {
-      const newOtp = [...otp];
-      newOtp[index] = value;
-      setOtp(newOtp);
-      if (value.length === 1 && index < 5) {
-        inputRefs.current[index + 1].focus();
-      }
-      setError(""); 
+    if (value.length === 1 && index < 5) {
+      inputRefs.current[index + 1].focus();
     }
   };
 
@@ -34,26 +23,29 @@ export default function Verify({ params }) {
     }
   };
 
-  const handleVerify = () => {
-    if (otp.some((digit) => digit === "")) {
-      setError("Please enter all 6 digits of the OTP before verifying.");
-    } else {
-      // Implement verification logic here
-      console.log("Verifying OTP:", otp.join(""));
+  useEffect(() => {
+    const fetchEmail = () => {
+      const fetchedEmail = "conta@email.com";
+      setEmail(fetchedEmail);
+    };
+    fetchEmail();
+  }, []);
 
-      // Navigate based on role
-      if (role === "user") {
-        router.push("/"); // Redirect to home page
-      } else if (role === "owner") {
-        router.push("/signupdetail"); 
-      }
+  const [selectedOption, setSelectedOption] = useState(null);
 
-      setError(""); 
+  const handleResend = () => {
+    if (selectedOption) {
     }
   };
 
-  const handleResend = () => {
-    // Implement resend logic here
+  const handleCancel = () => {
+    if (selectedOption) {
+    }
+  };
+
+  const handleVerify = () => {
+    if (selectedOption) {
+    }
   };
 
   return (
@@ -62,12 +54,10 @@ export default function Verify({ params }) {
       <div className={styles.bg}>
         <div className={styles.bigContainer}>
           <div className={styles.topContainer}>
-            <button
-              onClick={() => router.back()}
-              className={styles.iconArrowStyle}
-            >
-              <FaArrowLeft />
-            </button>
+            {/* กำหนดหน้า owner กับ user ไงอ้ะ */}
+            <Link href="/signup">
+              <FaArrowLeft className={styles.iconArrowStyle} />
+            </Link>
           </div>
           <MdMarkEmailUnread className={styles.iconStyle} />
           <h1 className={styles.title}>Please check your email</h1>
@@ -85,7 +75,6 @@ export default function Verify({ params }) {
                 onChange={(e) => handleInputChange(e, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 ref={(el) => (inputRefs.current[index] = el)}
-                required
               />
             ))}
           </div>
@@ -96,10 +85,7 @@ export default function Verify({ params }) {
             </button>
           </div>
           <div className={styles.rowContainer2}>
-            <button
-              className={styles.cancelButton}
-              onClick={() => router.back()}
-            >
+            <button className={styles.cancelButton} onClick={handleCancel}>
               Cancel
             </button>
             <button className={styles.verifyButton} onClick={handleVerify}>
@@ -107,12 +93,6 @@ export default function Verify({ params }) {
             </button>
           </div>
         </div>
-        {error && (
-          <div className={styles.ErrorChecking}>
-            <BsExclamationCircle className={styles.Alerticon} />
-            {error}
-          </div>
-        )}
       </div>
     </div>
   );
