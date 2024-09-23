@@ -42,7 +42,10 @@
     color: #527853;
     font-weight: 800;
     font-size: 40px;
-    margin-top: 3rem;
+    margin-top: 2.5rem;
+    width: 100%;
+    align-items: center;
+    text-align: center;
 }
 
 .From_Login_input{
@@ -128,7 +131,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-bottom: 2rem;
+    padding-bottom: 3rem;
     color: #486949;
     font-size: small;
 }
@@ -139,7 +142,6 @@
     color: #486949;
 }
 
-
 .back_icon{
     width: 30px;
     height: 30px;
@@ -149,7 +151,6 @@
     top: 0;
     margin-left: 3vh;
     margin-top: 2vh;
-    cursor: pointer;
 }
 
 .Login_Picture {
@@ -164,10 +165,10 @@
 }
 
 .imageSide {
-    width: 100%; 
-    height: auto;
-    max-width: 100%;
-    max-height: 100%; 
+    width: 100%; /* ปรับให้เต็มความกว้างของ container */
+    height: auto; /* ปรับความสูงตามสัดส่วน */
+    max-width: 100%; /* จำกัดไม่ให้เกินขอบ */
+    max-height: 100%; /* จำกัดไม่ให้เกินขอบ */
     object-fit: cover;
 }
 
