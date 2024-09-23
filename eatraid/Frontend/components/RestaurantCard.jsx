@@ -86,11 +86,11 @@ const RestaurantCard = (props) => {
             <div className={styles.content}>
                 <div className={styles.main_content}>
                     <div className={styles.singleDest}>
-                        <Link href={`/ProfileRestaurant/${id}`} className={styles.link_blog}>
+                      
                             <div className={styles.dastImage}>
                                 <Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover} width={300} height={200} />
                             </div>
-                        </Link>
+                
                         <div className={styles.dastFooter}>
                             <Link href={`/ProfileRestaurant/${id}`} className={styles.link_blog2}>
                                 <div className={styles.destText}>

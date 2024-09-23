@@ -1,9 +1,9 @@
-.link_blog{
+/* .link_blog{
     text-decoration: none;
     color: black;
     width: 100%;
     height: 60%;
-}
+} */
 
 .link_blog2{
     text-decoration: none;
@@ -81,6 +81,14 @@
     font-size: larger; 
     overflow: hidden; 
     text-overflow: ellipsis; 
+}
+
+.destText p:hover{ 
+    font-size: larger; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    text-decoration: underline;
+    color: #527853;
 }
 
 .favorite{
