@@ -184,6 +184,16 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/logout", async (req, res) => {
+  const { data, error } = await supabase.auth.signOut()
+
+  if (error) {
+    return res.status(401).json({ message: 'Logout failed', error: error.message });
+  } else {
+    return res.status(200).json({ message: 'Logout successful', user: data.user, session: data.session });
+  }
+});
+
 // ===========================home===========================
 
 app.get("/allrestaurant", async (req, res) => {

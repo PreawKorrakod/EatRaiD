@@ -1,9 +1,13 @@
+'use client';
 import styles from "./page.module.css";
 import Topbar from "../../components/Topbar";
-import supabase from './config/supabaseClient.js';
+import { General, supabase } from "../../session";
+import React, { useContext } from 'react';
 
 export default function Home() {
-  console.log(supabase);
+  const user = useContext(General);
+
+  console.log('supabase',user)
   return (
     <div className={styles.page}>
       <Topbar></Topbar>
