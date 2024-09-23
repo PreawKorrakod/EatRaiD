@@ -125,10 +125,10 @@ app.post("/verify-OTP", async (req, res) => {
 // });
 
 app.post("/add-account-info", async (req, res) => {
-    const { role,user } = req.body;
+    const { role,user, email } = req.body;
   
       if (role === 'customer' || role == 'owner'){
-        const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null}]).select("*");
+        const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email}]).select("*");
         if (error) {
             res.status(400).json(error);
         }

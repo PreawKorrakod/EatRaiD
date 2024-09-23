@@ -51,7 +51,8 @@ export default function signupRestaurant() {
                 }).then(async res => {
                     axios.post(`${NEXT_PUBLIC_BASE_API_URL}/add-account-info`, {
                         role: 'owner',
-                        user: 'b251e172-fdee-46d3-a507-8e47d6cf9dac'
+                        user: res.data.data.user.id,
+                        email: email
     
                     }).then(async res => {
                         // console.log(session)

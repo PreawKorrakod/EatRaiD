@@ -54,7 +54,8 @@ export default function SignupUser() {
                 }).then(async res => {
                     axios.post(`${NEXT_PUBLIC_BASE_API_URL}/add-account-info`, {
                         role: 'customer',
-                        user: res.data.data.user.id
+                        user: res.data.data.user.id,
+                        email: email
     
                     }).then(async response => {
                         // console.log(session)
