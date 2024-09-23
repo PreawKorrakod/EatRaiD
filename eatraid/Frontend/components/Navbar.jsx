@@ -46,14 +46,21 @@ export default function Navbar() {
     // ฟังก์ชัน Logout ตรงนี้เลยคับ
     const handleLogout = async () => {
         try {
+            axios.post(`${NEXT_PUBLIC_BASE_API_URL}/logout`, { 
+                }).then(async res => {
+                    setIsUserLoggedIn(false); // ทำให้ User ที่มีสถานะ login เป็นไม่ได้ login แล้ว
+                    setIsLogoutModalOpen(false); // ปิด model สำหรับการยืนยันการ logout กรณี logout สำเร็จ
+                }).catch(error => {
+                    console.error('Failed to log out', error);
+                    // setError('Wrong OTP. Try again.');
+                });
            
-           
-            if (response.ok) {
-                setIsUserLoggedIn(false); // ทำให้ User ที่มีสถานะ login เป็นไม่ได้ login แล้ว
-                setIsLogoutModalOpen(false); // ปิด model สำหรับการยืนยันการ logout กรณี logout สำเร็จ
-            } else {
-                console.error('Failed to log out');
-            }
+            // if (response.ok) {
+            //     setIsUserLoggedIn(false); // ทำให้ User ที่มีสถานะ login เป็นไม่ได้ login แล้ว
+            //     setIsLogoutModalOpen(false); // ปิด model สำหรับการยืนยันการ logout กรณี logout สำเร็จ
+            // } else {
+            //     console.error('Failed to log out');
+            // }
         } catch (error) {
             console.error("Error logging out:", error);
         }
