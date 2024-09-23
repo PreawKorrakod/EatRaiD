@@ -1,5 +1,4 @@
 'use client';
-import axios from 'axios';
 import { useState } from 'react';
 import styles from './favouriteList.module.css';
 import Navbar from '../../../components/Navbar';
