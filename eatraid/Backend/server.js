@@ -68,6 +68,21 @@ app.delete("/delete-fav", async (req, res) => {
 
 // ===========================test===========================
 
+app.post("/login", async (req, res) => {
+  const { email,password } = req.body;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+  });
+  
+  if (error) {
+      return res.status(401).json({ message: 'Login failed', error: error.message });
+  } else {
+      return res.status(200).json({ message: 'Login successful', user: data.user, session: data.session });
+  }
+});
+
 app.delete("/delete-user", async (req, res) => {
   const { data, error } = await supabase.auth.admin.deleteUser(
       '723b7ddf-38c9-4eac-8a2e-07f87e09e418'
