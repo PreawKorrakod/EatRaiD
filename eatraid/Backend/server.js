@@ -25,10 +25,24 @@ app.post("/signup", async (req, res) => {
     password: password
   })
   if (error) {
-      res.status(500).json(error);
+      res.status(500).json({ message: error.message });
   }
   else {
-      res.status(200).json(data);
+    let { data: User, error } = await supabase
+      .from('User')
+      .select("*")
+      .eq('Email', email)
+
+    if (error) {
+      res.status(500).json({ message: error.message });
+    }
+    else {
+      if (User.length != 0) {
+        res.status(400).json({message: 'This email already register. Please try again.'})
+      } else {
+        res.status(200).json({ message: 'go to verify page', data:data });
+      }
+    }
   }
 });
 
@@ -42,73 +56,118 @@ app.post("/verify-OTP", async (req, res) => {
     if (error) {
       res.status(400).json(error);
     } else {
-      res.status(200).json({"insert data to table user": session})
+      res.status(200).json({message:"insert data to table user", data: session})
     }
   });
 
-app.post("/add-account-info", upload.single("file"), async (req, res) => {
-  const file = req.file;
-  const { role,user
-    ,Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay
-   } = req.body;
+// app.post("/add-account-info", async (req, res) => {
+// // app.post("/add-account-info", upload.single("file"), async (req, res) => {
+//   // const file = req.file;
+//   const { role,user
+//     ,Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay
+//    } = req.body;
 
    
-  if (file == undefined) {
-    res.status(400).json("no profile picture");
-  } else {
-      const newminetype = "image/jpeg";
-      const newfilename = `profile_${user}.jpeg`;
-      const { data: updateData, error: uploadError } = await supabase.storage
-        .from("Profile")
-        .upload(newfilename, file.buffer, {
-          contentType: newminetype,
-          upsert: true,
-        });
+//   // if (file == undefined) {
+//   //   res.status(400).json("no profile picture");
+//   // } else {
+//       // const newminetype = "image/jpeg";
+//       // const newfilename = `profile_${user}.jpeg`;
+//       // const { data: updateData, error: uploadError } = await supabase.storage
+//       //   .from("Profile")
+//       //   .upload(newfilename, file.buffer, {
+//       //     contentType: newminetype,
+//       //     upsert: true,
+//       //   });
 
-      if (uploadError) throw uploadError;
-      else {
-        const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
+//       // if (uploadError) throw uploadError;
+//       // else {
+//       //   const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
 
-        if (role === 'customer' || role == 'owner'){
-          const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: ProfilePic}]).select("*");
-          if (error) {
-              res.status(400).json(error);
-          }
-          else {
+//         if (role === 'customer' || role == 'owner'){
+//           const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null}]).select("*");
+//           if (error) {
+//               res.status(400).json(error);
+//           }
+//           else {
             
-            if (role === 'owner'){
-              const { restaurant_data, error } = await supabase.from('Restaurant').insert([{ RestaurantId: user, Name: Name, 
-                Contact: Contact, OpenTime: OpenTime, CloseTime: CloseTime, 
-                Location: Location, Latitude: Latitude, Longitude: Longitude, 
-                BusinessDay: BusinessDay 
-              }]).select("*")
-              if (error) {
-                  const { error: delete_error } = await supabase 
-                    .from('User')
-                    .delete()
-                    .eq('Id', user) ;
-                    if (delete_error) {
-                      res.status(400).json({
-                        "error to delete data": delete_error, 
-                        "error to insert reataurant data data": error});
-                    } else {
-                      res.status(400).json({"error in inserting data so delete error data": error})
-                    }
-              }
-              else {
-                res.status(200).json({"insert restaurant data to table user successfully": data})
-              }
-            } else {
-              res.status(200).json({"insert custommer data to table user successfully": data})
-            }
-          }
-        } else {
-          res.status(400).json('wrong role');
-        }
-      }
+//             if (role === 'owner'){
+//               const { restaurant_data, error } = await supabase.from('Restaurant').insert([{ RestaurantId: user, Name: Name, 
+//                 Contact: Contact, OpenTime: OpenTime, CloseTime: CloseTime, 
+//                 Location: Location, Latitude: Latitude, Longitude: Longitude, 
+//                 BusinessDay: BusinessDay 
+//               }]).select("*")
+//               if (error) {
+//                   const { error: delete_error } = await supabase 
+//                     .from('User')
+//                     .delete()
+//                     .eq('Id', user) ;
+//                     if (delete_error) {
+//                       res.status(400).json({
+//                         "error to delete data": delete_error, 
+//                         "error to insert reataurant data data": error});
+//                     } else {
+//                       res.status(400).json({"error in inserting data so delete error data": error})
+//                     }
+//               }
+//               else {
+//                 res.status(200).json({"insert restaurant data to table user successfully": data})
+//               }
+//             } else {
+//               res.status(200).json({"insert custommer data to table user successfully": data})
+//             }
+//           }
+//         } else {
+//           res.status(400).json('wrong role');
+//         }
+//       // }
+//   // }
+// });
 
-    }
+app.post("/add-account-info", async (req, res) => {
+    const { role,user } = req.body;
+  
+      if (role === 'customer' || role == 'owner'){
+        const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null}]).select("*");
+        if (error) {
+            res.status(400).json(error);
+        }
+        else {
+          res.status(200).json({message: "insert custommer data to table user successfully", data: data})
+        }
+      } else {
+        res.status(400).json({message: 'wrong role'});
+      }
+  });
+
+app.post("/add-restaurant-info", async (req, res) => {
+  const { role,user
+    ,Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay
+    } = req.body;
+
+  const { data, error } = await supabase.from('Restaurant').insert([{ RestaurantId: user, Name: Name, 
+    Contact: Contact, OpenTime: OpenTime, CloseTime: CloseTime, 
+    Location: Location, Latitude: Latitude, Longitude: Longitude, 
+    BusinessDay: BusinessDay 
+  }]).select("*")
+  if (error) {
+      const { error: delete_error } = await supabase 
+        .from('User')
+        .delete()
+        .eq('Id', user) ;
+        if (delete_error) {
+          res.status(500).json({
+            "error to delete data": delete_error, 
+            "error to insert reataurant data data": error});
+        } else {
+          res.status(400).json({message: "error in inserting data so delete error data", error: error})
+        }
+  }
+  else {
+    res.status(200).json({message: "insert restaurant data to table user successfully", data: data})
+  }
 });
+
 
 app.post("/login", async (req, res) => {
   const { email,password } = req.body;
@@ -277,8 +336,9 @@ app.delete("/delete-fav", async (req, res) => {
 // ===========================test===========================
 
 app.delete("/delete-user", async (req, res) => {
+  const { user } = req.body;
   const { data, error } = await supabase.auth.admin.deleteUser(
-    '723b7ddf-38c9-4eac-8a2e-07f87e09e418'
+    user
   )
   if (error) {
     res.status(400).json(error);

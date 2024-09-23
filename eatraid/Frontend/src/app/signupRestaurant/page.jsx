@@ -1,27 +1,26 @@
 "use client";
-import styles from "./signupUser.module.css";
+import styles from "./signupRestaurant.module.css";
 import image1 from "../../../public/DecPic1.png";
 import Topbar from "../../../components/Topbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle} from "react-icons/bs";
-import { useRouter } from "next/navigation";
+import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
+import { redirect, useRouter } from "next/navigation";
 
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
-export default function SignupUser() {
+export default function signupRestaurant() {
     const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [error, setError] = useState('');
     const minPasswordLength = 6;
 
     const router = useRouter();
 
     const handleEmailChange = (e) => {
-        setEmail(e.target.value);
+        setEmail(e.target.value); 
     };
 
     const handlePasswordChange = (e) => {
@@ -42,10 +41,8 @@ export default function SignupUser() {
         if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
         }
-
-        setError('');
-
-        if (isPasswordMatching) {
+        
+        try {
             try {
                 axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
                     email: email,
@@ -53,13 +50,13 @@ export default function SignupUser() {
 
                 }).then(async res => {
                     axios.post(`${NEXT_PUBLIC_BASE_API_URL}/add-account-info`, {
-                        role: 'customer',
-                        user: res.data.data.user.id
+                        role: 'owner',
+                        user: 'b251e172-fdee-46d3-a507-8e47d6cf9dac'
     
-                    }).then(async response => {
+                    }).then(async res => {
                         // console.log(session)
-                        console.log("signup successful navigate to login(?)", res.data.data.user.id, response)
-                        // router.push(`/verify`);
+                        console.log("signup successful navigate to login(?)", res)
+                        router.push(`/verify`);
                     }).catch(error => {
                         console.error('Error inserting data:', error.response.data.message);
                         setError('This email already register. Please try again.');
@@ -73,6 +70,9 @@ export default function SignupUser() {
             } catch (error) {
                 console.log("Error:", error);
             }
+            // router.push(`/verify`);
+        } catch (error) {
+            console.log("Error:", error);
         }
     };
 
@@ -85,7 +85,7 @@ export default function SignupUser() {
                         <BsArrowLeft className={styles.back_icon} />
                     </Link>
                     <div className={styles.From_Login}>
-                        <div className={styles.From_Login_header}>Sign up - User</div>
+                        <div className={styles.From_Login_header}>Sign up - Restaurant</div>
                         <form className={styles.From_Login_input} onSubmit={handleSubmit}>
                             Email
                             <div className={styles.From_Login_input_Email}>
@@ -95,7 +95,7 @@ export default function SignupUser() {
                                     type="email"
                                     name="email"
                                     value={email}
-                                    onChange={handleEmailChange}
+                                    onChange={handleEmailChange} 
                                     required
                                 />
                             </div>
@@ -154,12 +154,6 @@ export default function SignupUser() {
                                         )
                                     )}
                                 </div>
-                                {error && (
-                                    <div className={styles.ErrorChecking}>
-                                        <BsExclamationCircle className={styles.Alerticon} />
-                                        {error}
-                                    </div>
-                                )}
                             </div>
                             <div className={styles.Loginbtn_wrapper}>
                                 <button
