@@ -5,16 +5,25 @@ import Topbar from "../../../components/Topbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
+import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle } from "react-icons/bs";
+import { useRouter } from "next/navigation";
+
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
 export default function SignupUser() {
     const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState('');
     const minPasswordLength = 6;
 
+    const role = 'customer';
+
+    const router = useRouter();
+
     const handleEmailChange = (e) => {
-        setEmail(e.target.value); 
+        setEmail(e.target.value);
     };
 
     const handlePasswordChange = (e) => {
@@ -35,11 +44,37 @@ export default function SignupUser() {
         if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
         }
-        
-        try {
-            
-        } catch (error) {
-            console.log("Error:", error);
+
+        setError('');
+
+        if (isPasswordMatching) {
+            try {
+                axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
+                    email: email,
+                    password: password
+
+                }).then(async res => {
+                    // const id = res.data.data.user.id;
+                    // const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
+                    // console.log("signup successful navigate to verify", userID);
+                    // console.log("signup successful navigate to login(?)", res.data.data.user.id, response)
+                    // router.push(`/verify/${JSON.stringify(userID)}`);
+                    const id = res.data.data.user.id;
+                    const userID = id; // เก็บเฉพาะ userID
+                    const role = 'customer'; // กำหนด role
+                    router.push({
+                        pathname: `/verify/${userID}`, // ส่งเฉพาะ userID ใน URL
+                        query: { email, role } // ส่ง email และ role ใน query หรือ state
+                    });
+
+                }).catch(error => {
+                    console.error('Error during signup:', error.response.data.message);
+                    setError('This email already register. Please try again.');
+                    // alert('This email already register. Please try again.')
+                });
+            } catch (error) {
+                console.log("Error:", error);
+            }
         }
     };
 
@@ -48,7 +83,7 @@ export default function SignupUser() {
             <Topbar />
             <div className={styles.content_wrapper}>
                 <div className={styles.container}>
-                    <Link href={`/SignupRole`}>
+                    <Link href={`/signUpRole`}>
                         <BsArrowLeft className={styles.back_icon} />
                     </Link>
                     <div className={styles.From_Login}>
@@ -62,7 +97,7 @@ export default function SignupUser() {
                                     type="email"
                                     name="email"
                                     value={email}
-                                    onChange={handleEmailChange} 
+                                    onChange={handleEmailChange}
                                     required
                                 />
                             </div>
@@ -121,6 +156,12 @@ export default function SignupUser() {
                                         )
                                     )}
                                 </div>
+                                {error && (
+                                    <div className={styles.ErrorChecking}>
+                                        <BsExclamationCircle className={styles.Alerticon} />
+                                        {error}
+                                    </div>
+                                )}
                             </div>
                             <div className={styles.Loginbtn_wrapper}>
                                 <button
