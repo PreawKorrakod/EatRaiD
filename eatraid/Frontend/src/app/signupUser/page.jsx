@@ -52,9 +52,23 @@ export default function SignupUser() {
                     password: password
 
                 }).then(async res => {
-                    // console.log(session)
+                    // console.log(res)
+                    // axios.post(`${NEXT_PUBLIC_BASE_API_URL}/add-account-info`, {
+                    //     role: 'customer',
+                    //     user: res.data.user.id
+    
+                    // }).then(async res => {
+                    //     // console.log(session)
+                    //     console.log("signup successful navigate to login(?)", res)
+                    //     router.push(`/verify`);
+                    // }).catch(error => {
+                    //     console.error('Error during signup:', error.response.data.message);
+                    //     setError('This email already register. Please try again.');
+                    //     // alert('This email already register. Please try again.')
+                    // });
+                    // alert(res)
                     console.log("signup successful navigate to login(?)", res)
-                    router.push(`/verify`);
+                    // router.push(`/verify`);
                 }).catch(error => {
                     console.error('Error during signup:', error.response.data.message);
                     setError('This email already register. Please try again.');
