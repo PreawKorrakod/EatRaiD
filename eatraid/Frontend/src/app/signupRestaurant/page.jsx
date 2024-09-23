@@ -8,6 +8,9 @@ import { useState } from "react";
 import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
 import { redirect, useRouter } from "next/navigation";
 
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+
 export default function signupRestaurant() {
     const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email
     const [password, setPassword] = useState("");
@@ -40,6 +43,33 @@ export default function signupRestaurant() {
         }
         
         try {
+            try {
+                axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
+                    email: email,
+                    password: password
+
+                }).then(async res => {
+                    axios.post(`${NEXT_PUBLIC_BASE_API_URL}/add-account-info`, {
+                        role: 'owner',
+                        user: 'b251e172-fdee-46d3-a507-8e47d6cf9dac'
+    
+                    }).then(async res => {
+                        // console.log(session)
+                        console.log("signup successful navigate to login(?)", res)
+                        router.push(`/verify`);
+                    }).catch(error => {
+                        console.error('Error inserting data:', error.response.data.message);
+                        setError('This email already register. Please try again.');
+                        // alert('This email already register. Please try again.')
+                    });
+                }).catch(error => {
+                    console.error('Error during signup:', error.response.data.message);
+                    setError('This email already register. Please try again.');
+                    // alert('This email already register. Please try again.')
+                });
+            } catch (error) {
+                console.log("Error:", error);
+            }
             // router.push(`/verify`);
         } catch (error) {
             console.log("Error:", error);
