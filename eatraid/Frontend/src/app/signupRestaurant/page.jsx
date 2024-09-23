@@ -5,13 +5,16 @@ import Topbar from "../../../components/Topbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";                                                       
+import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
+import { redirect, useRouter } from "next/navigation";
 
 export default function signupRestaurant() {
     const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const minPasswordLength = 6;
+
+    const router = useRouter();
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value); 
@@ -37,7 +40,7 @@ export default function signupRestaurant() {
         }
         
         try {
-            
+            // router.push(`/verify`);
         } catch (error) {
             console.log("Error:", error);
         }

@@ -131,7 +131,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-bottom: 1rem;
+    padding-bottom: 3rem;
     color: #486949;
     font-size: small;
 }
@@ -140,11 +140,6 @@
     margin-left: 0.2rem;
     font-weight: 700;
     color: #486949;
-}
-
-
-.From_Login_input_ConfirmPassword{
-    margin-top: 0.2rem;
 }
 
 .back_icon{
