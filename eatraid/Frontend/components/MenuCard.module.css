@@ -30,6 +30,13 @@
     flex-direction: row;
 }
 
+.singleDest:hover {
+    transform: translateY(-0.5vh);
+    box-shadow:0 2px 8px 2px rgba(178, 178, 178, 0.74);
+    transition: .3s ease;
+}
+
+
 
 
 .dastImage{
@@ -129,4 +136,117 @@
 .Editicon{
     color: #ffff;
     margin-right: 0.5vh;
+}
+
+.modal {
+    justify-content: center;
+    align-items: center;
+    display: block; 
+    position: fixed;
+    align-items: center;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.4); 
+}
+
+.modal_content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 1rem;
+    border: 1px solid #f4f4f4;
+    width: 25%; 
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.Alerticon{
+    width: 12vw;
+    height: 12vh;
+    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
+    color: #f44336; 
+}
+
+.h2{
+    margin-bottom: 1rem;
+}
+
+.close {
+    position: absolute; 
+    top: 0.2rem;
+    right: 0.2rem; 
+    color: rgba(0, 0, 0, 0.475);
+    font-size: 25px;
+    font-weight: bold;
+    border-top-right-radius: 0.5rem;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.cancelbtn{
+    margin-top: 1rem;
+    margin-right: 2rem;
+    background-color: #7b7b7b; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    border-radius: 5px;
+}
+
+.Removebtn {
+    margin-top: 1rem;
+    background-color: #f44336; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    border-radius: 5px;
+}
+
+.cancelbtn:hover, .Removebtn:hover {
+    opacity: 0.8;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.cancelbtn:disabled,
+.Removebtn:disabled {
+    background-color: #d3d3d3;
+    color: #a9a9a9;
+    cursor: not-allowed; 
+    opacity: 0.6; 
+}
+
+.SuccessfulText{
+    color: #27ca2d;
 }
