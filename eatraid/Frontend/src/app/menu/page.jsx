@@ -11,7 +11,7 @@ import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 // ข้อมูลปลอม
 // backend นำข้อมูลมาใส่ตรง ตัวแปร data เลยนะ
 const data = [
-    { id: 1, name: 'Restaurant A', image: image1, type:'noodle',price:'50' },
+    { id: 1, name: 'Restaurant AEEEEEEEEEEEEE', image: image1, type:'noodle',price:'50' },
     { id: 2, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  },
     { id: 3, name: 'Restaurant C', image: image3, type:'noodle',price:'50'  },
     { id: 4, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
@@ -38,7 +38,7 @@ const data = [
 export default function FavoriteList() {
     // Pagination settings
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6; // Number of items to show per page
+    const itemsPerPage = 9; // Number of items to show per page
 
     // Calculate the items to display based on the current page
     const indexOfLastItem = currentPage * itemsPerPage;

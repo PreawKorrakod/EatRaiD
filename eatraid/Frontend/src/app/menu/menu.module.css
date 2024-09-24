@@ -37,8 +37,7 @@
     justify-items: center;
     gap: 2vw; 
     grid-template-columns: repeat(3, 1fr); 
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
+    padding-right: 2.5vw;
 }
 
 .content_empty{

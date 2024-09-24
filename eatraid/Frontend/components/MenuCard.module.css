@@ -12,25 +12,29 @@
     padding-bottom: 0.5rem;
 }
 
-
-.singleDest{
-    overflow: hidden;
-    height: 250px;
-    width: 35vw;
-    min-width: 35vw;
+.singleDest {
+    min-height: 30vh; 
+    max-height: 30vh; 
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
     border-radius: 1rem;
     padding-right: 1rem;
     padding-left: 1rem;
     padding-top: 1rem;
+    padding-bottom: 1rem;
     box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.45);
     margin: 1.2rem;
     background-color: white;
+    display: flex;
+    flex-direction: row;
 }
 
 
+
 .dastImage{
-    width: 33%;
-    height: 50%;
+    width: 45%;
+    height: 100%;
     overflow: hidden;
 }
 
@@ -44,10 +48,85 @@
 
 .dastSide{
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-top: 1vh;
-    width: 100%;
-    height: min-content;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 55%;
+    height: 100%;
+    padding-left: 1rem;
 }
 
+.foodname{
+    width: 100%;
+    padding-bottom: 10%;
+}
+
+.textinfo{
+    width: 100%;
+    padding-bottom: 10%;
+}
+
+.foodname h5{
+    font-size: larger;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+
+
+.typefood{
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    /* background-color:#F7B787; */
+    border-radius: 15px;
+    font-size: small;
+    color: #FFFFFF;
+    width: fit-content;
+    background-color: #527853;
+}
+
+.pricefood{
+    margin-top: 10%;
+
+}
+
+.menu_buttom{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.Editfood{
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: #ffff;
+    background-color: #EE7214;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+
+.Editfood:hover{
+    cursor: pointer;
+    transition: .3s ease;
+    scale: 1.1;
+    box-shadow:0 2px 8px 2px rgba(178, 178, 178, 0.74); ;
+}
+
+
+.Editicon{
+    color: #ffff;
+    margin-right: 0.5vh;
+}
