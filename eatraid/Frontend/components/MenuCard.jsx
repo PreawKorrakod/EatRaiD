@@ -12,7 +12,7 @@ const MenuCard = (props) => {
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false); // State สำหรับสถานะการรอ
     const [isSuccess, setIsSuccess] = useState(false); // State สำหรับการลบสำเร็จ
-    const [profileImage, setProfileImage] = useState('');
+    const [MenuImage, setMenuImage] = useState('');
     const [Imagefile, setImagefile] = useState('');
 
 
@@ -21,7 +21,7 @@ const MenuCard = (props) => {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setProfileImage(reader.result);
+                setMenuImage(reader.result);
             };
             reader.readAsDataURL(file);
             setImagefile(file);
@@ -65,35 +65,44 @@ const MenuCard = (props) => {
                         ) : isSuccess ? (
                             <p className={styles.SuccessfulText}>Successfully delete!</p>
                         ) : (
-                            <form className={styles.EditContent}>
-                                <div className={styles.profiledisplay}><img className={styles.pfp} alt="Profile" src={profileImage} width={265} height={265} /></div>
-                                <label className={styles.uploadbtn}>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        hidden
-                                        onChange={handleFileChange}
-                                    />
-                                    <div>Upload Your Photo</div>
-                                </label>
-                                <div className={styles.inputNamefood}>
-                                    Name : <input type="text" placeholder="Your text here" />
-                                </div>
-                                <div className={styles.inputNamefood}>
-                                    Type :  <select
-                                        className={styles.optionTextStyles}
+                            <form className={styles.EditContentContainer}>
 
-                                    >
-                                        {categoryDropdown.map((category, index) => (
-                                            <option key={index} value={category}>
-                                                {category}
-                                            </option>
-                                        ))}
-                                    </select>
+                                <div className={styles.EditContentImg}>
+                                    <div className={styles.Menudisplay}><Image className={styles.MenuPicContainer} alt="Profile" src={MenuImage} /></div>
+                                    <label className={styles.uploadbtn}>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            hidden
+                                            onChange={handleFileChange}
+                                        />
+                                        <div>Upload Picture</div>
+                                    </label>
                                 </div>
-                                <div className={styles.inputPricefood}>
-                                    Price : <input type="text" placeholder="Your text here" /> ฿
+
+                                <div className={styles.EditContentInput}>
+                                    <div className={styles.inputNamefood}>
+                                        Name : <input type="text" placeholder="Your text here" />
+                                    </div>
+
+                                    <div className={styles.inputNamefood}>
+                                        Type :  <select
+                                            className={styles.optionTextStyles}
+
+                                        >
+                                            {categoryDropdown.map((category, index) => (
+                                                <option key={index} value={category}>
+                                                    {category}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className={styles.inputPricefood}>
+                                        Price : <input type="text" placeholder="Your text here" className={styles.inputPricefoodText} /> ฿
+                                    </div>
                                 </div>
+
                             </form>
                         )}
                         <div className={styles.clearfix}>
