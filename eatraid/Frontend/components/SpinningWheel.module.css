@@ -1,0 +1,53 @@
+.wheelContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .wheel {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 10px solid #ccc;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .slice {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    background: #ffcc00;
+    transform-origin: 100% 100%;
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+  }
+  
+  .centerButton {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #000;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .arrow {
+    position: absolute;
+    top: -30px; /* ปรับตำแหน่งของลูกศร */
+    font-size: 24px;
+    z-index: 2; /* ทำให้ลูกศรอยู่เหนือวงล้อ */
+  }
+  
+  .result {
+    margin-top: 20px; /* ให้มีระยะห่างจากวงล้อ */
+    font-size: 18px;
+  }
+  

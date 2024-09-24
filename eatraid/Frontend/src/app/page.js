@@ -1,18 +1,16 @@
 import styles from "./page.module.css";
-import Topbar from "../../components/Topbar";
-import supabase from './config/supabaseClient.js';
 import Navbar from "../../components/Navbar";
+import SpinningWheel from "../../components/SpinningWheel";
 
 export default function Home() {
-  console.log(supabase);
+
+  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5'];
+
   return (
     <div className={styles.page}>
-      {/* <Topbar></Topbar> */}
       <Navbar></Navbar>
-      EatRaiD
-      by Barley
-      mairuuka
-      kidtuengfan
+      <h1>Spinning Wheel</h1>
+      <SpinningWheel options={options} />
     </div>
   );
 }
