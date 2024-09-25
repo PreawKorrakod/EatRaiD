@@ -155,7 +155,7 @@
 
 .modal_content {
     background-color: #fefefe;
-    margin: 9% auto;
+    margin: 6% auto;
     padding-left: 2vw;
     padding-right: 2vw;
     padding-top: 1vw;
@@ -203,16 +203,28 @@
 }
 
 
-.cancelbtn{
+.Confirmbtn{
     margin-top: 1rem;
     margin-right: 2rem;
-    background-color: #7b7b7b; 
-    color: white;
+    background-color: #527853; 
+    color: #f4f4f4;
     padding: 10px 20px;
     border: none;
     cursor: pointer;
     width: auto;
     border-radius: 5px;
+    margin-right: 5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.Checkicon{
+    width: 20px;
+    height: 20px;
+    margin-right: 0.2rem;
 }
 
 .Removebtn {
@@ -224,16 +236,31 @@
     cursor: pointer;
     width: auto;
     border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
-.cancelbtn:hover, .Removebtn:hover {
+.Deleteicon{
+    width: 20px;
+    height: 20px;
+    margin-right: 0.2rem;
+}
+
+.Confirmbtn:hover, .Removebtn:hover {
     opacity: 0.8;
 }
 
 .clearfix{
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     padding-top: 1.5rem;
     padding-bottom: 1rem;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center ;
 }
 
 .clearfix::after {
@@ -249,10 +276,11 @@
 }
 
 .headerTextModal{
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    color: #527853;
 }
 
-.cancelbtn:disabled,
+.Confirmbtn:disabled,
 .Removebtn:disabled {
     background-color: #d3d3d3;
     color: #a9a9a9;
@@ -290,6 +318,11 @@
     height: 100%;
     object-fit: cover;
     overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    color: #b4a599;
 }
 
 .Uploadbtn{
@@ -343,7 +376,6 @@
     /* box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.502); */
     font-size: 16px;
     color: #0b0b0bd9;
-    margin-left: 0.5rem;
 }
 
 .inputContainer::placeholder {
@@ -353,4 +385,51 @@
 .inputContainer:focus {
     outline: none; 
     box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.42);; 
+}
+
+.titleStyles{
+    width: fit-content;
+    min-width: fit-content;
+    margin-right: 0.5rem;
+}
+
+.optionTextStyles{
+    width: 100%;
+    border: none;
+    border-radius: 0.2rem;
+    background-color: #EEE2D8;
+    font-size: 18px;
+    padding-left: 0.5rem;
+    padding-right: 0.2rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.5rem;
+    /* box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.502); */
+    font-size: 16px;
+    color: #0b0b0bd9;
+}
+
+.optionTextStyles:focus {
+    outline: none; 
+    box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.42);; 
+}
+
+.optionTextStyles::placeholder {
+    color: #888888a7;
+}
+
+.PriceBox{
+    width: 20%;
+    margin-right: 0.5rem;
+}
+
+.error{
+    color: #f44336; 
+    font-size: small;
+    margin-left: 0.5rem;
+    font-style: italic;
+}
+
+.Imageicon{
+    width: 20%;
+    height: 20%;
 }

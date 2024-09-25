@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styles from './MenuCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BsPencilSquare, BsXSquareFill, BsFillTrashFill, BsCheckLg, BsUpload } from "react-icons/bs";
+import { BsPencilSquare, BsXSquareFill, BsFillTrashFill, BsCheckLg, BsUpload, BsImages } from "react-icons/bs";
 
 const categoryDropdown = ["Thai", "Japanese"];
 
@@ -14,6 +14,9 @@ const MenuCard = (props) => {
     const [isSuccess, setIsSuccess] = useState(false); // State สำหรับการลบสำเร็จ
     const [MenuImage, setMenuImage] = useState('');
     const [Imagefile, setImagefile] = useState('');
+    const [inputValue, setInputValue] = useState('');
+    const [error, setError] = useState('');
+
 
 
     const handleFileChange = (e) => {
@@ -33,10 +36,10 @@ const MenuCard = (props) => {
     const handleRemove = async () => {
         setIsLoading(true); // เริ่มโหลด เป็นการตั้งสถานะโหลดของ frontend 
         try {
-            await 
-             // เวลา 2 วินาทีจำลองการลบ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
-            new Promise((resolve) =>
-                setTimeout(resolve, 2000));
+            await
+                // เวลา 2 วินาทีจำลองการลบ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
+                new Promise((resolve) =>
+                    setTimeout(resolve, 2000));
             // เป็นการจำลอง
 
             // อันนี้จำเป็นต้องวางไว้หลังจากลบข้อมูล โค้ดของ Backend ถ้าเกิดลบสำเร็จ
@@ -55,6 +58,17 @@ const MenuCard = (props) => {
 
     // Modal delete
     const renderAlertModal = () => {
+
+        const handleInput = (event) => {
+            const value = event.target.value;
+            if (/[^0-9]/g.test(value)) {
+                setError('Please enter numbers only.');
+            } else {
+                setError('');
+            }
+            setInputValue(value.replace(/[^0-9]/g, '')); // กรองเฉพาะตัวเลข
+        };
+
         return (
             <div id="logoutModal" className={styles.modal}>
                 <form className={styles.modal_content}>
@@ -76,10 +90,10 @@ const MenuCard = (props) => {
                                                 alt="Profile"
                                                 src={MenuImage}
                                                 layout="fill"
-                                                objectFit="cover" 
+                                                objectFit="cover"
                                             />
                                         ) : (
-                                            <div className={styles.MenuPicContainer}>No Picture</div>
+                                            <div className={styles.MenuPicContainer}><BsImages className={styles.Imageicon} />No Picture</div>
                                         )}
                                     </div>
                                     <label>
@@ -95,11 +109,11 @@ const MenuCard = (props) => {
 
                                 <div className={styles.EditContentInput}>
                                     <div className={styles.inputNamefood}>
-                                        Name : <input type="text" placeholder="Your text here" className={styles.inputContainer} />
+                                        <span className={styles.titleStyles}>Name :</span><input type="text" placeholder="Food name" className={styles.inputContainer} />
                                     </div>
 
                                     <div className={styles.inputNamefood}>
-                                        Type :  <select
+                                        <span className={styles.titleStyles}>Type :</span><select
                                             className={styles.optionTextStyles}
 
                                         >
@@ -111,11 +125,21 @@ const MenuCard = (props) => {
                                         </select>
                                     </div>
 
-                                    <div className={styles.inputPricefood}>
-                                        Price : <input type="text" placeholder="Your text here" className={styles.inputPricefoodText} /> ฿
+                                    <div className={styles.inputNamefood}>
+                                        <span className={styles.titleStyles}>Price :</span>
+                                        <div className={styles.PriceBox}>
+                                            <input
+                                                type="text"
+                                                placeholder="Price"
+                                                className={styles.inputContainer}
+                                                value={inputValue}
+                                                onInput={handleInput}
+                                            />
+                                        </div>
+                                        ฿
+                                        {error && <p className={styles.error}>{error}</p>} {/* แสดงคำเตือน */}
                                     </div>
                                 </div>
-
                             </form>
                         )}
                         <div className={styles.clearfix}>
@@ -123,7 +147,7 @@ const MenuCard = (props) => {
                                 <>
                                     <button
                                         type="button"
-                                        className={styles.cancelbtn}
+                                        className={styles.Confirmbtn}
                                         disabled={isLoading}
                                     >
                                         <BsCheckLg className={styles.Checkicon} />
