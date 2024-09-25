@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styles from './MenuCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BsPencilSquare, BsXSquareFill, BsFillTrashFill, BsCheckLg } from "react-icons/bs";
+import { BsPencilSquare, BsXSquareFill, BsFillTrashFill, BsCheckLg, BsUpload } from "react-icons/bs";
 
 const categoryDropdown = ["Thai", "Japanese"];
 
@@ -33,8 +33,9 @@ const MenuCard = (props) => {
     const handleRemove = async () => {
         setIsLoading(true); // เริ่มโหลด เป็นการตั้งสถานะโหลดของ frontend 
         try {
-            // เวลา 2 วินาทีจำลองการลบ ตรงนี้เอาออกได้เลย สามารถเขียนโค้ด Backend ลบข้อมูลตรงนี้ได้
-            await new Promise((resolve) =>
+            await 
+             // เวลา 2 วินาทีจำลองการลบ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
+            new Promise((resolve) =>
                 setTimeout(resolve, 2000));
             // เป็นการจำลอง
 
@@ -59,7 +60,7 @@ const MenuCard = (props) => {
                 <form className={styles.modal_content}>
                     <div className={styles.container}>
                         <BsXSquareFill className={styles.close} onClick={() => setIsAlertModalOpen(false)} />
-                        <h2>Edit Menu</h2>
+                        <h2 className={styles.headerTextModal}>Edit Menu</h2>
                         {isLoading ? (
                             <p>Please wait...</p>
                         ) : isSuccess ? (
@@ -68,21 +69,33 @@ const MenuCard = (props) => {
                             <form className={styles.EditContentContainer}>
 
                                 <div className={styles.EditContentImg}>
-                                    <div className={styles.Menudisplay}><Image className={styles.MenuPicContainer} alt="Profile" src={MenuImage} /></div>
-                                    <label className={styles.uploadbtn}>
+                                    <div className={styles.Menudisplay}>
+                                        {MenuImage ? (
+                                            <Image
+                                                className={styles.MenuPicContainer}
+                                                alt="Profile"
+                                                src={MenuImage}
+                                                layout="fill"
+                                                objectFit="cover" 
+                                            />
+                                        ) : (
+                                            <div className={styles.MenuPicContainer}>No Picture</div>
+                                        )}
+                                    </div>
+                                    <label>
                                         <input
                                             type="file"
                                             accept="image/*"
                                             hidden
                                             onChange={handleFileChange}
                                         />
-                                        <div>Upload Picture</div>
+                                        <div className={styles.Uploadbtn}><BsUpload className={styles.iconUpload} />Upload Picture</div>
                                     </label>
                                 </div>
 
                                 <div className={styles.EditContentInput}>
                                     <div className={styles.inputNamefood}>
-                                        Name : <input type="text" placeholder="Your text here" />
+                                        Name : <input type="text" placeholder="Your text here" className={styles.inputContainer} />
                                     </div>
 
                                     <div className={styles.inputNamefood}>
@@ -133,7 +146,7 @@ const MenuCard = (props) => {
         );
     };
 
-    const { img, name, type, price } = props;
+    const { id, img, name, type, price, ownerID } = props;
 
     return (
         <>
@@ -161,6 +174,7 @@ const MenuCard = (props) => {
                                     onClick={() => setIsAlertModalOpen(true)} >
                                     <BsPencilSquare className={styles.Editicon} />
                                     Edit
+                                    {/* ต้องส่งค่า id ของอาหารว่าเป็นอาหารไอดีไหน */}
                                 </button>
                             </div>
                         </div>

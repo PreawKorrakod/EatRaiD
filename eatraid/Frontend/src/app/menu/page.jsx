@@ -35,7 +35,9 @@ const data = [
     { id: 22, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  }
 ];
 
-export default function FavoriteList() {
+export default function menu() {
+
+    const OwnerID = 'ABCD'
     // Pagination settings
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 9; // Number of items to show per page
@@ -100,6 +102,7 @@ export default function FavoriteList() {
                                     name={restaurant.name}
                                     type={restaurant.type}
                                     price={restaurant.price}
+                                    owner ={OwnerID}
                                 />
                             ))} 
                         </div>

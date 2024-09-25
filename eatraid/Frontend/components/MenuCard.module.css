@@ -155,8 +155,11 @@
 
 .modal_content {
     background-color: #fefefe;
-    margin: 15% auto;
-    padding: 3vw;
+    margin: 9% auto;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    padding-top: 1vw;
+    padding-bottom: 1vw;
     border: 1px solid #f4f4f4;
     width: max-content; 
     border-radius: 10px;
@@ -227,6 +230,12 @@
     opacity: 0.8;
 }
 
+.clearfix{
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+}
+
 .clearfix::after {
     content: "";
     clear: both;
@@ -237,6 +246,10 @@
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+.headerTextModal{
+    margin-bottom: 1rem;
 }
 
 .cancelbtn:disabled,
@@ -254,4 +267,90 @@
 .EditContentContainer{
     display: flex;
     flex-direction: row;
+    width: 40vw;
+    height: 30vh;
+}
+
+.EditContentImg{
+    width: 40%;
+}
+
+.Menudisplay{
+    width: 100%;
+    height: 100%;
+    background-color: #F9E8D9;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.MenuPicContainer{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.Uploadbtn{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: #EE7214;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    font-size: medium;
+}
+
+.Uploadbtn:hover{
+    scale: 1.1;
+}
+
+.iconUpload{
+    margin-right: 0.5rem;
+}
+
+.EditContentInput{
+    margin-left: 1rem;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start; 
+}
+
+.inputNamefood{
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.inputContainer{
+    width: 100%;
+    border: none;
+    border-radius: 0.2rem;
+    background-color: #EEE2D8;
+    font-size: 18px;
+    padding-left: 0.5rem;
+    padding-right: 0.2rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.5rem;
+    /* box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.502); */
+    font-size: 16px;
+    color: #0b0b0bd9;
+    margin-left: 0.5rem;
+}
+
+.inputContainer::placeholder {
+    color: #888888a7;
+}
+
+.inputContainer:focus {
+    outline: none; 
+    box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.42);; 
 }
