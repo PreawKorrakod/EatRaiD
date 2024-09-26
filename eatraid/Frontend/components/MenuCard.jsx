@@ -3,24 +3,42 @@ import { useState } from 'react';
 import styles from './MenuCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BsPencilSquare, BsXSquareFill, BsFillTrashFill, BsCheckLg, BsUpload, BsImages } from "react-icons/bs";
+import { BsPencilSquare, BsXSquareFill, BsFillTrashFill, BsCheckLg, BsUpload, BsImages, BsExclamationCircle, BsCheckCircleFill } from "react-icons/bs";
 
-const categoryDropdown = ["Thai", "Japanese"];
+
+const categoryDropdown = ["fastfood", "dessert", "noodle", "Cooked to order", "beverages", "Japanese", "Western", "Chinese",
+    "Local food", "Quick meal", "healthy"]
 
 const MenuCard = (props) => {
+    // เป็นค่า props ที่ดึงมา
+    const { id, img, name, type, price, ownerID } = props;
+
+    const [selectedMenu, setSelectedMenu] = useState({ name, type, price, img });// เก็บค่าข้อมูลเดิมก่อนที่จะทำการ Edit ใหม่
+
+    // เก็บค่าข้อมูลใหม่ ให้ Back เอาค่าที่ได้รับการ edit ไปใช้ได้เลย
+    const [editName, setEditName] = useState(selectedMenu.name);
+    const [editPrice, setEditPrice] = useState(selectedMenu.price);
+    const [editType, setEditType] = useState(selectedMenu.type);
 
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false); // State สำหรับสถานะการรอ
     const [isSuccess, setIsSuccess] = useState(false); // State สำหรับการลบสำเร็จ
-    const [MenuImage, setMenuImage] = useState('');
+    const [isEditSuccess, setIsEditSuccess] = useState(false); // State สำหรับการแก้ไขสำเร็จ
+    const [MenuImage, setMenuImage] = useState(img || '');
     const [Imagefile, setImagefile] = useState('');
     const [inputValue, setInputValue] = useState('');
     const [error, setError] = useState('');
 
+    // เมื่อทำการกดปุ่ม edit บน Card ไม่ใข่การ Confirm เป็นการดึงค่าเดิมออกมาใส่ใน popup modal ที่ทำการแก้ไข 
+    const handleEditClick = () => {
+        // เป็นตัวแปรที่รับมาจาก props ไม่ต้องแก้อะไร
+        setSelectedMenu({ name, type, price, img });
+        setIsAlertModalOpen(true);
+    };
 
-
+    // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
+        const file = e.target.files[0]; // รับค่ารูปภาพเที่เข้ามาใหม่
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -28,19 +46,20 @@ const MenuCard = (props) => {
             };
             reader.readAsDataURL(file);
             setImagefile(file);
+            // ใช้ตัวแปร Imagefile คือ ตัวแปรเก็บค่ารูป อันนี้คือต้องดึงเข้าไปเก็บที่ back
         }
     };
 
 
     // ฟังก์ชันลบ  backend ตรงนี้นะ
-    const handleRemove = async () => {
+    const handleRemove = async (cardId) => {
         setIsLoading(true); // เริ่มโหลด เป็นการตั้งสถานะโหลดของ frontend 
         try {
             await
                 // เวลา 2 วินาทีจำลองการลบ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
                 new Promise((resolve) =>
                     setTimeout(resolve, 2000));
-            // เป็นการจำลอง
+            console.log(`ลบภาพที่ id ${cardId}`);
 
             // อันนี้จำเป็นต้องวางไว้หลังจากลบข้อมูล โค้ดของ Backend ถ้าเกิดลบสำเร็จ
             setIsLoading(false); // หยุดโหลด
@@ -56,38 +75,87 @@ const MenuCard = (props) => {
         }
     };
 
-    // Modal delete
+    // ฟังก์ชัน edit ตรงนี้นะ
+    const handleConfirm = async (event, cardId) => {
+        if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault(); 
+        }
+
+        setSelectedMenu({ name: editName, price: editPrice, type: editType });
+        console.log("Name:", editName);
+        console.log("Price:", editPrice);
+        console.log("Type:", editType);
+
+        setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
+        try {
+
+            // เวลา 2 วินาทีจำลองการแก้ไข เมื่อ user กรอกเนื้อหาที่ต้องการแก้ไขครบแล้วกดปุ่มต้องแสดงการรอเวลา+ทำการ edit สำเร็จ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
+            await new Promise((resolve) => setTimeout(resolve, 2000)); // จำลองการรอ 2 วินาที
+
+
+            // อันนี้จำเป็นต้องวางไว้หลังจากลบข้อมูล โค้ดของ Backend ถ้าเกิดลบสำเร็จ
+            setIsLoading(false); // หยุดโหลด
+            setIsEditSuccess(true); // แก้ไขสำเร็จ
+            setTimeout(() => {
+                console.log(`แก้ไขเมนูที่ id: ${cardId}`);
+                setIsAlertModalOpen(false);
+                setIsEditSuccess(false); // รีเซ็ตสถานะสำเร็จ
+            }, 2000); // ซ่อน modal หลังจากแสดงข้อความสำเร็จ 2 วินาที
+        } catch (error) {
+            setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
+            alert("Error occurred while editing"); // แสดงข้อผิดพลาด
+        }
+    };
+
+    // เป็นฟังก์ชันตรวจสอบ input ของ User ตรงส่วน Price ของ frontend ไม่มีอะไรต้องดึง
+    const handleInput = (event) => {
+        let value = event.target.value;
+
+        // ตรวจสอบว่ากรอกเป็นตัวอักษรหรือตัวเลข
+        if (/[^0-9]/g.test(value)) {
+            setError('Please enter numbers only.');
+        }
+        // ตรวจสอบว่าเริ่มต้นด้วย 0 แต่ไม่ใช่เพียงเลข 0 ตัวเดียว
+        else if (value.length > 1 && value.startsWith('0')) {
+            setError('Please do not enter numbers starting with 0.');
+        }
+        else {
+            setError('');
+        }
+
+        // กรองเฉพาะตัวเลข และลบเลข 0 นำหน้า (ยกเว้น 0 ตัวเดียว)
+        setInputValue(value.replace(/[^0-9]/g, ''));
+    };
+
+    // Modal edit popup
     const renderAlertModal = () => {
-
-        const handleInput = (event) => {
-            const value = event.target.value;
-            if (/[^0-9]/g.test(value)) {
-                setError('Please enter numbers only.');
-            } else {
-                setError('');
-            }
-            setInputValue(value.replace(/[^0-9]/g, '')); // กรองเฉพาะตัวเลข
-        };
-
         return (
             <div id="logoutModal" className={styles.modal}>
-                <form className={styles.modal_content}>
+                <form className={styles.modal_content} onSubmit={(e) => handleConfirm(e, id)}>
                     <div className={styles.container}>
                         <BsXSquareFill className={styles.close} onClick={() => setIsAlertModalOpen(false)} />
                         <h2 className={styles.headerTextModal}>Edit Menu</h2>
                         {isLoading ? (
-                            <p>Please wait...</p>
+                            <p className={styles.wait}>Please wait...</p> // แสดงข้อความ "Please wait" เมื่ออยู่ระหว่างการโหลด
                         ) : isSuccess ? (
-                            <p className={styles.SuccessfulText}>Successfully delete!</p>
+                            <div className={styles.successContainer}>
+                                <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />Successfully deleted!</p>
+                            </div>
+                        ) : isEditSuccess ? (
+                            <div className={styles.successContainer}>
+                                <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />Successfully edited!</p>
+                            </div>
                         ) : (
-                            <form className={styles.EditContentContainer}>
-
+                            // ส่วนของการ input ข้อมูลใหม่ของ User ที่ต้องการ edit 
+                            <div className={styles.EditContentContainer}>
                                 <div className={styles.EditContentImg}>
                                     <div className={styles.Menudisplay}>
+                                        {/* Input สำหรับรูปภาพเมนู */}
                                         {MenuImage ? (
+                                            // อันนี้รูปเดิมที่มาจากค่า props ไม่ต้องแก้อะไร
                                             <Image
                                                 className={styles.MenuPicContainer}
-                                                alt="Profile"
+                                                alt="Menu"
                                                 src={MenuImage}
                                                 layout="fill"
                                                 objectFit="cover"
@@ -97,25 +165,41 @@ const MenuCard = (props) => {
                                         )}
                                     </div>
                                     <label>
+                                        {/* เป็นส่วนที่มีการเรียกใช้งาน handleFileChange ที่เอาไว้ render รูป ไป get URL รูปตรงฟังก์ชันได้เลย ไม่มีอะไรต้องดึง
+                                        ในส่วนนี้*/}
                                         <input
                                             type="file"
                                             accept="image/*"
                                             hidden
-                                            onChange={handleFileChange}
+                                            onChange={handleFileChange} // ฟังก์ชันนี้จะถูกเรียกเมื่อเลือกไฟล์ใหม่
+                                            required
                                         />
                                         <div className={styles.Uploadbtn}><BsUpload className={styles.iconUpload} />Upload Picture</div>
                                     </label>
                                 </div>
 
+
                                 <div className={styles.EditContentInput}>
                                     <div className={styles.inputNamefood}>
-                                        <span className={styles.titleStyles}>Name :</span><input type="text" placeholder="Food name" className={styles.inputContainer} />
+                                        <span className={styles.titleStyles}>Name :</span>
+                                        <input
+                                            type="text"
+                                            value={editName}
+                                            // ให้เอาค่าของ editName ไปอัปเดตตาราง
+                                            onChange={(e) => setEditName(e.target.value)}
+                                            placeholder="Food name"
+                                            className={styles.inputContainer}
+                                            required />
                                     </div>
 
+                                    {/* Input สำหรับประเภทเมนู */}
                                     <div className={styles.inputNamefood}>
-                                        <span className={styles.titleStyles}>Type :</span><select
+                                        <span className={styles.titleStyles}>Type :</span>
+                                        <select
                                             className={styles.optionTextStyles}
-
+                                            value={editType}
+                                            onChange={(e) => setEditType(e.target.value)}
+                                            required
                                         >
                                             {categoryDropdown.map((category, index) => (
                                                 <option key={index} value={category}>
@@ -132,32 +216,37 @@ const MenuCard = (props) => {
                                                 type="text"
                                                 placeholder="Price"
                                                 className={styles.inputContainer}
-                                                value={inputValue}
-                                                onInput={handleInput}
+                                                value={editPrice}
+                                                onChange={(e) => {
+                                                    setEditPrice(e.target.value);
+                                                    handleInput(e);
+                                                }}
+                                                required
                                             />
                                         </div>
                                         ฿
-                                        {error && <p className={styles.error}>{error}</p>} {/* แสดงคำเตือน */}
                                     </div>
+                                    {error && <p className={styles.error}>< BsExclamationCircle className={styles.iconExc} />{error}</p>} {/* แสดงคำเตือนหากมี */}
                                 </div>
-                            </form>
+                            </div>
                         )}
                         <div className={styles.clearfix}>
-                            {!isSuccess && (
+                            {!isSuccess && !isEditSuccess && (
                                 <>
                                     <button
-                                        type="button"
+                                        type="submit"
                                         className={styles.Confirmbtn}
-                                        disabled={isLoading}
+                                        disabled={isLoading || error} // ปิดปุ่มระหว่างการโหลดหรือตอนที่มี error
+                                        onClick={(e) => handleConfirm(e, id)} // เรียกใช้ฟังก์ชัน Confirm เมื่อกดปุ่ม
                                     >
                                         <BsCheckLg className={styles.Checkicon} />
-                                        Confirm
+                                        {isLoading ? "Confirming..." : "Confirm"}
                                     </button>
                                     <button
                                         type="button"
                                         className={styles.Removebtn}
-                                        onClick={handleRemove}
-                                        disabled={isLoading}
+                                        onClick={() => handleRemove(id)} // ส่ง id ของ Card ที่ต้องการลบ
+                                        disabled={isLoading} // ปิดปุ่มระหว่างการโหลด
                                     >
                                         {isLoading ? "Removing..." : <><BsFillTrashFill className={styles.Deleteicon} /> Delete</>}
                                     </button>
@@ -170,7 +259,7 @@ const MenuCard = (props) => {
         );
     };
 
-    const { id, img, name, type, price, ownerID } = props;
+
 
     return (
         <>
@@ -195,10 +284,9 @@ const MenuCard = (props) => {
                             <div className={styles.menu_buttom}>
                                 <button
                                     className={styles.Editfood}
-                                    onClick={() => setIsAlertModalOpen(true)} >
+                                    onClick={() => handleEditClick()} >
                                     <BsPencilSquare className={styles.Editicon} />
                                     Edit
-                                    {/* ต้องส่งค่า id ของอาหารว่าเป็นอาหารไอดีไหน */}
                                 </button>
                             </div>
                         </div>

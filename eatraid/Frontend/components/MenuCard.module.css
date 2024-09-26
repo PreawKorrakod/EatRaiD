@@ -289,6 +289,10 @@
 }
 
 .SuccessfulText{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     color: #27ca2d;
 }
 
@@ -426,10 +430,50 @@
     color: #f44336; 
     font-size: small;
     margin-left: 0.5rem;
-    font-style: italic;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
 }
 
 .Imageicon{
     width: 20%;
     height: 20%;
+}
+
+.iconExc{
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem; 
+}
+
+.wait {
+    padding-top: 1rem;
+    animation: waitAnimation 1s infinite; 
+}
+
+@keyframes waitAnimation {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5; 
+    }
+    100% {
+        opacity: 1; 
+    }
+}
+
+.CheckSuccess{
+    width: 10vw;
+    height: 10vh;
+    margin-bottom: 2vh;
+    margin-top: 2vh;
+}
+
+.successContainer{
+    width: 20vw;
+    height: 10vh;
+    justify-content: center;
+    align-items: center;
 }

@@ -11,28 +11,28 @@ import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 // ข้อมูลปลอม
 // backend นำข้อมูลมาใส่ตรง ตัวแปร data เลยนะ
 const data = [
-    { id: 1, name: 'Restaurant AEEEEEEEEEEEEE', image: image1, type:'noodle',price:'50' },
-    { id: 2, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  },
-    { id: 3, name: 'Restaurant C', image: image3, type:'noodle',price:'50'  },
-    { id: 4, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
-    { id: 5, name: 'Restaurant B', image: image2, type:'noodle',price:'50' },
-    { id: 6, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
-    { id: 7, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  },
-    { id: 8, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
-    { id: 9, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  },
-    { id: 10, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
-    { id: 11, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  },
-    { id: 12, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
-    { id: 13, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  },
-    { id: 14, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
-    { id: 15, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
-    { id: 16, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  },
-    { id: 17, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
-    { id: 18, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  },
-    { id: 19, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
-    { id: 20, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  },
-    { id: 21, name: 'Restaurant A', image: image1, type:'noodle',price:'50'  },
-    { id: 22, name: 'Restaurant B', image: image2, type:'noodle',price:'50'  }
+    { id: 1, name: 'food A', image: image1, type:'noodle',price:'50' },
+    { id: 2, name: 'food B', image: image2, type:'noodle',price:'50'  },
+    { id: 3, name: 'food C', image: image3, type:'Western',price:'50'  },
+    { id: 4, name: 'food A', image: image1, type:'noodle',price:'50'  },
+    { id: 5, name: 'food B', image: image2, type:'noodle',price:'50' },
+    { id: 6, name: 'food A', image: image1, type:'noodle',price:'50'  },
+    { id: 7, name: 'food B', image: image2, type:'noodle',price:'50'  },
+    { id: 8, name: 'food A', image: image1, type:'noodle',price:'50'  },
+    { id: 9, name: 'food B', image: image2, type:'noodle',price:'50'  },
+    { id: 10, name: 'food A', image: image1, type:'noodle',price:'50'  },
+    { id: 11, name: 'food B', image: image2, type:'noodle',price:'50'  },
+    { id: 12, name: 'food A', image: image1, type:'noodle',price:'50'  },
+    { id: 13, name: 'food B', image: image2, type:'noodle',price:'50'  },
+    { id: 14, name: 'food A', image: image1, type:'noodle',price:'50'  },
+    { id: 15, name: 'food A', image: image1, type:'noodle',price:'50'  },
+    { id: 16, name: 'food B', image: image2, type:'noodle',price:'50'  },
+    { id: 17, name: 'food A', image: image1, type:'noodle',price:'50'  },
+    { id: 18, name: 'food B', image: image2, type:'noodle',price:'50'  },
+    { id: 19, name: 'food A', image: image1, type:'noodle',price:'50'  },
+    { id: 20, name: 'food B', image: image2, type:'noodle',price:'50'  },
+    { id: 21, name: 'food A', image: image1, type:'noodle',price:'50'  },
+    { id: 22, name: 'food B', image: image2, type:'noodle',price:'50'  }
 ];
 
 export default function menu() {
@@ -98,6 +98,7 @@ export default function menu() {
                             {currentItems.map((restaurant) => (
                                 <MenuCard
                                     key={restaurant.id}
+                                    id={restaurant.id}
                                     img={restaurant.image}
                                     name={restaurant.name}
                                     type={restaurant.type}
