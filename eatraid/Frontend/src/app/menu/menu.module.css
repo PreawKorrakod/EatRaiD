@@ -21,11 +21,52 @@
 
 .header {
     width: 100%;
-    font-size: 3.5vw;
-    color: #527853;
     padding-bottom: 1vh;
     padding-left: 1vh;
     margin-bottom: 1vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.headerText{
+    font-size: 3.5vw;
+    color: #527853; 
+    width: 50%;
+}
+
+.AddContainer{
+    width: 50%;
+    align-items:end;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 1vw;
+}
+
+.Addbtn{
+    color: #FFFBF7;
+    background-color: #527853;
+    border: none;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.Addbtn:hover{
+    scale: 1.1;
+    cursor: pointer;
+    transition: .3s ease;
+}
+
+.Plusicon{
+    width: 25px;
+    height: 25px;
+    margin-right: 0.2rem;
 }
 
 .content_grid {

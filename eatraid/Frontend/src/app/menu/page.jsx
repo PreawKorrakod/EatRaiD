@@ -6,33 +6,33 @@ import image1 from '../../../public/imgTest4.png';
 import image2 from '../../../public/imgTest5.png';
 import image3 from '../../../public/imgTest6.png';
 import MenuCard from '../../../components/MenuCard';
-import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
+import { BsChevronDoubleLeft, BsChevronDoubleRight, BsPlus } from "react-icons/bs";
 
 // ข้อมูลปลอม
 // backend นำข้อมูลมาใส่ตรง ตัวแปร data เลยนะ
 const data = [
-    { id: 1, name: 'food A', image: image1, type:'noodle',price:'50' },
-    { id: 2, name: 'food B', image: image2, type:'noodle',price:'50'  },
-    { id: 3, name: 'food C', image: image3, type:'Western',price:'50'  },
-    { id: 4, name: 'food A', image: image1, type:'noodle',price:'50'  },
-    { id: 5, name: 'food B', image: image2, type:'noodle',price:'50' },
-    { id: 6, name: 'food A', image: image1, type:'noodle',price:'50'  },
-    { id: 7, name: 'food B', image: image2, type:'noodle',price:'50'  },
-    { id: 8, name: 'food A', image: image1, type:'noodle',price:'50'  },
-    { id: 9, name: 'food B', image: image2, type:'noodle',price:'50'  },
-    { id: 10, name: 'food A', image: image1, type:'noodle',price:'50'  },
-    { id: 11, name: 'food B', image: image2, type:'noodle',price:'50'  },
-    { id: 12, name: 'food A', image: image1, type:'noodle',price:'50'  },
-    { id: 13, name: 'food B', image: image2, type:'noodle',price:'50'  },
-    { id: 14, name: 'food A', image: image1, type:'noodle',price:'50'  },
-    { id: 15, name: 'food A', image: image1, type:'noodle',price:'50'  },
-    { id: 16, name: 'food B', image: image2, type:'noodle',price:'50'  },
-    { id: 17, name: 'food A', image: image1, type:'noodle',price:'50'  },
-    { id: 18, name: 'food B', image: image2, type:'noodle',price:'50'  },
-    { id: 19, name: 'food A', image: image1, type:'noodle',price:'50'  },
-    { id: 20, name: 'food B', image: image2, type:'noodle',price:'50'  },
-    { id: 21, name: 'food A', image: image1, type:'noodle',price:'50'  },
-    { id: 22, name: 'food B', image: image2, type:'noodle',price:'50'  }
+    { id: 1, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 2, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    { id: 3, name: 'food C', image: image3, type: 'Western', price: '50' },
+    { id: 4, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 5, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    { id: 6, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 7, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    { id: 8, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 9, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    { id: 10, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 11, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    { id: 12, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 13, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    { id: 14, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 15, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 16, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    { id: 17, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 18, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    { id: 19, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 20, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    { id: 21, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    { id: 22, name: 'food B', image: image2, type: 'noodle', price: '50' }
 ];
 
 export default function menu() {
@@ -90,8 +90,16 @@ export default function menu() {
             <div className={styles.container}>
                 <div className={styles.Favourite_wrapper}>
                     <div className={styles.header}>
-                        Menu
+                        <div className={styles.headerText}>
+                            Menu
+                        </div>
+                        <div className={styles.AddContainer}>
+                            <button className={styles.Addbtn}>
+                                <BsPlus className={styles.Plusicon}/>Add Menu
+                            </button>
+                        </div>
                     </div>
+
                     {currentItems.length > 0 ? (
                         <div className={styles.content_grid}>
                             {/* backend มาเชื่อมให้ใส่ข้อมูล restaurant.(ชื่อคอลัมน์) นะ */}
@@ -103,13 +111,13 @@ export default function menu() {
                                     name={restaurant.name}
                                     type={restaurant.type}
                                     price={restaurant.price}
-                                    owner ={OwnerID}
+                                    owner={OwnerID}
                                 />
-                            ))} 
+                            ))}
                         </div>
                     ) : (
                         <div className={styles.content_empty}>
-                              <p className={styles.emptyMessage}>No menu added yet.</p>
+                            <p className={styles.emptyMessage}>No menu added yet.</p>
                         </div>
                     )}
                     {/* Pagination Controls */}
