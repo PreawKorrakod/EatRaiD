@@ -9,16 +9,19 @@ import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
 import { useRouter } from "next/navigation";
 import { getCookies } from 'cookies-next';
+import imgTest from '../../Frontend/public/TestProfile.jpg';
 
 
 export default function Navbar() {
     const [isOpen_Profile, setIsOpen_Profile] = useState(false);
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [isUserEmail, setIsEmailUser] = useState('');
     const [isOwnerLoggedIn, setIsOwnerLoggedIn] = useState(false);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
 
     const profileRef = useRef(null);
+    const profileImage = '';
 
 
 
@@ -50,7 +53,9 @@ export default function Navbar() {
                 if (response.ok) {
                   console.log('Success:', user);
                   console.log("User Role:", user[0]?.Role);
+                  console.log("User Email:", user[0].Email);
                   setIsUserLoggedIn(token !== null);
+                  setIsEmailUser(user[0].Email);
                   setIsOwnerLoggedIn(data[0]?.Role === "owner");
                 } else {
                   console.error('Error:', data);
@@ -183,9 +188,9 @@ export default function Navbar() {
                                 onClick={() => setIsOpen_Profile(!isOpen_Profile)}
                                 ref={profileRef}
                             >
-                                {profileImageUrl ? (
+                                {profileImage ? (
                                     <Image
-                                        src={profileImageUrl}
+                                        src={imgTest}
                                         alt="Profile Picture"
                                         className={styles.profilePic}
                                     />
@@ -195,9 +200,9 @@ export default function Navbar() {
                                 {isOpen_Profile && (
                                     <div className={styles.profile_content}>
                                         <div className={styles.profileImage}>
-                                            {profileImageUrl ? (
+                                            {profileImage ? (
                                                 <Image
-                                                    src={profileImageUrl}
+                                                    src={imgTest}
                                                     alt="Profile Picture"
                                                     className={styles.profileicon}
                                                 />
@@ -206,7 +211,7 @@ export default function Navbar() {
                                             )}
                                         </div>
                                         <div className={styles.profileDetail}>
-                                            Email: {Email_User}
+                                            Email: {isUserEmail}
                                             <div className={styles.SignOutSide}>
                                                 <button className={styles.SignOutbtn_Profile} onClick={() => setIsLogoutModalOpen(true)}>
                                                     <BsBoxArrowRight size={25} className={styles.SignOuticon_Profile} />

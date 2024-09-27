@@ -53,7 +53,16 @@ export default function Login() {
             }).then((response) => {
                 // localStorage.setItem('accessToken',res.data.accessToken);
                 console.log("User_Data", response.data[0]);
-                router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
+                console.log("Role", response.data[0].Role);
+                const role = response.data[0].Role;
+
+                if (role === 'owner') {
+                    router.push(`${NEXT_PUBLIC_BASE_WEB_URL}/info`);
+                } else if (role === 'customer') {
+                    router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
+                }
+
+
             });
 
         } catch (error) {
