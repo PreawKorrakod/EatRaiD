@@ -6,15 +6,66 @@ const app = express();
 const { v4: uuid4 } = require('uuid');
 const multer = require("multer");
 const upload = multer();
+const cookieparser = require('cookie-parser');
+const jwt = require('jsonwebtoken')
+const bodyParser = require('body-parser');
 
-app.use(cors());
+app.use(cors(
+  {
+    origin: 'http://localhost:3000',
+    credentials: true
+  }
+));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for easy to test with Postman
 const port = 3300;
+app.use(cookieparser());
 
 const supabaseUrl = 'https://gemuxctpjqhmwbtxrpul.supabase.co'
 const supabaseKey = process.env.ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
+
+//===============Token================
+
+app.post('/refresh', (req, res) => {
+  if (req.cookies?.jwt) {
+    const refreshToken = req.cookies.jwt;
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET,
+      (err, decoded) => {
+        if (err) {
+          return res.status(406).json({ message: 'Unauthorized' });
+        }
+        else {
+          const accessToken = jwt.sign({
+            id: decoded.id,
+            email: decoded.email
+          }, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: '10m'
+          });
+          return res.json({ accessToken });
+        }
+      })
+  } else {
+    return res.status(406).json({ message: 'Unauthorized' });
+  }
+})
+
+const validaccesstoken = (req, res, next) => {
+  const authHeader = req.headers.authorization
+  if (!authHeader) { res.status(403).json({ msg: 'Unauthorized: Missing access token' }) }
+  const token = authHeader.split(' ')[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: 'Forbidden: Invalid access token' });
+    }
+    next(); // Allow the request to proceed
+  });
+}
+
+const decodeToken = (token) => {
+  const raw = token.split(" ")[1];
+  return jwt.verify(raw, process.env.ACCESS_TOKEN_SECRET);
+}
 
 // ===========================user management===========================
 
@@ -125,20 +176,20 @@ app.post("/verify-OTP", async (req, res) => {
 // });
 
 app.post("/add-account-info", async (req, res) => {
-    const { role,user, email } = req.body;
-  
-      if (role === 'customer' || role == 'owner'){
-        const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email}]).select("*");
-        if (error) {
-            res.status(400).json(error);
-        }
-        else {
-          res.status(200).json({message: "insert custommer data to table user successfully", data: data})
-        }
-      } else {
-        res.status(400).json({message: 'wrong role'});
-      }
-  });
+  const { role, user, email } = req.body;
+
+  if (role === 'customer' || role == 'owner') {
+    const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email }]).select("*");
+    if (error) {
+      res.status(400).json(error);
+    }
+    else {
+      res.status(200).json({ message: "insert custommer data to table user successfully", data: data })
+    }
+  } else {
+    res.status(400).json({ message: 'wrong role' });
+  }
+});
 
 app.post("/add-restaurant-info", async (req, res) => {
   const { role, user
@@ -171,23 +222,110 @@ app.post("/add-restaurant-info", async (req, res) => {
 });
 
 
+// app.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
+
+//   const { data, error } = await supabase.auth.signInWithPassword({
+//     email: email,
+//     password: password,
+//   });
+//   if (error) {
+//     return res.status(401).json({ message: 'Login failed', error: error.message });
+//   } else {
+//     return res.status(200).json({ message: 'Login successful', user: data.user, session: data.session});
+//   }
+// });
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
     password: password,
   });
-
   if (error) {
     return res.status(401).json({ message: 'Login failed', error: error.message });
-  } else {
-    return res.status(200).json({ message: 'Login successful', user: data.user, session: data.session });
   }
+
+  const user = data.user;
+
+  // Access Token
+  const accessToken = jwt.sign({
+    id: user.id,
+    email: user.email
+  }, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: '10m'
+  });
+
+  //Refresh Token
+  const refreshToken = jwt.sign({
+    id: user.id,
+  }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+
+  // ตั้งค่า Refresh Token ในคุกกี้แบบ HTTP-only
+  res.cookie('jwt', refreshToken, {
+    httpOnly: true,
+    sameSite: 'Lax',
+    secure: true,
+    maxAge: 24 * 60 * 60 * 1000 // 1 วัน
+  });
+  return res.status(200).json({
+    message: 'Login successful',
+    accessToken,
+    user: {
+      id: user.id,
+      email: user.email,
+    }
+  });
 });
+
+// const verifyToken = (rawToken) => {
+//   if (!rawToken) {
+//     // Handle the missing token scenario
+//     return false;
+//   }
+
+//   let authorized = false;
+//   // Extract the token without the "Bearer" prefix
+//   const token = rawToken.split(" ")[1];
+//   console.log(token);
+
+//   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+//     if (err) {
+//       console.log('Invalid token', err);
+//     } else {
+//       console.log('Decoded token:', decoded);
+//       authorized = true;
+//     }
+//   });
+
+//   return authorized;
+// };
+
+app.get("/getuserdata", validaccesstoken, async (req, res) => {
+  const { id } = decodeToken(req.headers.authorization);
+  const { data, error } = await supabase.from("User").select("*").eq("Id", id);
+
+  if (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+  console.log(data);
+
+  if (data.length === 0) {
+    return res.status(404).json({ msg: "User not found" });
+  }
+
+  return res.status(200).json(data);
+});
+
 
 app.post("/logout", async (req, res) => {
   const { data, error } = await supabase.auth.signOut()
+
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    sameSite: 'Lax',
+    secure: true
+  });
 
   if (error) {
     return res.status(400).json({ message: 'Logout failed', error: error.message });
@@ -284,7 +422,7 @@ app.put("/editprofile", upload.single("file"), async (req, res) => {
         return res.status(200).json({ Picdata });
       }
     } else {
-      return res.status(200).json({ RestaurantData,Picdata});
+      return res.status(200).json({ RestaurantData, Picdata });
     }
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -444,5 +582,12 @@ app.delete("/delete-user", async (req, res) => {
     res.status(200).json(data);
   }
 });
+
+
+
+
+
+
+
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));

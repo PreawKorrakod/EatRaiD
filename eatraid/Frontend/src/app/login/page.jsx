@@ -6,11 +6,14 @@ import Topbar from '../../../components/Topbar';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useContext, useState } from 'react';
-import { BsExclamationCircle,BsArrowLeft } from "react-icons/bs";
+import { BsExclamationCircle, BsArrowLeft } from "react-icons/bs";
 import { redirect, useRouter } from "next/navigation";
 
-import { NEXT_PUBLIC_BASE_API_URL,NEXT_PUBLIC_BASE_WEB_URL} from '../../../src/app/config/supabaseClient.js';
+import { NEXT_PUBLIC_BASE_API_URL, NEXT_PUBLIC_BASE_WEB_URL } from '../../../src/app/config/supabaseClient.js';
+import session from '../../../session';
+import { json } from 'react-router-dom';
 // import { General, supabase } from '../../../session';
+
 
 export default function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -19,7 +22,7 @@ export default function Login() {
     // const navigate = useNavigate();
 
     // const { session } = useContext(General);
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         // ตรวจสอบว่ากรอกข้อมูลครบหรือไม่
@@ -33,24 +36,34 @@ export default function Login() {
 
         // Backend
         try {
-            axios.post(`${NEXT_PUBLIC_BASE_API_URL}/login`, {
+            const res = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/login`, {
                 email: formData.email,
                 password: formData.password
+            }, { withCredentials: true }); // for sending cookies
 
-            }).then(async res => {
-                
-                console.log("navigate to home", res)
+            if (res.data.accessToken) {
+                console.log("Login success", res.data.user.id);
+                // localStorage.setItem('accessToken',res.data.accessToken);
+            }
+
+            await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/getuserdata`, {
+                headers: {
+                    "Authorization": `Bearer ${res.data.accessToken}`
+                }
+            }).then((response) => {
+                // localStorage.setItem('accessToken',res.data.accessToken);
+                console.log("User_Data", response.data[0]);
                 router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
-            }).catch(error => {
-                
-                console.error('Error during login:', error);
-                setError('Your email or password is incorrect. Try again.');
             });
 
         } catch (error) {
             console.log(error);
+            // console.error('Error during login:', error);
+            setError('Your email or password is incorrect. Try again.');
         }
     };
+
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });

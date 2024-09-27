@@ -3,31 +3,64 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from './Navbar.module.css';
 import Link from 'next/link';
-import { BsPersonCircle, BsBoxArrowRight,  BsExclamationCircle, BsXSquareFill } from "react-icons/bs";
+import { BsPersonCircle, BsBoxArrowRight, BsExclamationCircle, BsXSquareFill } from "react-icons/bs";
 import Image from 'next/image';
-
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
+import { useRouter } from "next/navigation";
+import { getCookies } from 'cookies-next';
 
 
 export default function Navbar() {
     const [isOpen_Profile, setIsOpen_Profile] = useState(false);
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [isOwnerLoggedIn, setIsOwnerLoggedIn] = useState(false);
-    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); 
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
 
     const profileRef = useRef(null);
+
+
 
     useEffect(() => {
         // Fetch current user login status from backend when component mounts
         const fetchUserStatus = async () => {
+            // const token = localStorage.getItem('accessToken');
             try {
-                const response = await fetch('/api/user-status'); // Fetch user login status
-                const data = await response.json();
-                setIsUserLoggedIn(data.isLoggedIn);
-                setIsOwnerLoggedIn(data.isOwner);
+                // รอค่าจาก fetch ด้วย await
+                const token = await fetch(`${NEXT_PUBLIC_BASE_API_URL}/refresh`, {
+                    method: 'POST',
+                    credentials: 'include', // เพื่อให้แน่ใจว่าคุกกี้ถูกส่งไป
+                });
+                if (token.status !== 200) {
+                    const errorData = await response.json();
+                    console.error('Error refreshing access token:', errorData.message);
+                };
+                const data = await token.json();
+                console.log("Token:", data.accessToken);
+
+                const response = await fetch(`${NEXT_PUBLIC_BASE_API_URL}/getuserdata`, {
+                  method: 'GET',
+                  headers: {
+                    "Authorization": `Bearer ${data.accessToken}`
+                  },
+                });
+
+                const user = await response.json();
+                if (response.ok) {
+                  console.log('Success:', user);
+                  console.log("User Role:", user[0]?.Role);
+                  setIsUserLoggedIn(token !== null);
+                  setIsOwnerLoggedIn(data[0]?.Role === "owner");
+                } else {
+                  console.error('Error:', data);
+                }
             } catch (error) {
                 console.error("Error fetching user status:", error);
             }
+
         };
+
         fetchUserStatus();
 
         // Handle click outside profile to close dropdown
@@ -45,22 +78,21 @@ export default function Navbar() {
 
     // ฟังก์ชัน Logout ตรงนี้เลยคับ
     const handleLogout = async () => {
+        // const token = localStorage.getItem('accessToken');
         try {
-            axios.post(`${NEXT_PUBLIC_BASE_API_URL}/logout`, { 
-                }).then(async res => {
-                    setIsUserLoggedIn(false); // ทำให้ User ที่มีสถานะ login เป็นไม่ได้ login แล้ว
-                    setIsLogoutModalOpen(false); // ปิด model สำหรับการยืนยันการ logout กรณี logout สำเร็จ
-                }).catch(error => {
-                    console.error('Failed to log out', error);
-                    // setError('Wrong OTP. Try again.');
-                });
-           
-            // if (response.ok) {
-            //     setIsUserLoggedIn(false); // ทำให้ User ที่มีสถานะ login เป็นไม่ได้ login แล้ว
-            //     setIsLogoutModalOpen(false); // ปิด model สำหรับการยืนยันการ logout กรณี logout สำเร็จ
-            // } else {
-            //     console.error('Failed to log out');
-            // }
+            // ส่งคำขอ logout ไปยัง backend ก่อนล้าง localStorage
+            const response = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/logout`, {}, {
+                withCredentials: true, // ตรวจสอบว่าใช้ cookies หรือ header อื่นๆ ที่เกี่ยวข้อง
+            });
+
+            if (response.status === 200) { // ตรวจสอบว่าการ logout สำเร็จ
+                // ล้างข้อมูลใน localStorage หลัง logout สำเร็จ
+                localStorage.clear();
+                setIsUserLoggedIn(token !== null); // ทำให้ User ที่มีสถานะ login เป็นไม่ได้ login แล้ว
+                setIsLogoutModalOpen(false); // ปิด modal สำหรับการยืนยันการ logout กรณี logout สำเร็จ
+            } else {
+                console.error('Failed to log out', response);
+            }
         } catch (error) {
             console.error("Error logging out:", error);
         }
@@ -85,8 +117,8 @@ export default function Navbar() {
         return (
             <div id="logoutModal" className={styles.modal}>
                 <form className={styles.modal_content}>
-                    <div className={styles.container}> 
-                        <BsExclamationCircle className={styles.Alerticon}/><BsXSquareFill className={styles.close} onClick={() => setIsLogoutModalOpen(false)}/>
+                    <div className={styles.container}>
+                        <BsExclamationCircle className={styles.Alerticon} /><BsXSquareFill className={styles.close} onClick={() => setIsLogoutModalOpen(false)} />
                         <h2>Sign out</h2>
                         <p>Are you sure you want to Sign out?</p>
 
@@ -101,7 +133,7 @@ export default function Navbar() {
                                 className={styles.Logoutbtn}
                                 onClick={() => {
                                     // เรียกใช้ฟังก์ชัน sign out ตรงนี้
-                                    onClick={handleLogout}
+                                    onClick = { handleLogout }
                                 }}
                             >
                                 Sign out
@@ -131,7 +163,7 @@ export default function Navbar() {
                                 Menu
                             </Link>
                             <div>
-                                <button className={styles.SignOutbtn} onClick={() => 
+                                <button className={styles.SignOutbtn} onClick={() =>
                                     setIsLogoutModalOpen(true)}>
                                     <BsBoxArrowRight size={30} className={styles.SignOuticon} />
                                     Sign out
