@@ -28,38 +28,20 @@ export default function Navbar() {
     useEffect(() => {
         // Fetch current user login status from backend when component mounts
         const fetchUserStatus = async () => {
-            // const token = localStorage.getItem('accessToken');
             try {
-                // รอค่าจาก fetch ด้วย await
-                const token = await fetch(`${NEXT_PUBLIC_BASE_API_URL}/refresh`, {
-                    method: 'POST',
-                    credentials: 'include', // เพื่อให้แน่ใจว่าคุกกี้ถูกส่งไป
+                const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
+                    withCredentials: true,
                 });
-                if (token.status !== 200) {
-                    const errorData = await response.json();
-                    console.error('Error refreshing access token:', errorData.message);
-                };
-                const data = await token.json();
-                console.log("Token:", data.accessToken);
-
-                const response = await fetch(`${NEXT_PUBLIC_BASE_API_URL}/getuserdata`, {
-                  method: 'GET',
-                  headers: {
-                    "Authorization": `Bearer ${data.accessToken}`
-                  },
-                });
-
-                const user = await response.json();
-                if (response.ok) {
-                  console.log('Success:', user);
-                  console.log("User Role:", user[0]?.Role);
-                  console.log("User Email:", user[0].Email);
-                  setIsUserLoggedIn(token !== null);
-                  setIsEmailUser(user[0].Email);
-                  setIsOwnerLoggedIn(data[0]?.Role === "owner");
+                if (user) {
+                    console.log('Success:', user);
+                    console.log("User Role:", user.data[0].Role);
+                    console.log("User Email:", user.data[0].Email);
+                    setIsUserLoggedIn(user !== null);
+                    setIsEmailUser(user.data[0].Email);
+                    setIsOwnerLoggedIn(user.data[0].Role === "owner");
                 } else {
-                  console.error('Error:', data);
-                }
+                    console.log('Failed:', user);
+                };
             } catch (error) {
                 console.error("Error fetching user status:", error);
             }
@@ -83,20 +65,18 @@ export default function Navbar() {
 
     // ฟังก์ชัน Logout ตรงนี้เลยคับ
     const handleLogout = async () => {
-        // const token = localStorage.getItem('accessToken');
         try {
-            // ส่งคำขอ logout ไปยัง backend ก่อนล้าง localStorage
             const response = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/logout`, {}, {
-                withCredentials: true, // ตรวจสอบว่าใช้ cookies หรือ header อื่นๆ ที่เกี่ยวข้อง
+                withCredentials: true
             });
 
-            if (response.status === 200) { // ตรวจสอบว่าการ logout สำเร็จ
-                // ล้างข้อมูลใน localStorage หลัง logout สำเร็จ
-                localStorage.clear();
-                setIsUserLoggedIn(token !== null); // ทำให้ User ที่มีสถานะ login เป็นไม่ได้ login แล้ว
-                setIsLogoutModalOpen(false); // ปิด modal สำหรับการยืนยันการ logout กรณี logout สำเร็จ
+            if (response.status === 200) {
+                console.log('Logout successful');
+                setIsUserLoggedIn(false);
+                setIsEmailUser('');
+                setIsOwnerLoggedIn(false);
             } else {
-                console.error('Failed to log out', response);
+                console.error('Logout failed');
             }
         } catch (error) {
             console.error("Error logging out:", error);
@@ -135,11 +115,9 @@ export default function Navbar() {
                                 Cancel
                             </button>
                             <button
+                                type="button" 
                                 className={styles.Logoutbtn}
-                                onClick={() => {
-                                    // เรียกใช้ฟังก์ชัน sign out ตรงนี้
-                                    onClick = { handleLogout }
-                                }}
+                                onClick={handleLogout} 
                             >
                                 Sign out
                             </button>

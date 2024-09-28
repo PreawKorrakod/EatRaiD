@@ -19,9 +19,6 @@ export default function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const router = useRouter();
-    // const navigate = useNavigate();
-
-    // const { session } = useContext(General);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -36,38 +33,23 @@ export default function Login() {
 
         // Backend
         try {
-            const res = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/login`, {
+            await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/login`, {
                 email: formData.email,
                 password: formData.password
-            }, { withCredentials: true }); // for sending cookies
-
-            if (res.data.accessToken) {
+            }, { withCredentials: true }).then((res) => {
                 console.log("Login success", res.data.user.id);
-                // localStorage.setItem('accessToken',res.data.accessToken);
-            }
-
-            await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/getuserdata`, {
-                headers: {
-                    "Authorization": `Bearer ${res.data.accessToken}`
-                }
-            }).then((response) => {
-                // localStorage.setItem('accessToken',res.data.accessToken);
-                console.log("User_Data", response.data[0]);
-                console.log("Role", response.data[0].Role);
-                const role = response.data[0].Role;
-
-                if (role === 'owner') {
-                    router.push(`${NEXT_PUBLIC_BASE_WEB_URL}/info`);
-                } else if (role === 'customer') {
-                    router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
-                }
-
-
             });
 
+            const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
+                withCredentials: true, 
+            });
+    
+            const user = response.data[0];
+            console.log("Info:", user);
+
+            router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
         } catch (error) {
             console.log(error);
-            // console.error('Error during login:', error);
             setError('Your email or password is incorrect. Try again.');
         }
     };
