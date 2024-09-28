@@ -43,6 +43,10 @@ export default function FavoriteList() {
     // Calculate the total number of pages
     const totalPages = Math.ceil(data.length / itemsPerPage);
 
+    const handleDelete = (restaurantId) => {
+        setData((prevData) => prevData.filter((restaurant) => restaurant.RestaurantId !== restaurantId));
+    };
+
     // Handle page changes
     const handleNextPage = () => {
         if (currentPage < totalPages) {
@@ -94,6 +98,7 @@ export default function FavoriteList() {
                                     img={restaurant.User?.ProfilePic ? restaurant.User.ProfilePic : "https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/Menu/Menu_4_8034dbe4-bbdf-40b6-9b8e-fe7691ad9500.jpeg"}
                                     name={restaurant.Restaurant?.Name}
                                     id={restaurant.RestaurantId}
+                                    onRemove={handleDelete} 
                                 />
                             ))}
                         </div>
