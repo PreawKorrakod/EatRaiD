@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import styles from './favouriteList.module.css';
 import Navbar from '../../../components/Navbar';
 import RestaurantCard from '../../../components/RestaurantCard';
@@ -7,42 +7,33 @@ import image1 from '../../../public/imgTest2.png';
 import image2 from '../../../public/imgTest3.png';
 import image3 from '../../../public/imgTest1.png';
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
-
-
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from "../../app/config/supabaseClient";
+import Image from 'next/image';
 
 
 // ข้อมูลปลอม
 // backend นำข้อมูลมาใส่ตรง ตัวแปร data เลยนะ
 
-const data = [
-    { id: 1, name: 'Restaurant A', image: image1 },
-    { id: 2, name: 'Restaurant B', image: image2 },
-    { id: 3, name: 'Restaurant C', image: image3 },
-    { id: 4, name: 'Restaurant A', image: image1 },
-    { id: 5, name: 'Restaurant B', image: image2 },
-    { id: 6, name: 'Restaurant A', image: image1 },
-    { id: 7, name: 'Restaurant B', image: image2 },
-    { id: 8, name: 'Restaurant A', image: image1 },
-    { id: 9, name: 'Restaurant B', image: image2 },
-    { id: 10, name: 'Restaurant A', image: image1 },
-    { id: 11, name: 'Restaurant B', image: image2 },
-    { id: 12, name: 'Restaurant A', image: image1 },
-    { id: 13, name: 'Restaurant B', image: image2 },
-    { id: 14, name: 'Restaurant A', image: image1 },
-    { id: 15, name: 'Restaurant A', image: image1 },
-    { id: 16, name: 'Restaurant B', image: image2 },
-    { id: 17, name: 'Restaurant A', image: image1 },
-    { id: 18, name: 'Restaurant B', image: image2 },
-    { id: 19, name: 'Restaurant A', image: image1 },
-    { id: 20, name: 'Restaurant B', image: image2 },
-    { id: 21, name: 'Restaurant A', image: image1 },
-    { id: 22, name: 'Restaurant B', image: image2 }
-];
 
 export default function FavoriteList() {
     // Pagination settings
+    const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12; // Number of items to show per page
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/get-fav-list`, { withCredentials: true });
+                console.log('Success:', response.data);
+                setData(response.data); // เก็บข้อมูลที่ได้รับ
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     // Calculate the items to display based on the current page
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -99,10 +90,24 @@ export default function FavoriteList() {
                             {/* backend มาเชื่อมให้ใส่ข้อมูล restaurant.(ชื่อคอลัมน์) นะ */}
                             {currentItems.map((restaurant) => (
                                 <RestaurantCard
-                                    key={restaurant.id}
-                                    img={restaurant.image}
-                                    name={restaurant.name}
-                                    id={restaurant.id}
+                                    key={restaurant.RestaurantId}
+                                    img={restaurant.User?.ProfilePic ? (
+                                        <Image
+                                            src={restaurant.User.ProfilePic}
+                                            alt={restaurant.Restaurant?.Name}
+                                            // width={200} // กำหนดความกว้าง
+                                            // height={200} // กำหนดความสูง
+                                        />
+                                    ) : (
+                                        <Image
+                                            src="/path/to/default-image.png" // เส้นทางภาพเริ่มต้นเมื่อไม่มีภาพ
+                                            alt="Default Image"
+                                            // width={200}
+                                            // height={200}
+                                        />
+                                    )}
+                                    name={restaurant.Restaurant?.Name}
+                                    id={restaurant.RestaurantId}
                                 />
                             ))}
                         </div>
