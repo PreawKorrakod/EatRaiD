@@ -91,21 +91,7 @@ export default function FavoriteList() {
                             {currentItems.map((restaurant) => (
                                 <RestaurantCard
                                     key={restaurant.RestaurantId}
-                                    img={restaurant.User?.ProfilePic ? (
-                                        <Image
-                                            src={restaurant.User.ProfilePic}
-                                            alt={restaurant.Restaurant?.Name}
-                                            // width={200} // กำหนดความกว้าง
-                                            // height={200} // กำหนดความสูง
-                                        />
-                                    ) : (
-                                        <Image
-                                            src="/path/to/default-image.png" // เส้นทางภาพเริ่มต้นเมื่อไม่มีภาพ
-                                            alt="Default Image"
-                                            // width={200}
-                                            // height={200}
-                                        />
-                                    )}
+                                    img={restaurant.User?.ProfilePic ? restaurant.User.ProfilePic : "https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/Menu/Menu_4_8034dbe4-bbdf-40b6-9b8e-fe7691ad9500.jpeg"}
                                     name={restaurant.Restaurant?.Name}
                                     id={restaurant.RestaurantId}
                                 />

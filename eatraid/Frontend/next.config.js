@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-      domains: ['gemuxctpjqhmwbtxrpul.supabase.co'], 
+        domains: ['gemuxctpjqhmwbtxrpul.supabase.co'],
     },
-  }
-  
-  export default nextConfig
-  
+};
+
+module.exports = nextConfig;
