@@ -2,19 +2,48 @@ const express = require('express');
 require("dotenv").config();
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
-const app = express();
 const { v4: uuid4 } = require('uuid');
 const multer = require("multer");
 const upload = multer();
+const session = require('express-session');
 
-app.use(cors());
+const app = express();
+
+
+app.use(cors(
+  {
+    origin: 'http://localhost:3000',
+    credentials: true
+  }
+));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: 'lax',
+  }
+}));
+
+app.use((req, res, next) => {
+  console.log('Session:', req.session);
+  next();
+});
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for easy to test with Postman
 const port = 3300;
 
+
 const supabaseUrl = 'https://gemuxctpjqhmwbtxrpul.supabase.co'
 const supabaseKey = process.env.ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
+
 
 // ===========================user management===========================
 
@@ -125,20 +154,20 @@ app.post("/verify-OTP", async (req, res) => {
 // });
 
 app.post("/add-account-info", async (req, res) => {
-    const { role,user, email } = req.body;
-  
-      if (role === 'customer' || role == 'owner'){
-        const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email}]).select("*");
-        if (error) {
-            res.status(400).json(error);
-        }
-        else {
-          res.status(200).json({message: "insert custommer data to table user successfully", data: data})
-        }
-      } else {
-        res.status(400).json({message: 'wrong role'});
-      }
-  });
+  const { role, user, email } = req.body;
+
+  if (role === 'customer' || role == 'owner') {
+    const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email }]).select("*");
+    if (error) {
+      res.status(400).json(error);
+    }
+    else {
+      res.status(200).json({ message: "insert custommer data to table user successfully", data: data })
+    }
+  } else {
+    res.status(400).json({ message: 'wrong role' });
+  }
+});
 
 app.post("/add-restaurant-info", async (req, res) => {
   const { role, user
@@ -181,20 +210,55 @@ app.post("/login", async (req, res) => {
 
   if (error) {
     return res.status(401).json({ message: 'Login failed', error: error.message });
-  } else {
-    return res.status(200).json({ message: 'Login successful', user: data.user, session: data.session });
   }
+
+  const user = data.user;
+  req.session.userId = user.id;
+  console.log("User ID from session:", req.session.userId); // ตรวจสอบค่า userId
+  return res.status(200).json({
+    message: 'Login successful',
+    session: req.session,
+    user: {
+      id: user.id,
+      email: user.email,
+    }
+  });
 });
+
 
 app.post("/logout", async (req, res) => {
-  const { data, error } = await supabase.auth.signOut()
-
-  if (error) {
-    return res.status(400).json({ message: 'Logout failed', error: error.message });
+  console.log('Session before logout:', req.session); 
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        console.error('Error destroying session:', err);
+        return res.status(500).json({ message: 'Error logging out' });
+      }
+      res.clearCookie('connect.sid', { path: '/', sameSite: 'lax' }); 
+      console.log('Session after logout:', req.session); 
+      return res.status(200).json({ message: 'Logout successful' });
+    });
   } else {
-    return res.status(200).json({ message: 'Logout successful', user: data.user, session: data.session });
+    return res.status(400).json({ message: 'No active session' });
   }
 });
+
+
+app.get("/user", async (req, res) => {
+  console.log("User ID from session:", req.session.userId);
+
+  if (!req.session.userId) {
+    return res.status(401).json({ msg: "User not authenticated" });
+  }
+  const { data, error } = await supabase.from("User").select("*").eq("Id", req.session.userId);
+  if (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+
+  return res.status(200).json(data);
+});
+
+
 
 // ===========================home===========================
 
@@ -284,7 +348,7 @@ app.put("/editprofile", upload.single("file"), async (req, res) => {
         return res.status(200).json({ Picdata });
       }
     } else {
-      return res.status(200).json({ RestaurantData,Picdata});
+      return res.status(200).json({ RestaurantData, Picdata });
     }
   } catch (error) {
     res.status(500).json({ msg: error.message });
