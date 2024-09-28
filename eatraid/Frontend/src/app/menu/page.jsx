@@ -6,8 +6,11 @@ import image1 from '../../../public/imgTest4.png';
 import image2 from '../../../public/imgTest5.png';
 import image3 from '../../../public/imgTest6.png';
 import MenuCard from '../../../components/MenuCard';
-import { BsChevronDoubleLeft, BsChevronDoubleRight, BsPlus,BsXSquareFill } from "react-icons/bs";
+import { BsChevronDoubleLeft, BsCheckLg,BsChevronDoubleRight, BsPlus,BsXSquareFill,BsUpload,BsImages,BsExclamationCircle,BsCheckCircleFill,BsFillTrashFill   } from "react-icons/bs";
 
+
+const categoryDropdown = ["fastfood", "dessert", "noodle", "Cooked to order", "beverages", "Japanese", "Western", "Chinese",
+    "Local food", "Quick meal", "healthy"]
 // ข้อมูลปลอม
 // backend นำข้อมูลมาใส่ตรง ตัวแปร data เลยนะ
 const data = [
@@ -42,8 +45,8 @@ export default function menu() {
     const [error, setError] = useState('');
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false); // State สำหรับสถานะการรอ
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [isAddSuccess, setIsAddSuccess] = useState(false); // State สำหรับการแก้ไขสำเร็จ
+    const [isAddSuccess, setIsAddSuccess] = useState(false); // State สำหรับการเพิ่มสำเร็จ
+    const [formData, setFormData] = useState({ foodname: '', type: '',price:'' });
 
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
     const handleFileChange = (e) => {
@@ -58,6 +61,11 @@ export default function menu() {
             // ใช้ตัวแปร Imagefile คือ ตัวแปรเก็บค่ารูป อันนี้คือต้องดึงเข้าไปเก็บที่ back
         }
     }
+
+    
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
     // เป็นฟังก์ชันตรวจสอบ input ของ User ตรงส่วน Price ของ frontend ไม่มีอะไรต้องดึง
     const handleInput = (event) => {
@@ -86,7 +94,7 @@ export default function menu() {
                 <form className={styles.modal_content} onSubmit={(e) => handleConfirm(e, id)}>
                     <div className={styles.container}>
                         <BsXSquareFill className={styles.close} onClick={() => setIsAlertModalOpen(false)} />
-                        <h2 className={styles.headerTextModal}>Edit Menu</h2>
+                        <h2 className={styles.headerTextModal}>Add Menu</h2>
                         {isLoading ? (
                             <p className={styles.wait}>Please wait...</p> // แสดงข้อความ "Please wait" เมื่ออยู่ระหว่างการโหลด
                         ) : isAddSuccess ? (
@@ -99,8 +107,7 @@ export default function menu() {
                                 <div className={styles.EditContentImg}>
                                     <div className={styles.Menudisplay}>
                                         {/* Input สำหรับรูปภาพเมนู */}
-                                        {MenuImage ? (
-                                            
+                                        {MenuImage ? ( 
                                             <Image
                                                 className={styles.MenuPicContainer}
                                                 alt="Menu"
@@ -132,8 +139,9 @@ export default function menu() {
                                         <span className={styles.titleStyles}>Name :</span>
                                         <input
                                             type="text"
-                                            value={Name}
-                                            onChange={(e) => setEditName(e.target.value)}
+                                            name="foodname"
+                                            value={formData.foodname}
+                                            onChange={handleChange}
                                             placeholder="Food name"
                                             className={styles.inputContainer}
                                             required />
@@ -144,8 +152,9 @@ export default function menu() {
                                         <span className={styles.titleStyles}>Type :</span>
                                         <select
                                             className={styles.optionTextStyles}
-                                            value={editType}
-                                            onChange={(e) => setEditType(e.target.value)}
+                                            name="type"
+                                            value={formData.type}
+                                            onChange={handleChange}
                                             required
                                         >
                                             {categoryDropdown.map((category, index) => (
@@ -163,10 +172,11 @@ export default function menu() {
                                                 type="text"
                                                 placeholder="Price"
                                                 className={styles.inputContainer}
-                                                value={editPrice}
+                                                name="price"
+                                                value={formData.price}
                                                 onChange={(e) => {
                                                     setEditPrice(e.target.value);
-                                                    handleInput(e);
+                                                    handleChange(e);
                                                 }}
                                                 required
                                             />
@@ -178,7 +188,7 @@ export default function menu() {
                             </div>
                         )}
                         <div className={styles.clearfix}>
-                            {!isSuccess && !isEditSuccess && (
+                            {!isAddSuccess && (
                                 <>
                                     <button
                                         type="submit"
