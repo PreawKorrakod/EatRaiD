@@ -8,6 +8,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
 import imgTest from '../../Frontend/public/TestProfile.jpg';
+import { useRouter } from "next/navigation";
 
 
 export default function Navbar() {
@@ -20,6 +21,7 @@ export default function Navbar() {
 
     const profileRef = useRef(null);
     const profileImage = '';
+    const router = useRouter();
 
 
 
@@ -70,6 +72,7 @@ export default function Navbar() {
 
             if (response.status === 200) {
                 console.log('Logout successful');
+                router.push('/');
                 setIsUserLoggedIn(false);
                 setIsEmailUser('');
                 setIsOwnerLoggedIn(false);
