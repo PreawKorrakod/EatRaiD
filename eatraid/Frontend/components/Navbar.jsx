@@ -7,8 +7,6 @@ import { BsPersonCircle, BsBoxArrowRight, BsExclamationCircle, BsXSquareFill } f
 import Image from 'next/image';
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
-import { useRouter } from "next/navigation";
-import { getCookies } from 'cookies-next';
 import imgTest from '../../Frontend/public/TestProfile.jpg';
 
 
@@ -75,6 +73,7 @@ export default function Navbar() {
                 setIsUserLoggedIn(false);
                 setIsEmailUser('');
                 setIsOwnerLoggedIn(false);
+                setIsLogoutModalOpen(false);
             } else {
                 console.error('Logout failed');
             }
