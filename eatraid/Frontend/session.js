@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 const { createClient } = require("@supabase/supabase-js");
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseUrl = 'https://gemuxctpjqhmwbtxrpul.supabase.co'
 const supabaseKey = process.env.NEXT_PUBLIC_ANON_KEY
 export const supabase = createClient(supabaseUrl,supabaseKey);
 
