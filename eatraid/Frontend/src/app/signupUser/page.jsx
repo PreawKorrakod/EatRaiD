@@ -18,7 +18,6 @@ export default function SignupUser() {
     const [error, setError] = useState('');
     const minPasswordLength = 6;
 
-    const role = 'customer';
 
     const router = useRouter();
 
@@ -49,29 +48,24 @@ export default function SignupUser() {
 
         if (isPasswordMatching) {
             try {
-                axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
-                    email: email,
-                    password: password
+                // axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
+                //     email: email,
+                //     password: password
 
-                }).then(async res => {
-                    // const id = res.data.data.user.id;
-                    // const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
-                    // console.log("signup successful navigate to verify", userID);
-                    // console.log("signup successful navigate to login(?)", res.data.data.user.id, response)
-                    // router.push(`/verify/${JSON.stringify(userID)}`);
-                    const id = res.data.data.user.id;
-                    const userID = id; // เก็บเฉพาะ userID
-                    const role = 'customer'; // กำหนด role
-                    router.push({
-                        pathname: `/verify/${userID}`, // ส่งเฉพาะ userID ใน URL
-                        query: { email, role } // ส่ง email และ role ใน query หรือ state
-                    });
+                // }).then(async res => {
+                const id = '6963b19d-683c-471f-ae2f-6d76acecbac7';
+                const role = 'customer'
+                const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
+                console.log("signup successful navigate to verify", userID);
+                sessionStorage.setItem('userID', JSON.stringify(userID));
+                router.push('/verify');
+                // });
 
-                }).catch(error => {
-                    console.error('Error during signup:', error.response.data.message);
-                    setError('This email already register. Please try again.');
-                    // alert('This email already register. Please try again.')
-                });
+                //     }).catch(error => {
+                //         console.error('Error during signup:', error.response.data.message);
+                //         setError('This email already register. Please try again.');
+                //         // alert('This email already register. Please try again.')
+                //     });
             } catch (error) {
                 console.log("Error:", error);
             }
