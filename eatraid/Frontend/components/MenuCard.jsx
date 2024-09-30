@@ -10,8 +10,12 @@ const categoryDropdown = ["fastfood", "dessert", "noodle", "Cooked to order", "b
     "Local food", "Quick meal", "healthy"]
 
 const MenuCard = (props) => {
+
     // เป็นค่า props ที่ดึงมา
-    const { id, img, name, type, price, ownerID } = props;
+    const { id, img, name, type, price, ownerID, User } = props;
+
+    // User เป็นตัวแปร User สร้างมาเก็บค่าของ User/owner ที่กำลัง  เพื่อเอามาเทียบว่าเท่ากับ ownerID ไหม ถ้าไม่ตรงจะไม่ขึ้นปุ่ม edit
+
 
     const [selectedMenu, setSelectedMenu] = useState({ name, type, price, img });// เก็บค่าข้อมูลเดิมก่อนที่จะทำการ Edit ใหม่
 
@@ -26,7 +30,7 @@ const MenuCard = (props) => {
     const [isEditSuccess, setIsEditSuccess] = useState(false); // State สำหรับการแก้ไขสำเร็จ
     const [MenuImage, setMenuImage] = useState(img || '');
     const [Imagefile, setImagefile] = useState('');
-    const [inputValue, setInputValue] = useState('');
+    // const [inputValue, setInputValue] = useState('');
     const [error, setError] = useState('');
 
     // เมื่อทำการกดปุ่ม edit บน Card ไม่ใข่การ Confirm เป็นการดึงค่าเดิมออกมาใส่ใน popup modal ที่ทำการแก้ไข 
@@ -46,7 +50,7 @@ const MenuCard = (props) => {
             };
             reader.readAsDataURL(file);
             setImagefile(file);
-            // ใช้ตัวแปร Imagefile คือ ตัวแปรเก็บค่ารูป อันนี้คือต้องดึงเข้าไปเก็บที่ back
+            // ใช้ตัวแปร file คือ ตัวแปรเก็บค่ารูป อันนี้คือต้องดึงเข้าไปเก็บที่ back
         }
     };
 
@@ -78,7 +82,7 @@ const MenuCard = (props) => {
     // ฟังก์ชัน edit ตรงนี้นะ
     const handleConfirm = async (event, cardId) => {
         if (event && typeof event.preventDefault === 'function') {
-            event.preventDefault(); 
+            event.preventDefault();
         }
 
         setSelectedMenu({ name: editName, price: editPrice, type: editType });
@@ -124,7 +128,7 @@ const MenuCard = (props) => {
         }
 
         // กรองเฉพาะตัวเลข และลบเลข 0 นำหน้า (ยกเว้น 0 ตัวเดียว)
-        setInputValue(value.replace(/[^0-9]/g, ''));
+        event.target.value = value.replace(/[^0-9]/g, '');
     };
 
     // Modal edit popup
@@ -201,6 +205,7 @@ const MenuCard = (props) => {
                                             onChange={(e) => setEditType(e.target.value)}
                                             required
                                         >
+                                            <option value="" disabled>Select Type</option>
                                             {categoryDropdown.map((category, index) => (
                                                 <option key={index} value={category}>
                                                     {category}
@@ -282,12 +287,13 @@ const MenuCard = (props) => {
                                 </div>
                             </div>
                             <div className={styles.menu_buttom}>
-                                <button
+                                {/* check ว่ามีปุ่ม edit ไหม */}
+                                {User === ownerID ? <button
                                     className={styles.Editfood}
                                     onClick={() => handleEditClick()} >
                                     <BsPencilSquare className={styles.Editicon} />
                                     Edit
-                                </button>
+                                </button> : ''}
                             </div>
                         </div>
                     </div>

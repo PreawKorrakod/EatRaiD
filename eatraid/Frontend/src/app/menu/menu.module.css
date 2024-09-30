@@ -167,14 +167,6 @@
     position: relative;
 }
 
-.Alerticon{
-    width: 12vw;
-    height: 12vh;
-    margin-top: 0.5rem;
-    margin-bottom: 0.2rem;
-    color: #f44336; 
-}
-
 .h2{
     margin-bottom: 1rem;
 }
@@ -215,13 +207,8 @@
     text-align: center;
 }
 
-.Checkicon{
-    width: 20px;
-    height: 20px;
-    margin-right: 0.2rem;
-}
 
-.Removebtn {
+.Canclebtn {
     margin-top: 1rem;
     background-color: #f44336; 
     color: white;
@@ -237,20 +224,14 @@
     text-align: center;
 }
 
-.Deleteicon{
-    width: 20px;
-    height: 20px;
-    margin-right: 0.2rem;
-}
 
-.Confirmbtn:hover, .Removebtn:hover {
+.Confirmbtn:hover, .Canclebtn:hover {
     opacity: 0.8;
 }
 
 .clearfix{
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    padding-bottom: 1rem;
+    margin-top: 2rem;
+    padding-bottom: 0.2rem;
     justify-content: center;
     display: flex;
     flex-direction: row;
@@ -275,7 +256,7 @@
 }
 
 .Confirmbtn:disabled,
-.Removebtn:disabled {
+.Canclebtn:disabled {
     background-color: #d3d3d3;
     color: #a9a9a9;
     cursor: not-allowed; 
@@ -290,14 +271,14 @@
     color: #27ca2d;
 }
 
-.EditContentContainer{
+.ContentContainer{
     display: flex;
     flex-direction: row;
     width: 40vw;
     height: 30vh;
 }
 
-.EditContentImg{
+.ContentImg{
     width: 40%;
 }
 
@@ -305,6 +286,7 @@
     width: 100%;
     height: 100%;
     background-color: #F9E8D9;
+    /* background-color: #27ca2d; */
     overflow: hidden;
     border-radius: 10px;
     margin-bottom: 0.5rem;
@@ -423,11 +405,29 @@
 .error{
     color: #f44336; 
     font-size: small;
-    margin-left: 0.5rem;
+    margin-left: 1rem;
     align-items: center;
     display: flex;
     justify-content: center;
     flex-direction: row;
+}
+
+.errorImg{
+    color: #f44336; 
+    font-size: small;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 7vh;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    background-color: #f09b9584;
+    border-radius: 5px;
+    border: 2px solid #f44336;
+
 }
 
 .Imageicon{
