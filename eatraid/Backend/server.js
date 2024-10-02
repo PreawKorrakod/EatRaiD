@@ -6,6 +6,7 @@ const { v4: uuid4 } = require('uuid');
 const multer = require("multer");
 const upload = multer();
 const session = require('express-session');
+const e = require('express');
 
 const app = express();
 
@@ -177,15 +178,15 @@ app.post("/login", async (req, res) => {
 
 
 app.post("/logout", async (req, res) => {
-  console.log('Session before logout:', req.session); 
+  console.log('Session before logout:', req.session);
   if (req.session) {
     req.session.destroy(err => {
       if (err) {
         console.error('Error destroying session:', err);
         return res.status(500).json({ message: 'Error logging out' });
       }
-      res.clearCookie('connect.sid', { path: '/', sameSite: 'lax' }); 
-      console.log('Session after logout:', req.session); 
+      res.clearCookie('connect.sid', { path: '/', sameSite: 'lax' });
+      console.log('Session after logout:', req.session);
       return res.status(200).json({ message: 'Logout successful' });
     });
   } else {
@@ -394,19 +395,21 @@ app.get("/showinfo", async (req, res) => {
 
 // ===========================favorite===========================
 
-app.post("/get-fav-list", async (req, res) => {
-  const { user } = req.body;
-
-  const { data: fav, error } = await supabase
-    .from('Favorite')
-    .select('Id,Restaurant(*)')
-    .eq('UserId', user)
-    .order('Id', { ascending: true })
-
-  if (error) {
-    res.status(400).json(error);
+app.get("/get-fav-list", async (req, res) => {
+  console.log("User ID from session:", req.session.userId);
+  if (!req.session.userId) {
+    return res.status(401).json({ msg: "User not authenticated" });
   } else {
-    res.status(200).json(fav)
+    const { data: fav, error } = await supabase
+      .from('Favorite')
+      .select('RestaurantId,Restaurant(Name),User(ProfilePic)')
+      .eq('UserId', req.session.userId)
+      .order('Id', { ascending: true })
+    if (error) {
+      res.status(400).json(error);
+    } else {
+      res.status(200).json(fav)
+    }
   }
 });
 
@@ -428,19 +431,22 @@ app.post("/add-to-fav", async (req, res) => {
 });
 
 app.delete("/delete-fav", async (req, res) => {
-  const { user, restaurant } = req.body;
+  const { restaurant } = req.body;
+  if (!req.session.userId) {
+    return res.status(401).json({ msg: "User not authenticated" });
+  } else {
+    const { error } = await supabase
+      .from('Favorite')
+      .delete()
+      .eq('UserId', req.session.userId)
+      .eq('RestaurantId', restaurant);
 
-  const { error } = await supabase
-    .from('Favorite')
-    .delete()
-    .eq('UserId', user)
-    .eq('RestaurantId', restaurant);
-
-  if (error) {
-    res.status(400).json(error);
-  }
-  else {
-    res.status(200).json({ 'msg': "delete user's fav restaurant successfully" });
+    if (error) {
+      res.status(400).json(error);
+    }
+    else {
+      res.status(200).json({ 'msg': "delete user's fav restaurant successfully" });
+    }
   }
 });
 
