@@ -56,7 +56,7 @@ export default function menu() {
     const Userfromsession = 'ABCD'
     const OwnerID = 'ABCD'
 
-    
+
     // จำลองการดึงค่า User ออกมาจาก Session เพื่อนำมาเช็คว่าควรมีปุ่ม edit ไหม ว่าตรงกับ OwnerID หรือเปล่า
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
     const handleFileChange = (e) => {
@@ -151,7 +151,7 @@ export default function menu() {
                         </div>
                     ) : errorMessage ? (
                         <div className={styles.successContainer}>
-                            <p className={styles.errorText}><BsExclamationCircle className={styles.iconExc} />{errorMessage}</p>
+                            <p className={styles.errorText}><BsExclamationCircle className={styles.iconExc2} />{errorMessage}</p>
                         </div>
                     ) : (
                         // ส่วนของการ input ข้อมูลใหม่ของ User ที่ต้องการ edit 

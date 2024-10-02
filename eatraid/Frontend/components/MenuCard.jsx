@@ -159,7 +159,7 @@ const MenuCard = (props) => {
                             </div>
                         ) : errorMessage ? (
                             <div className={styles.successContainer}>
-                                <p className={styles.errorText}><BsExclamationCircle className={styles.iconExc} />{errorMessage}</p>
+                                <p className={styles.errorText}><BsExclamationCircle className={styles.iconExc2} />{errorMessage}</p>
                             </div>
                         ) : (
                             // ส่วนของการ input ข้อมูลใหม่ของ User ที่ต้องการ edit 
@@ -278,7 +278,7 @@ const MenuCard = (props) => {
 
 
 
-    
+
     return (
         <>
             <div className={styles.content}>
