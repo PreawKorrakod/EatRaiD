@@ -55,16 +55,22 @@ app.post("/signup", async (req, res) => {
     password: password
   })
   if (error) {
-    res.status(500).json({ message: error.message });
+    const errorMessage = error.toString(); 
+    if (errorMessage.includes("cannot be used as it is not authorized")) {
+      res.status(400).json({ message: "This email already register. Please try again." });
+    } else {
+      res.status(500).json({ message: errorMessage });
+    }
+    // res.status(500).json({ message: error.message });
   }
   else {
-    let { data: User, error } = await supabase
+    let { data: User, error: find_error} = await supabase
       .from('User')
       .select("*")
       .eq('Email', email)
 
-    if (error) {
-      res.status(500).json({ message: error.message });
+    if (error) {        
+      res.status(200).json({ message: find_error });
     }
     else {
       if (User.length != 0) {
@@ -77,96 +83,40 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/verify-OTP", async (req, res) => {
-  const { email, OTP } = req.body;
+  const { email, OTP, role, user } = req.body;
   const { data: { session }, error } = await supabase.auth.verifyOtp({
     email: email,
     token: OTP,
     type: 'email',
   });
   if (error) {
-    res.status(400).json(error);
+    res.status(400).json({error: error, msg: 'Wrong OTP. Try again.'});
   } else {
-    res.status(200).json({ "insert data to table user": session })
+    if (role == 'customer' || role == 'owner') {
+      const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email }]).select("*");
+      if (error) {
+        res.status(400).json({error, message: "Error while insert user data"});
+      }
+      else {
+        res.status(200).json({ message: "insert custommer data to table user successfully", data: data })
+      }
+    } else {
+      res.status(400).json({ message: 'wrong role' });
+    }
   }
 });
 
-// app.post("/add-account-info", async (req, res) => {
-// // app.post("/add-account-info", upload.single("file"), async (req, res) => {
-//   // const file = req.file;
-//   const { role,user
-//     ,Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay
-//    } = req.body;
-
-
-//   // if (file == undefined) {
-//   //   res.status(400).json("no profile picture");
-//   // } else {
-//       // const newminetype = "image/jpeg";
-//       // const newfilename = `profile_${user}.jpeg`;
-//       // const { data: updateData, error: uploadError } = await supabase.storage
-//       //   .from("Profile")
-//       //   .upload(newfilename, file.buffer, {
-//       //     contentType: newminetype,
-//       //     upsert: true,
-//       //   });
-
-//       // if (uploadError) throw uploadError;
-//       // else {
-//       //   const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
-
-//         if (role === 'customer' || role == 'owner'){
-//           const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null}]).select("*");
-//           if (error) {
-//               res.status(400).json(error);
-//           }
-//           else {
-
-//             if (role === 'owner'){
-//               const { restaurant_data, error } = await supabase.from('Restaurant').insert([{ RestaurantId: user, Name: Name, 
-//                 Contact: Contact, OpenTime: OpenTime, CloseTime: CloseTime, 
-//                 Location: Location, Latitude: Latitude, Longitude: Longitude, 
-//                 BusinessDay: BusinessDay 
-//               }]).select("*")
-//               if (error) {
-//                   const { error: delete_error } = await supabase 
-//                     .from('User')
-//                     .delete()
-//                     .eq('Id', user) ;
-//                     if (delete_error) {
-//                       res.status(400).json({
-//                         "error to delete data": delete_error, 
-//                         "error to insert reataurant data data": error});
-//                     } else {
-//                       res.status(400).json({"error in inserting data so delete error data": error})
-//                     }
-//               }
-//               else {
-//                 res.status(200).json({"insert restaurant data to table user successfully": data})
-//               }
-//             } else {
-//               res.status(200).json({"insert custommer data to table user successfully": data})
-//             }
-//           }
-//         } else {
-//           res.status(400).json('wrong role');
-//         }
-//       // }
-//   // }
-// });
-
-app.post("/add-account-info", async (req, res) => {
-  const { role, user, email } = req.body;
-
-  if (role === 'customer' || role == 'owner') {
-    const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email }]).select("*");
-    if (error) {
-      res.status(400).json(error);
-    }
-    else {
-      res.status(200).json({ message: "insert custommer data to table user successfully", data: data })
-    }
+app.post("/resend-OTP", async (req, res) => {
+  const { email } = req.body;
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email: email,
+  })
+  
+  if (error) {
+    res.status(400).json({error: error, msg: 'Error while resend OTP'});
   } else {
-    res.status(400).json({ message: 'wrong role' });
+      res.status(200).json({ message: 'Resend OTP successfully' });
   }
 });
 

@@ -28,7 +28,7 @@ export default function Verify() {
     
 
   if (!userID) return <div>Loading...</div>; // แสดง Loading หากยังไม่มีข้อมูล
-  console.log('userID',userID)
+  // console.log('userID',userID)
   const handleInputChange = (e, index) => {
     const value = e.target.value;
     if (/^[0-9]*$/.test(value) && value.length <= 1) {
@@ -58,7 +58,9 @@ export default function Verify() {
       try {
         axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
           email: userID.email, 
-          OTP: otp.join("")
+          OTP: otp.join(""),
+          role: userID.role, 
+          user: userID.id
 
           }).then(async res => {
               console.log("Navigate based on role", res)
@@ -81,7 +83,19 @@ export default function Verify() {
   };
 
   const handleResend = () => {
-    // Implement resend logic here
+    try {
+      axios.post(`${NEXT_PUBLIC_BASE_API_URL}/resend-OTP`, {
+        email: userID.email,
+
+        }).then(async res => {
+            console.log('resend OTP successfully')
+        }).catch(error => {
+            console.error('Error during resend OTP:', error);
+            setError("Can't resend OTP. Try again.");
+        });
+      } catch (error) {
+        console.log(error);
+    }
   };
 
   return (
