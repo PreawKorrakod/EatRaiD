@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { BsHeartFill, BsXSquareFill, BsFillTrashFill } from "react-icons/bs";
 import { MdHeartBroken } from "react-icons/md";
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
 
 const RestaurantCard = (props) => {
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
@@ -15,13 +17,14 @@ const RestaurantCard = (props) => {
     const handleRemove = async () => {
         setIsLoading(true); // เริ่มโหลด เป็นการตั้งสถานะโหลดของ frontend 
         try {
-            // เวลา 2 วินาทีจำลองการลบ ตรงนี้เอาออกได้เลย สามารถเขียนโค้ด Backend ลบข้อมูลตรงนี้ได้
-            await new Promise((resolve) => 
-            setTimeout(resolve, 2000)); 
-            // เป็นการจำลอง
-
             // อันนี้จำเป็นต้องวางไว้หลังจากลบข้อมูล โค้ดของ Backend ถ้าเกิดลบสำเร็จ
-            setIsLoading(false); // หยุดโหลด
+            const response = await axios.delete(`${NEXT_PUBLIC_BASE_API_URL}/delete-fav`, {
+                data: { restaurant: id },
+                withCredentials: true,
+            });
+            console.log(response.data.msg);
+            setIsLoading(false);
+            props.onRemove(props.id);
             setIsSuccess(true); // ลบสำเร็จ
             setTimeout(() => {
                 setIsAlertModalOpen(false);
@@ -86,11 +89,11 @@ const RestaurantCard = (props) => {
             <div className={styles.content}>
                 <div className={styles.main_content}>
                     <div className={styles.singleDest}>
-                      
-                            <div className={styles.dastImage}>
-                                <Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover} width={300} height={200} />
-                            </div>
-                
+
+                        <div className={styles.dastImage}>
+                            <Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover} width={300} height={200} />
+                        </div>
+
                         <div className={styles.dastFooter}>
                             <Link href={`/ProfileRestaurant/${id}`} className={styles.link_blog2}>
                                 <div className={styles.destText}>
