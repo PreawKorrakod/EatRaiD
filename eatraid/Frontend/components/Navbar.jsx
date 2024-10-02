@@ -72,11 +72,11 @@ export default function Navbar() {
 
             if (response.status === 200) {
                 console.log('Logout successful');
-                router.push('/');
+                setIsLogoutModalOpen(false);
                 setIsUserLoggedIn(false);
                 setIsEmailUser('');
                 setIsOwnerLoggedIn(false);
-                setIsLogoutModalOpen(false);
+               
             } else {
                 console.error('Logout failed');
             }
