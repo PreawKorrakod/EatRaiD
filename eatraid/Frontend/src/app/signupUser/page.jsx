@@ -39,6 +39,16 @@ export default function SignupUser() {
     const handleSubmit = async (e) => {
         e.preventDefault(); // ป้องกันไม่ให้ page reload
 
+        if (!isPasswordValid) {
+            setError('Please complete the password and confirm password.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match. Please check and try again.');
+            return;
+        }
+
         // ตรวจสอบว่าฟอร์มมีข้อมูลครบหรือไม่
         if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
@@ -53,7 +63,7 @@ export default function SignupUser() {
                     password: password
 
                 }).then(async res => {
-                    console.log("signup successful navigate to verify page",  res.data.data.user.id)
+                    console.log("signup successful navigate to verify page", res.data.data.user.id)
                     const id = res.data.data.user.id;
                     const role = 'customer'
                     const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
@@ -111,20 +121,22 @@ export default function SignupUser() {
                                     required
                                 />
                                 <div className={styles.passwordCheckIcon}>
-                                    {isPasswordValid ? (
-                                        <>
-                                            <BsCheck className={styles.checkIcon} />
-                                            <p className={styles.passwordSuccess}>
-                                                Password is valid.
-                                            </p>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <BsX className={styles.xIcon} />
-                                            <p className={styles.passwordWarning}>
-                                                {minPasswordLength - password.length} more character(s) needed.
-                                            </p>
-                                        </>
+                                    {password.length > 0 && (
+                                        isPasswordValid ? (
+                                            <>
+                                                <BsCheck className={styles.checkIcon} />
+                                                <p className={styles.passwordSuccess}>
+                                                    Password is valid.
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <BsX className={styles.xIcon} />
+                                                <p className={styles.passwordWarning}>
+                                                    {minPasswordLength - password.length} more character(s) needed.
+                                                </p>
+                                            </>
+                                        )
                                     )}
                                 </div>
                             </div>

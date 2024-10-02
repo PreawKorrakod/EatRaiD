@@ -56,7 +56,7 @@ export default function signupRestaurant() {
         setError('');
 
 
-        try {
+        if (isPasswordMatching) {
             try {
                 axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
                     email: email,
@@ -78,9 +78,7 @@ export default function signupRestaurant() {
                 console.log("Error:", error);
             }
 
-        } catch (error) {
-            console.log("Error:", error);
-        }
+        } 
     };
 
     return (
