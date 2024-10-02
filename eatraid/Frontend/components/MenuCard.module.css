@@ -1,0 +1,495 @@
+.content{
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: black;
+    justify-content: center;
+}
+
+.main_content{
+    display: flex;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.singleDest {
+    min-height: 30vh; 
+    max-height: 30vh; 
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    border-radius: 1rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.45);
+    margin: 1.2rem;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+}
+
+.singleDest:hover {
+    transform: translateY(-0.5vh);
+    box-shadow:0 2px 8px 2px rgba(178, 178, 178, 0.74);
+    transition: .3s ease;
+}
+
+
+
+
+.dastImage{
+    width: 45%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.Imagecover{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+
+.dastSide{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 55%;
+    height: 100%;
+    padding-left: 1rem;
+}
+
+.foodname{
+    width: 100%;
+    padding-bottom: 10%;
+}
+
+.textinfo{
+    width: 100%;
+    padding-bottom: 10%;
+}
+
+.foodname h5{
+    font-size: larger;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+
+
+.typefood{
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    /* background-color:#F7B787; */
+    border-radius: 15px;
+    font-size: small;
+    color: #FFFFFF;
+    width: fit-content;
+    background-color: #527853;
+}
+
+.pricefood{
+    margin-top: 10%;
+
+}
+
+.menu_buttom{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.Editfood{
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: #ffff;
+    background-color: #EE7214;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+
+.Editfood:hover{
+    cursor: pointer;
+    transition: .3s ease;
+    scale: 1.1;
+    box-shadow:0 2px 8px 2px rgba(178, 178, 178, 0.74); ;
+}
+
+
+.Editicon{
+    color: #ffff;
+    margin-right: 0.5vh;
+}
+
+.modal {
+    justify-content: center;
+    align-items: center;
+    display: block; 
+    position: fixed;
+    align-items: center;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.4); 
+}
+
+.modal_content {
+    background-color: #fefefe;
+    margin: 6% auto;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    padding-top: 1vw;
+    padding-bottom: 1vw;
+    border: 1px solid #f4f4f4;
+    width: max-content; 
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.Alerticon{
+    width: 12vw;
+    height: 12vh;
+    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
+    color: #f44336; 
+}
+
+.h2{
+    margin-bottom: 1rem;
+}
+
+.close {
+    position: absolute; 
+    top: 0.2rem;
+    right: 0.2rem; 
+    color: rgba(0, 0, 0, 0.475);
+    font-size: 25px;
+    font-weight: bold;
+    border-top-right-radius: 0.5rem;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.Confirmbtn{
+    margin-top: 1rem;
+    margin-right: 2rem;
+    background-color: #527853; 
+    color: #f4f4f4;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    border-radius: 5px;
+    margin-right: 5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.Checkicon{
+    width: 20px;
+    height: 20px;
+    margin-right: 0.2rem;
+}
+
+.Removebtn {
+    margin-top: 1rem;
+    background-color: #f44336; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width: auto;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.Deleteicon{
+    width: 20px;
+    height: 20px;
+    margin-right: 0.2rem;
+}
+
+.Confirmbtn:hover, .Removebtn:hover {
+    opacity: 0.8;
+}
+
+.clearfix{
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center ;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.headerTextModal{
+    margin-bottom: 2rem;
+    color: #527853;
+}
+
+.Confirmbtn:disabled,
+.Removebtn:disabled {
+    background-color: #d3d3d3;
+    color: #a9a9a9;
+    cursor: not-allowed; 
+    opacity: 0.6; 
+}
+
+.SuccessfulText{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #27ca2d;
+}
+
+.errorText{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* color: #27ca2d; */
+    color: #f44336;
+}
+
+.EditContentContainer{
+    display: flex;
+    flex-direction: row;
+    width: 40vw;
+    height: 30vh;
+}
+
+.EditContentImg{
+    width: 40%;
+}
+
+.Menudisplay{
+    width: 100%;
+    height: 100%;
+    background-color: #F9E8D9;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.MenuPicContainer{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    color: #b4a599;
+}
+
+.Uploadbtn{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: #EE7214;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    font-size: medium;
+}
+
+.Uploadbtn:hover{
+    scale: 1.1;
+}
+
+.iconUpload{
+    margin-right: 0.5rem;
+}
+
+.EditContentInput{
+    margin-left: 1rem;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start; 
+}
+
+.inputNamefood{
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.inputContainer{
+    width: 100%;
+    border: none;
+    border-radius: 0.2rem;
+    background-color: #EEE2D8;
+    font-size: 18px;
+    padding-left: 0.5rem;
+    padding-right: 0.2rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.5rem;
+    /* box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.502); */
+    font-size: 16px;
+    color: #0b0b0bd9;
+}
+
+.inputContainer::placeholder {
+    color: #888888a7;
+}
+
+.inputContainer:focus {
+    outline: none; 
+    box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.42);; 
+}
+
+.titleStyles{
+    width: max-content;
+    min-width: max-content;
+    margin-right: 0.5rem;
+}
+
+.optionTextStyles{
+    width: 100%;
+    border: none;
+    border-radius: 0.2rem;
+    background-color: #EEE2D8;
+    font-size: 18px;
+    padding-left: 0.5rem;
+    padding-right: 0.2rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.5rem;
+    /* box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.502); */
+    font-size: 16px;
+    color: #0b0b0bd9;
+}
+
+.optionTextStyles:focus {
+    outline: none; 
+    box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.42);; 
+}
+
+.optionTextStyles::placeholder {
+    color: #888888a7;
+}
+
+.PriceBox{
+    width: 20%;
+    margin-right: 0.5rem;
+}
+
+.error{
+    color: #f44336; 
+    font-size: small;
+    margin-left: 0.5rem;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.Imageicon{
+    width: 20%;
+    height: 20%;
+}
+
+.iconExc{
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem; 
+}
+
+.wait {
+    padding-top: 1rem;
+    animation: waitAnimation 1s infinite; 
+}
+
+@keyframes waitAnimation {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5; 
+    }
+    100% {
+        opacity: 1; 
+    }
+}
+
+.CheckSuccess{
+    width: 10vw;
+    height: 10vh;
+    margin-bottom: 2vh;
+    margin-top: 2vh;
+}
+
+.iconExc2{
+    width: 10vw;
+    height: 10vh;
+    margin-bottom: 2vh;
+    margin-top: 2vh;
+}
+
+.successContainer{
+    width: 20vw;
+    height: 10vh;
+    justify-content: center;
+    align-items: center;
+}
