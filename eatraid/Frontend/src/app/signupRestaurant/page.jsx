@@ -5,7 +5,7 @@ import Topbar from "../../../components/Topbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle  } from "react-icons/bs";
+import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle } from "react-icons/bs";
 import { redirect, useRouter } from "next/navigation";
 
 import axios from 'axios';
@@ -38,10 +38,23 @@ export default function signupRestaurant() {
     const handleSubmit = async (e) => {
         e.preventDefault(); // ป้องกันไม่ให้ page reload
 
+        if (!isPasswordValid ) {
+            setError('Please complete the password and confirm password.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match. Please check and try again.');
+            return;
+        }
+    
         // ตรวจสอบว่าฟอร์มมีข้อมูลครบหรือไม่
         if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
         }
+    
+        setError('');
+
 
         try {
             try {
@@ -105,20 +118,22 @@ export default function signupRestaurant() {
                                     required
                                 />
                                 <div className={styles.passwordCheckIcon}>
-                                    {isPasswordValid ? (
-                                        <>
-                                            <BsCheck className={styles.checkIcon} />
-                                            <p className={styles.passwordSuccess}>
-                                                Password is valid.
-                                            </p>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <BsX className={styles.xIcon} />
-                                            <p className={styles.passwordWarning}>
-                                                {minPasswordLength - password.length} more character(s) needed.
-                                            </p>
-                                        </>
+                                    {password.length > 0 && (
+                                        isPasswordValid ? (
+                                            <>
+                                                <BsCheck className={styles.checkIcon} />
+                                                <p className={styles.passwordSuccess}>
+                                                    Password is valid.
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <BsX className={styles.xIcon} />
+                                                <p className={styles.passwordWarning}>
+                                                    {minPasswordLength - password.length} more character(s) needed.
+                                                </p>
+                                            </>
+                                        )
                                     )}
                                 </div>
                             </div>
