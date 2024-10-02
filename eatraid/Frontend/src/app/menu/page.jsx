@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import styles from './menu.module.css';
 import Navbar from '../../../components/Navbar';
 import Image from 'next/image';
@@ -8,39 +8,43 @@ import image2 from '../../../public/imgTest5.png';
 import image3 from '../../../public/imgTest6.png';
 import MenuCard from '../../../components/MenuCard';
 import { BsChevronDoubleLeft, BsCheckLg, BsChevronDoubleRight, BsPlus, BsXSquareFill, BsUpload, BsImages, BsExclamationCircle, BsCheckCircleFill, BsFillTrashFill } from "react-icons/bs";
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+
 
 // ข้อมูลปลอม
 const categoryDropdown = ["fastfood", "dessert", "noodle", "Cooked to order", "beverages", "Japanese", "Western", "Chinese",
     "Local food", "Quick meal", "healthy"]
 // ข้อมูลปลอม
 // backend ตอนดึงข้อมูลให้ดึงเข้ามาใส่ในตัวแปร data data ตอนนี้เป็นแค่ข้อมูลจำลอง 
-const data = [
-    { id: 1, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 2, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 3, name: 'food C', image: image3, type: 'Western', price: '50' },
-    { id: 4, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 5, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 6, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 7, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 8, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 9, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 10, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 11, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 12, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 13, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 14, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 15, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 16, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 17, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 18, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 19, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 20, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 21, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 22, name: 'food B', image: image2, type: 'noodle', price: '50' }
-];
+// const data = [
+    // { id: 1, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 2, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    // { id: 3, name: 'food C', image: image3, type: 'Western', price: '50' },
+    // { id: 4, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 5, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    // { id: 6, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 7, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    // { id: 8, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 9, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    // { id: 10, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 11, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    // { id: 12, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 13, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    // { id: 14, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 15, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 16, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    // { id: 17, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 18, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    // { id: 19, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 20, name: 'food B', image: image2, type: 'noodle', price: '50' },
+    // { id: 21, name: 'food A', image: image1, type: 'noodle', price: '50' },
+    // { id: 22, name: 'food B', image: image2, type: 'noodle', price: '50' }
+// ];
 
 export default function menu() {
-
+    const [userId, setUserId] = useState(null);
+    const [data, setData] = useState([]);
     const [MenuImage, setMenuImage] = useState('');
     const [Imagefile, setImagefile] = useState('');
     const [error, setError] = useState('');
@@ -52,10 +56,45 @@ export default function menu() {
     const categoryDropdownWithDefault = ["Select type", ...categoryDropdown];
     const [errorMessage, setErrorMessage] = useState('');
 
-    // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
-    const Userfromsession = 'ABCD'
-    const OwnerID = 'ABCD'
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
+                    withCredentials: true, 
+                });
+                console.log(user.data[0].Id);
+                setUserId(user.data[0].Id);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchData();
+    }, []); // Empty array means this runs once on component mount
 
+    useEffect(() => {
+        const fetchMenuData = async () => {
+            if (!userId) return; // Wait until userId is set before fetching the menu data
+            try {
+                // Fetch menu data using the userId
+                const menu = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/showmenu`, {
+                    params: { RestaurantId: userId },
+                    withCredentials: true,
+                });
+                console.log(menu.data);
+                setData(menu.data);
+            } catch (error) {
+                console.error('Error fetching menu data:', error);
+                setError('Failed to fetch menu data.');
+            }
+        };
+        fetchMenuData();
+    }, [userId]); 
+
+
+
+    // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
+    const Userfromsession = userId
+    const OwnerID = 'ABC'
 
     // จำลองการดึงค่า User ออกมาจาก Session เพื่อนำมาเช็คว่าควรมีปุ่ม edit ไหม ว่าตรงกับ OwnerID หรือเปล่า
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
@@ -343,14 +382,16 @@ export default function menu() {
                             {/* backend มาเชื่อมให้ใส่ข้อมูล restaurant.(ชื่อคอลัมน์) นะ */}
                             {currentItems.map((restaurant) => (
                                 <MenuCard
-                                    key={restaurant.id}
-                                    id={restaurant.id}
-                                    img={restaurant.image}
-                                    name={restaurant.name}
-                                    type={restaurant.type}
-                                    price={restaurant.price}
-                                    owner={OwnerID}
-                                    user={Userfromsession}
+                                    key={restaurant.Id}
+                                    id={restaurant.RestaurantId}
+                                    img={restaurant.MenuPic
+                                        ? restaurant.MenuPic
+                                        : "https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/Profile/profile_b251e172-fdee-46d3-a507-8e47d6cf9dac.jpeg"}
+                                    name={restaurant.NameFood}
+                                    type={restaurant.Type.Name}
+                                    price={restaurant.Price}
+                                    // owner={OwnerID}
+                                    // user={Userfromsession}
                                 />
                             ))}
                         </div>

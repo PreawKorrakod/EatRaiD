@@ -4,6 +4,7 @@ import styles from './MenuCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BsPencilSquare, BsXSquareFill, BsFillTrashFill, BsCheckLg, BsUpload, BsImages, BsExclamationCircle, BsCheckCircleFill } from "react-icons/bs";
+import axios from 'axios';
 
 
 
@@ -31,7 +32,7 @@ const MenuCard = (props) => {
     const [Imagefile, setImagefile] = useState('');
     const [error, setError] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    
+
 
     // เมื่อทำการกดปุ่ม edit บน Card เป็นการดึงค่าเดิมออกมาใส่ใน popup modal ที่ทำการแก้ไข 
     const handleEditClick = () => {
@@ -86,6 +87,13 @@ const MenuCard = (props) => {
         if (event && typeof event.preventDefault === 'function') {
             event.preventDefault();
         }
+        await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editmenu`, {
+            id: cardId,
+            name: editName,
+            price: editPrice,
+            type: editType,
+            img: Imagefile
+        }, { withCredentials: true })
 
         setSelectedMenu({ name: editName, price: editPrice, type: editType });
         console.log("Name:", editName);
@@ -135,7 +143,7 @@ const MenuCard = (props) => {
         // กรองเฉพาะตัวเลข และลบเลข 0 นำหน้า (ยกเว้น 0 ตัวเดียว)
         event.target.value = value.replace(/[^0-9]/g, '');
     };
-    
+
 
 
 
@@ -285,7 +293,12 @@ const MenuCard = (props) => {
                 <div className={styles.main_content}>
                     <div className={styles.singleDest}>
                         <div className={styles.dastImage}>
-                            <Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover} />
+                            <Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover}
+                                // layout="fill"
+                                // objectFit="cover"
+                                width={500} // Set your desired width
+                                height={950} 
+                            />
                         </div>
                         <div className={styles.dastSide}>
                             <div className={styles.textinfo}>
