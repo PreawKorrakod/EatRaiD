@@ -239,7 +239,12 @@ export default function menu() {
                             </div>
                         </div>
                     )}
-                    {errorImg && <p className={styles.errorImg}>< BsExclamationCircle className={styles.iconExc} />{errorImg}</p>} {/* แสดงคำเตือนหากมี */}
+                    {errorImg ? (
+                        <p className={styles.errorImg}>
+                            <BsExclamationCircle className={styles.iconExc} />
+                            {errorImg}
+                        </p>
+                    ) : null}
                     <div className={styles.clearfix}>
                         {!isAddSuccess && (
                             <>
