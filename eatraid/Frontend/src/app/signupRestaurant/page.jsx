@@ -15,6 +15,7 @@ export default function signupRestaurant() {
     const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState('');
     const minPasswordLength = 6;
 
     const router = useRouter();
@@ -44,23 +45,22 @@ export default function signupRestaurant() {
 
         try {
             try {
-                // axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
-                //     email: email,
-                //     password: password
+                axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
+                    email: email,
+                    password: password
 
-                // }).then(async res => {
-                const id = '6963b19d-683c-471f-ae2f-6d76acecbac7';
-                const role = 'owner'
-                const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
-                console.log("signup successful navigate to verify", userID);
-                sessionStorage.setItem('userID', JSON.stringify(userID));
-                router.push('/verify');
-                // });
-                //     }).catch(error => {
-                //         console.error('Error during signup:', error.response.data.message);
-                //         setError('This email already register. Please try again.');
-                //         // alert('This email already register. Please try again.')
-                //     });
+                }).then(async res => {
+                    const id = res.data.data.user.id;
+                    const role = 'owner'
+                    const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
+                    console.log("signup successful navigate to verify", userID);
+                    sessionStorage.setItem('userID', JSON.stringify(userID));
+                    router.push('/verify');
+                }).catch(error => {
+                    console.error('Error during signup:', error.response.data.message);
+                    setError('This email already register. Please try again.');
+                    // alert('This email already register. Please try again.')
+                });
             } catch (error) {
                 console.log("Error:", error);
             }
