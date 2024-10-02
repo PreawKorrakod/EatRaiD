@@ -5,7 +5,7 @@ import Topbar from "../../../components/Topbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
+import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle  } from "react-icons/bs";
 import { redirect, useRouter } from "next/navigation";
 
 import axios from 'axios';
@@ -148,6 +148,12 @@ export default function signupRestaurant() {
                                         )
                                     )}
                                 </div>
+                                {error && (
+                                    <div className={styles.ErrorChecking}>
+                                        <BsExclamationCircle className={styles.Alerticon} />
+                                        {error}
+                                    </div>
+                                )}
                             </div>
                             <div className={styles.Loginbtn_wrapper}>
                                 <button

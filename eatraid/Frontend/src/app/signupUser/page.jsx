@@ -57,7 +57,7 @@ export default function SignupUser() {
                     const id = res.data.data.user.id;
                     const role = 'customer'
                     const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
-                    // console.log("signup successful navigate to verify", userID);
+                    console.log("signup successful navigate to verify", userID);
                     sessionStorage.setItem('userID', JSON.stringify(userID));
                     router.push('/verify');
 
