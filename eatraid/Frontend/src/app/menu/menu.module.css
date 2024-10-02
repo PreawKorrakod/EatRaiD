@@ -465,6 +465,23 @@
     margin-top: 2vh;
 }
 
+.iconExc{
+    width: 10vw;
+    height: 10vh;
+    margin-bottom: 2vh;
+    margin-top: 2vh;
+}
+
+.errorText{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* color: #27ca2d; */
+    color: #f44336;
+}
+
+
 .successContainer{
     width: 20vw;
     height: 10vh;

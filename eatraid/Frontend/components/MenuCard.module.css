@@ -255,7 +255,7 @@
 
 .clearfix{
     margin-top: 1.5rem;
-    padding-top: 1.5rem;
+    padding-top: 1rem;
     padding-bottom: 1rem;
     justify-content: center;
     display: flex;
@@ -294,6 +294,15 @@
     justify-content: center;
     align-items: center;
     color: #27ca2d;
+}
+
+.errorText{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* color: #27ca2d; */
+    color: #f44336;
 }
 
 .EditContentContainer{
@@ -392,8 +401,8 @@
 }
 
 .titleStyles{
-    width: fit-content;
-    min-width: fit-content;
+    width: max-content;
+    min-width: max-content;
     margin-right: 0.5rem;
 }
 
@@ -465,6 +474,13 @@
 }
 
 .CheckSuccess{
+    width: 10vw;
+    height: 10vh;
+    margin-bottom: 2vh;
+    margin-top: 2vh;
+}
+
+.iconExc{
     width: 10vw;
     height: 10vh;
     margin-bottom: 2vh;

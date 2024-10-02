@@ -50,9 +50,14 @@ export default function menu() {
     const [isAddSuccess, setIsAddSuccess] = useState(false); // State สำหรับการเพิ่มสำเร็จ
     const [formData, setFormData] = useState({ foodname: '', type: '', price: '' });
     const categoryDropdownWithDefault = ["Select type", ...categoryDropdown];
+    const [errorMessage, setErrorMessage] = useState('');
 
+    // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
+    const Userfromsession = 'ABCD'
+    const OwnerID = 'ABCD'
+
+    
     // จำลองการดึงค่า User ออกมาจาก Session เพื่อนำมาเช็คว่าควรมีปุ่ม edit ไหม ว่าตรงกับ OwnerID หรือเปล่า
-    const Userfromsession = ''
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
     const handleFileChange = (e) => {
         const file = e.target.files[0]; // รับค่ารูปภาพเที่เข้ามาใหม่
@@ -68,9 +73,12 @@ export default function menu() {
     }
 
 
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+
 
     // เป็นฟังก์ชันตรวจสอบ input ของ User ตรงส่วน Price ของ frontend ไม่มีอะไรต้องดึง
     const handleInput = (event) => {
@@ -92,6 +100,8 @@ export default function menu() {
         event.target.value = value.replace(/[^0-9]/g, '');
     };
 
+
+
     // Backend เชื่อม Addmenu ตรงนี้
     // ในการรับข้อมูลให้ใช้ formData.foodname formData.type formData.price ได้เลย
     const handleConfirm = async (e) => {
@@ -111,13 +121,16 @@ export default function menu() {
             await new Promise((resolve) => setTimeout(resolve, 2000)); // รอ 2 วินาทีเพื่อจำลองการโหลด
 
             setIsAddSuccess(true); // ตั้งค่าสถานะสำเร็จ
+            setIsLoading(false); // หยุดโหลด
+            setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
             console.log('Add menu name : ', formData.foodname)
             console.log('Add menu type : ', formData.type)
             console.log('Add menu price : ', formData.price)
             setIsAlertModalOpen(false)
 
         } catch (err) {
-            setError('Failed to add menu. Please try again.');
+            setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
+            setErrorMessage('Failed to add menu. Please try again.');
         }
     };
 
@@ -135,6 +148,10 @@ export default function menu() {
                     ) : isAddSuccess ? (
                         <div className={styles.successContainer}>
                             <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />Successfully edited!</p>
+                        </div>
+                    ) : errorMessage ? (
+                        <div className={styles.successContainer}>
+                            <p className={styles.errorText}><BsExclamationCircle className={styles.iconExc} />{errorMessage}</p>
                         </div>
                     ) : (
                         // ส่วนของการ input ข้อมูลใหม่ของ User ที่ต้องการ edit 
@@ -251,7 +268,7 @@ export default function menu() {
         );
     };
 
-    const OwnerID = 'ABCD'
+
     // Pagination settings
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 9; // Number of items to show per page
@@ -328,7 +345,7 @@ export default function menu() {
                                     type={restaurant.type}
                                     price={restaurant.price}
                                     owner={OwnerID}
-                                    user ={Userfromsession}
+                                    user={Userfromsession}
                                 />
                             ))}
                         </div>
