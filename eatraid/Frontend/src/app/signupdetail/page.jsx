@@ -109,7 +109,7 @@ export default function SignupDetail({ params }) {
     console.log("Selected business days:", selectedBusinessDays);
     console.log("Location:", location);
 
-    router.push("/info");
+    router.push("/verify");
   };
 
   return (
