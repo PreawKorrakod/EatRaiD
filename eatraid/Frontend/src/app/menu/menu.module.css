@@ -293,17 +293,6 @@
     position: relative;
 }
 
-.MenuPicContainer{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    overflow: hidden;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    color: #b4a599;
-}
 
 .Uploadbtn{
     margin-top: 1rem;
@@ -488,3 +477,28 @@
     justify-content: center;
     align-items: center;
 }
+/* 
+.MenuPicContainer{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    color: #b4a599;
+} */
+
+.MenuPicContainer{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    color: #b4a599;
+}
+

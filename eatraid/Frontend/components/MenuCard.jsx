@@ -156,7 +156,10 @@ const MenuCard = (props) => {
                         <BsXSquareFill className={styles.close} onClick={() => setIsAlertModalOpen(false)} />
                         <h2 className={styles.headerTextModal}>Edit Menu</h2>
                         {isLoading ? (
-                            <p className={styles.wait}>Please wait...</p>
+                            <div className={styles.loadingContainer}>
+                                <div className={styles.loading}></div>
+                                <p className={styles.wait}>Please wait...</p>
+                            </div>
                         ) : isSuccess ? (
                             <div className={styles.successContainer}>
                                 <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />Successfully deleted!</p>
@@ -293,12 +296,14 @@ const MenuCard = (props) => {
                 <div className={styles.main_content}>
                     <div className={styles.singleDest}>
                         <div className={styles.dastImage}>
-                            <Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover}
-                                // layout="fill"
-                                // objectFit="cover"
-                                width={500} // Set your desired width
-                                height={950} 
-                            />
+                            {MenuImage ?
+                                (<Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover}
+                                    width={500}
+                                    height={950}
+                                />) : (
+                                    <div className={styles.MenuPicContainer}><BsImages className={styles.Imageicon} />No Picture</div>
+                                )
+                            }
                         </div>
                         <div className={styles.dastSide}>
                             <div className={styles.textinfo}>

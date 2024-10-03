@@ -84,7 +84,8 @@ export default function menu() {
                 setData(menu.data);
             } catch (error) {
                 console.error('Error fetching menu data:', error);
-                setError('Failed to fetch menu data.');
+                // setError('Failed to fetch menu data.');
+                alert('Failed to fetch menu data.');
             }
         };
         fetchMenuData();
@@ -183,7 +184,9 @@ export default function menu() {
                     <BsXSquareFill className={styles.close} onClick={() => setIsAlertModalOpen(false)} />
                     <h2 className={styles.headerTextModal}>Add Menu</h2>
                     {isLoading ? (
-                        <p className={styles.wait}>Please wait...</p> // แสดงข้อความ "Please wait" เมื่ออยู่ระหว่างการโหลด
+                        <div>
+                            <p className={styles.wait}>loading...</p>
+                        </div>
                     ) : isAddSuccess ? (
                         <div className={styles.successContainer}>
                             <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />Successfully edited!</p>
@@ -384,9 +387,11 @@ export default function menu() {
                                 <MenuCard
                                     key={restaurant.Id}
                                     id={restaurant.RestaurantId}
-                                    img={restaurant.MenuPic
-                                        ? restaurant.MenuPic
-                                        : "https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/Profile/profile_b251e172-fdee-46d3-a507-8e47d6cf9dac.jpeg"}
+                                    // img={restaurant.MenuPic
+                                    //     ? restaurant.MenuPic
+                                    //     : "https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/Profile/profile_b251e172-fdee-46d3-a507-8e47d6cf9dac.jpeg"
+                                    //     }
+                                    img={restaurant.MenuPic ? restaurant.MenuPic : null} 
                                     name={restaurant.NameFood}
                                     type={restaurant.Type.Name}
                                     price={restaurant.Price}
