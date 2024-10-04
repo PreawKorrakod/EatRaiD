@@ -374,7 +374,7 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
 
 app.get("/showmenu", async (req, res) => {
   const { RestaurantId } = req.query;
-  const { data, error } = await supabase.from("Menu").select('Id,RestaurantId,NameFood,Type(Name),Price,MenuPic').eq("RestaurantId", RestaurantId);
+  const { data, error } = await supabase.from("Menu").select('Id,RestaurantId,NameFood,Type(Name),TypeID,Price,MenuPic').eq("RestaurantId", RestaurantId);
   if (error) {
     res.status(500).json({ error });
   } else {

@@ -31,24 +31,29 @@ const MenuCard = (props) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [category, setCategory] = useState('');
 
+
     useEffect(() => {
         const fetchcategoryData = async () => {
             try {
                 const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
                 console.log(category.data);
                 setCategory(category);
+
+                // ค้นหา id ของ category ที่ตรงกับ typeName (type) และตั้งเป็นค่าเริ่มต้นของ editType
+                const matchedCategory = category.data.find(item => item.Name === type);
+                if (matchedCategory) {
+                    setEditType(matchedCategory.Id); // ตั้งค่า editType เป็น id ที่ตรงกับ typeName
+                }
             } catch (error) {
-                console.error('Error fetching user data:', error);
+                console.error('Error fetching category data:', error);
             }
         };
         fetchcategoryData();
-    }, []);
+    }, [type]);
 
 
 
-    // เมื่อทำการกดปุ่ม edit บน Card เป็นการดึงค่าเดิมออกมาใส่ใน popup modal ที่ทำการแก้ไข 
     const handleEditClick = () => {
-        // เป็นตัวแปรที่รับมาจาก props ไม่ต้องแก้อะไร เป็นค่าเดิม
         setSelectedMenu({ name, type, price, img });
         setIsAlertModalOpen(true);
     };
