@@ -29,7 +29,7 @@ export default function menu() {
             try {
                 const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
                 console.log(category.data);
-                setCategory(category);
+                setCategory(category.data);
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
@@ -51,7 +51,7 @@ export default function menu() {
             }
         };
         fetchData();
-    }, []); 
+    }, []);
 
     useEffect(() => {
         const fetchMenuData = async () => {
@@ -71,7 +71,7 @@ export default function menu() {
             }
         };
         fetchMenuData();
-    }, [userId]);
+    }, [data, userId]);
 
     // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
     const Userfromsession = userId
@@ -83,25 +83,9 @@ export default function menu() {
         setData((prevData) => prevData.filter((restaurant) => restaurant.Id !== restaurantId));
     };
 
-    const handleMenuUpdate = (id, newName, newType, newPrice, newMenuPic) => {
-        setData((prevData) => 
-            prevData.map((restaurant) => {
-                if ( restaurant.Id === id) {
-                    // Update the restaurant's menu
-                    return {
-                        ...restaurant,
-                        NameFood: newName, 
-                        Type: { Name: newType },
-                        Price: newPrice, 
-                        MenuPic: newMenuPic
-                    };
-                }
-                return restaurant;
-            })
-        );
-    };
     
-    
+
+
     // จำลองการดึงค่า User ออกมาจาก Session เพื่อนำมาเช็คว่าควรมีปุ่ม edit ไหม ว่าตรงกับ OwnerID หรือเปล่า
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
     const handleFileChange = (e) => {
@@ -184,7 +168,7 @@ export default function menu() {
     const renderAlertModal = () => {
         return (
             <div id="logoutModal" className={styles.modal}>
-                <form className={styles.modal_content} onSubmit={(e) => handleConfirm(e, id)}>
+                <form className={styles.modal_content} onSubmit={handleConfirm}>
 
                     <BsXSquareFill className={styles.close} onClick={() => setIsAlertModalOpen(false)} />
                     <h2 className={styles.headerTextModal}>Add Menu</h2>
@@ -280,7 +264,7 @@ export default function menu() {
                                             }}
                                             required
                                         />
-                                    </div> 
+                                    </div>
                                     ฿
                                 </div>
                                 {error && <p className={styles.error}>< BsExclamationCircle className={styles.iconExc} />{error}</p>} {/* แสดงคำเตือนหากมี */}
@@ -399,7 +383,6 @@ export default function menu() {
                                     price={restaurant.Price}
                                     owner={OwnerID}
                                     user={Userfromsession}
-                                    onMenuUpdate={handleMenuUpdate}
                                     onRemove={handleDelete}
                                 />
                             ))}

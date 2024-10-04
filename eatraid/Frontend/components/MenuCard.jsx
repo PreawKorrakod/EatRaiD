@@ -134,8 +134,6 @@ const MenuCard = (props) => {
 
             setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
 
-            props.onMenuUpdate(props.id, props.name, props.type, props.price, props.img);
-
             await new Promise((resolve) => setTimeout(resolve, 2000)); // จำลองการรอ 2 วินาที
 
             setIsLoading(false); // หยุดโหลด
