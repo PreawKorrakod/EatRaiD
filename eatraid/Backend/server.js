@@ -382,6 +382,26 @@ app.get("/showmenu", async (req, res) => {
   }
 });
 
+app.delete("/deletemenu", async (req, res) => {
+  const { id } = req.body;
+  if (!req.session.userId) {
+    return res.status(401).json({ msg: "User not authenticated" });
+  } else {
+    const { error } = await supabase
+      .from('Menu')
+      .delete()
+      .eq('RestaurantId', req.session.userId)
+      .eq('Id', id);
+
+    if (error) {
+      res.status(400).json(error);
+    }
+    else {
+      res.status(200).json({ 'msg': "delete menu successfully" });
+    }
+  }
+});
+
 app.get("/category", async (req, res) => {
   const { data, error } = await supabase.from("Type").select("*");
   if (error) {

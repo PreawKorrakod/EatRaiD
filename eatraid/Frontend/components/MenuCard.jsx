@@ -78,10 +78,15 @@ const MenuCard = (props) => {
     const handleRemove = async (cardId) => {
         setIsLoading(true); // เริ่มโหลด เป็นการตั้งสถานะโหลดของ frontend 
         try {
-            await
-                // เวลา 2 วินาทีจำลองการลบ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
-                new Promise((resolve) =>
-                    setTimeout(resolve, 2000));
+            await axios.delete(`${NEXT_PUBLIC_BASE_API_URL}/deletemenu`, {
+                data: { id: cardId },
+                withCredentials: true
+            })
+
+            props.onRemove(props.id);
+            // เวลา 2 วินาทีจำลองการลบ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
+            new Promise((resolve) =>
+                setTimeout(resolve, 2000));
             console.log(`ลบภาพที่ id ${cardId}`);
 
             // อันนี้จำเป็นต้องวางไว้หลังจากลบข้อมูล โค้ดของ Backend ถ้าเกิดลบสำเร็จ
@@ -115,7 +120,7 @@ const MenuCard = (props) => {
         try {
             const res = await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editmenu`, formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data', 
+                    'Content-Type': 'multipart/form-data',
                 },
                 withCredentials: true,
             });
@@ -129,8 +134,8 @@ const MenuCard = (props) => {
 
             setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
 
-            props.onMenuUpdate(props.id,props.name, props.type, props.price, props.img);
-            
+            props.onMenuUpdate(props.id, props.name, props.type, props.price, props.img);
+
             await new Promise((resolve) => setTimeout(resolve, 2000)); // จำลองการรอ 2 วินาที
 
             setIsLoading(false); // หยุดโหลด

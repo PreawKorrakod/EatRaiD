@@ -79,6 +79,10 @@ export default function menu() {
     console.log('User ID : ', Userfromsession)
     console.log('Owner ID : ', OwnerID)
 
+    const handleDelete = (restaurantId) => {
+        setData((prevData) => prevData.filter((restaurant) => restaurant.Id !== restaurantId));
+    };
+
     const handleMenuUpdate = (id, newName, newType, newPrice, newMenuPic) => {
         setData((prevData) => 
             prevData.map((restaurant) =>
@@ -393,6 +397,7 @@ export default function menu() {
                                     owner={OwnerID}
                                     user={Userfromsession}
                                     onMenuUpdate={handleMenuUpdate}
+                                    onRemove={handleDelete}
                                 />
                             ))}
                         </div>
