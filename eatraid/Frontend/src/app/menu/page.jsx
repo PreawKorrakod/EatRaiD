@@ -94,7 +94,9 @@ export default function menu() {
 
     // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
     const Userfromsession = userId
-    const OwnerID = 'ABC'
+    const OwnerID = data[0]?.RestaurantId
+    console.log('User ID : ', Userfromsession)
+    console.log('Owner ID : ', OwnerID)
 
     // จำลองการดึงค่า User ออกมาจาก Session เพื่อนำมาเช็คว่าควรมีปุ่ม edit ไหม ว่าตรงกับ OwnerID หรือเปล่า
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
@@ -383,15 +385,15 @@ export default function menu() {
                             {currentItems.map((restaurant) => (
                                 <MenuCard
                                     key={restaurant.Id}
-                                    id={restaurant.RestaurantId}
+                                    id={restaurant.Id}
                                     img={restaurant.MenuPic
                                         ? restaurant.MenuPic
                                         : "https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/Profile/profile_b251e172-fdee-46d3-a507-8e47d6cf9dac.jpeg"}
                                     name={restaurant.NameFood}
                                     type={restaurant.Type.Name}
                                     price={restaurant.Price}
-                                    // owner={OwnerID}
-                                    // user={Userfromsession}
+                                    owner={OwnerID}
+                                    user={Userfromsession}
                                 />
                             ))}
                         </div>

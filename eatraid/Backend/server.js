@@ -7,6 +7,7 @@ const multer = require("multer");
 const upload = multer();
 const session = require('express-session');
 const e = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -37,7 +38,8 @@ app.use((req, res, next) => {
 
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // for easy to test with Postman
+app.use(express.urlencoded({extended: true}));
+app.use(bodyParser.json());
 const port = 3300;
 
 
@@ -55,7 +57,7 @@ app.post("/signup", async (req, res) => {
     password: password
   })
   if (error) {
-    const errorMessage = error.toString(); 
+    const errorMessage = error.toString();
     if (errorMessage.includes("cannot be used as it is not authorized")) {
       res.status(400).json({ message: "This email already register. Please try again." });
     } else {
@@ -64,12 +66,12 @@ app.post("/signup", async (req, res) => {
     // res.status(500).json({ message: error.message });
   }
   else {
-    let { data: User, error: find_error} = await supabase
+    let { data: User, error: find_error } = await supabase
       .from('User')
       .select("*")
       .eq('Email', email)
 
-    if (error) {        
+    if (error) {
       res.status(200).json({ message: find_error });
     }
     else {
@@ -90,12 +92,12 @@ app.post("/verify-OTP", async (req, res) => {
     type: 'email',
   });
   if (error) {
-    res.status(400).json({error: error, msg: 'Wrong OTP. Try again.'});
+    res.status(400).json({ error: error, msg: 'Wrong OTP. Try again.' });
   } else {
     if (role == 'customer' || role == 'owner') {
       const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email }]).select("*");
       if (error) {
-        res.status(400).json({error, message: "Error while insert user data"});
+        res.status(400).json({ error, message: "Error while insert user data" });
       }
       else {
         res.status(200).json({ message: "insert custommer data to table user successfully", data: data })
@@ -112,11 +114,11 @@ app.post("/resend-OTP", async (req, res) => {
     type: 'signup',
     email: email,
   })
-  
+
   if (error) {
-    res.status(400).json({error: error, msg: 'Error while resend OTP'});
+    res.status(400).json({ error: error, msg: 'Error while resend OTP' });
   } else {
-      res.status(200).json({ message: 'Resend OTP successfully' });
+    res.status(200).json({ message: 'Resend OTP successfully' });
   }
 });
 
@@ -307,13 +309,15 @@ app.post("/addmenu", upload.single("file"), async (req, res) => {
 app.put("/editmenu", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
-    const { Id, TypeID, NameFood, Price } = req.body;
+    const { id, type, name, price } = req.body;
+    console.log(req.body);
     const newminetype = "image/jpeg";
-    const newfilename = `Menu_${Id}_${uuid4()}.jpeg`;
+    const newfilename = `Menu_${id}_${uuid4()}.jpeg`;
+
     const { data: MenuData, error: fetchError } = await supabase
       .from("Menu")
       .select("MenuPic")
-      .eq("Id", Id)
+      .eq("Id", id)
       .single();
 
     if (fetchError) {
@@ -322,18 +326,38 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
     if (!MenuData) {
       throw new Error("Post not found.");
     }
-    const imagePath = MenuData.MenuPic.split('/').pop();
-    await supabase.storage.from("Menu").remove([imagePath]);
-    const { data: updateData, error: uploadError } = await supabase.storage
-      .from("Menu")
-      .upload(newfilename, file.buffer, {
-        contentType: newminetype,
-        upsert: true,
-      });
-    if (uploadError) throw uploadError;
-    else {
-      const MenuPic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
-      const { data, error } = await supabase.from("Menu").update({ TypeID, NameFood, Price, MenuPic }).eq("Id", Id).select("*");
+
+    const oldMenuPic = MenuData.MenuPic;
+    const imagePath = oldMenuPic.split('/').pop();
+
+    if (file) {
+
+      await supabase.storage.from("Menu").remove([imagePath]); 
+
+      const { data: updateData, error: uploadError } = await supabase.storage
+        .from("Menu")
+        .upload(newfilename, file.buffer, {
+          contentType: newminetype,
+          upsert: true,
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const img = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
+
+      const { data, error } = await supabase.from("Menu").update({ TypeID: type, NameFood: name, Price :price, MenuPic: img}).eq("Id", id).select("*");
+
+      if (error) {
+        res.status(500).json({ error });
+      } else {
+        res.status(200).json(data);
+      }
+    } else {
+      const img = oldMenuPic;
+      const { data, error } = await supabase.from("Menu").update({  TypeID: type, NameFood: name, Price :price, MenuPic: img }).eq("Id", id).select("*");
+
       if (error) {
         res.status(500).json({ error });
       } else {

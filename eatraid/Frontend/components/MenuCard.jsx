@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { BsPencilSquare, BsXSquareFill, BsFillTrashFill, BsCheckLg, BsUpload, BsImages, BsExclamationCircle, BsCheckCircleFill } from "react-icons/bs";
 import axios from 'axios';
-
+import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
 
 
 
@@ -15,8 +15,20 @@ const MenuCard = (props) => {
     const { id, img, name, type, price, owner, user } = props;
 
     // ตัวแปร caiegoryDropdown // ตอนดึง type ให้ดึงมาใส่ตัวแปร categoryDropdown
-    const categoryDropdown = ["fastfood", "dessert", "noodle", "Cooked to order", "beverages", "Japanese", "Western", "Chinese",
-        "Local food", "Quick meal", "healthy"]
+    const categoryDropdown = [
+        // { label: "Select type", value: 0 },
+        { label: "fastfood", value: 1 },
+        { label: "dessert", value: 2 },
+        { label: "noodle", value: 3 },
+        { label: "Cooked to order", value: 4 },
+        { label: "beverages", value: 5 },
+        { label: "Japanese", value: 6 },
+        { label: "Western", value: 7 },
+        { label: "Chinese", value: 8 },
+        { label: "Local food", value: 9 },
+        { label: "Quick meal", value: 10 },
+        { label: "healthy", value: 11 }
+    ];
 
     const [selectedMenu, setSelectedMenu] = useState({ name, type, price, img });// เก็บค่าข้อมูลเดิมก่อนที่จะทำการ Edit ใหม่
 
@@ -43,15 +55,17 @@ const MenuCard = (props) => {
 
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
     const handleFileChange = (e) => {
-        const file = e.target.files[0]; // รับค่ารูปภาพที่เข้ามาใหม่
+        const file = e.target.files[0];
         if (file) {
+            setImagefile(file);
+
+            // สร้าง URL สำหรับแสดงตัวอย่างภาพ
             const reader = new FileReader();
             reader.onloadend = () => {
                 setMenuImage(reader.result);
             };
             reader.readAsDataURL(file);
-            setImagefile(file);
-            // ใช้ตัวแปร Imagefile/file คือ ตัวแปรเก็บค่ารูป อันนี้คือต้องดึงเข้าไปเก็บที่ back
+            console.log("Image:", file);
         }
     };
 
@@ -88,17 +102,21 @@ const MenuCard = (props) => {
             event.preventDefault();
         }
         await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editmenu`, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
             id: cardId,
             name: editName,
             price: editPrice,
             type: editType,
-            img: Imagefile
+            img: Imagefile,
         }, { withCredentials: true })
 
-        setSelectedMenu({ name: editName, price: editPrice, type: editType });
+        setSelectedMenu({ name: editName, price: editPrice, type: editType, img: Imagefile });
         console.log("Name:", editName);
         console.log("Price:", editPrice);
         console.log("Type:", editType);
+        console.log("Image:", Imagefile);
 
         setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
         try {
@@ -121,8 +139,6 @@ const MenuCard = (props) => {
             setErrorMessage('Error occurred while editing'); // ตั้งค่าข้อความข้อผิดพลาด
         }
     };
-
-
 
     // เป็นฟังก์ชันตรวจสอบ input ของ User ตรงส่วน Price ของ frontend ไม่มีอะไรต้องดึง
     const handleInput = (event) => {
@@ -227,8 +243,8 @@ const MenuCard = (props) => {
                                         >
                                             <option value="" disabled>Select Type</option>
                                             {categoryDropdown.map((category, index) => (
-                                                <option key={index} value={category}>
-                                                    {category}
+                                                <option key={index} value={category.value}>
+                                                    {category.label}
                                                 </option>
                                             ))}
                                         </select>
@@ -297,7 +313,7 @@ const MenuCard = (props) => {
                                 // layout="fill"
                                 // objectFit="cover"
                                 width={500} // Set your desired width
-                                height={950} 
+                                height={950}
                             />
                         </div>
                         <div className={styles.dastSide}>
