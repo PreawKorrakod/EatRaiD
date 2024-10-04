@@ -357,15 +357,15 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
         res.status(200).json(data);
       }
     } else {
-      return res.status(200).json({ MenuData });
-      // const img = oldMenuPic;
-      // const { data, error } = await supabase.from("Menu").update({  TypeID: type, NameFood: name, Price :price, MenuPic: img }).eq("Id", id).select("*");
+      // return res.status(400).json({ msg: "No file uploaded" });
+      const img = oldMenuPic;
+      const { data, error } = await supabase.from("Menu").update({  TypeID: type, NameFood: name, Price :price, MenuPic: img }).eq("Id", id).select("*");
 
-      // if (error) {
-      //   res.status(500).json({ error });
-      // } else {
-      //   res.status(200).json(data);
-      // }
+      if (error) {
+        res.status(500).json({ error });
+      } else {
+        res.status(200).json(data);
+      }
     }
   } catch (error) {
     res.status(500).json({ msg: error.message });

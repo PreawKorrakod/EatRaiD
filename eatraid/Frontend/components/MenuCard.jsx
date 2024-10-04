@@ -63,16 +63,15 @@ const MenuCard = (props) => {
         const file = e.target.files[0];
         if (file) {
             setImagefile(file);
-
-            // สร้าง URL สำหรับแสดงตัวอย่างภาพ
             const reader = new FileReader();
             reader.onloadend = () => {
                 setMenuImage(reader.result);
             };
             reader.readAsDataURL(file);
-            console.log("Image:", file);
+            console.log("Selected Image File:", file);
         }
     };
+
 
 
     // ฟังก์ชันลบ  backend ตรงนี้นะ
@@ -106,31 +105,34 @@ const MenuCard = (props) => {
         if (event && typeof event.preventDefault === 'function') {
             event.preventDefault();
         }
-        await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editmenu`, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
-            id: cardId,
-            name: editName,
-            price: editPrice,
-            type: editType,
-            img: Imagefile,
-        }, { withCredentials: true })
 
-        setSelectedMenu({ name: editName, price: editPrice, type: editType, img: Imagefile });
-        console.log("Name:", editName);
-        console.log("Price:", editPrice);
-        console.log("Type:", editType);
-        console.log("Image:", Imagefile);
-
-        setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
+        const formData = new FormData();
+        formData.append('file', Imagefile); // 'file' ต้องตรงกับที่ Backend คาดหวัง
+        formData.append('id', cardId);
+        formData.append('name', editName);
+        formData.append('price', editPrice);
+        formData.append('type', editType);
         try {
+            const res = await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editmenu`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data', 
+                },
+                withCredentials: true,
+            });
+            console.log(res.data);
 
-            // เวลา 2 วินาทีจำลองการแก้ไข เมื่อ user กรอกเนื้อหาที่ต้องการแก้ไขครบแล้วกดปุ่มต้องแสดงการรอเวลา+ทำการ edit สำเร็จ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
+            setSelectedMenu({ name: editName, price: editPrice, type: editType, img: res.data[0].MenuPic });
+            console.log("Name:", editName);
+            console.log("Price:", editPrice);
+            console.log("Type:", editType);
+            console.log("Image:", Imagefile);
+
+            setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
+
+            props.onMenuUpdate(props.id,props.name, props.type, props.price, props.img);
+            
             await new Promise((resolve) => setTimeout(resolve, 2000)); // จำลองการรอ 2 วินาที
 
-
-            // อันนี้จำเป็นต้องวางไว้หลังจากลบข้อมูล โค้ดของ Backend ถ้าเกิดลบสำเร็จ
             setIsLoading(false); // หยุดโหลด
             setIsEditSuccess(true); // แก้ไขสำเร็จ
             setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
@@ -142,6 +144,7 @@ const MenuCard = (props) => {
         } catch (error) {
             setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
             setErrorMessage('Error occurred while editing'); // ตั้งค่าข้อความข้อผิดพลาด
+            console.error(error);
         }
     };
 

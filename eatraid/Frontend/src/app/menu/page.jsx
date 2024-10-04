@@ -73,14 +73,28 @@ export default function menu() {
         fetchMenuData();
     }, [userId]);
 
-
-
     // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
     const Userfromsession = userId
     const OwnerID = data[0]?.RestaurantId
     console.log('User ID : ', Userfromsession)
     console.log('Owner ID : ', OwnerID)
 
+    const handleMenuUpdate = (id, newName, newType, newPrice, newMenuPic) => {
+        setData((prevData) => 
+            prevData.map((restaurant) =>
+                restaurant.Id === id
+                    ? { 
+                        ...restaurant, 
+                        NameFood: newName, 
+                        Type: { Name: newType },
+                        Price: newPrice, 
+                        MenuPic: newMenuPic 
+                      }
+                    : restaurant
+            )
+        );
+    };
+    
     // จำลองการดึงค่า User ออกมาจาก Session เพื่อนำมาเช็คว่าควรมีปุ่ม edit ไหม ว่าตรงกับ OwnerID หรือเปล่า
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
     const handleFileChange = (e) => {
@@ -259,7 +273,7 @@ export default function menu() {
                                             }}
                                             required
                                         />
-                                    </div>
+                                    </div> 
                                     ฿
                                 </div>
                                 {error && <p className={styles.error}>< BsExclamationCircle className={styles.iconExc} />{error}</p>} {/* แสดงคำเตือนหากมี */}
@@ -378,6 +392,7 @@ export default function menu() {
                                     price={restaurant.Price}
                                     owner={OwnerID}
                                     user={Userfromsession}
+                                    onMenuUpdate={handleMenuUpdate}
                                 />
                             ))}
                         </div>
