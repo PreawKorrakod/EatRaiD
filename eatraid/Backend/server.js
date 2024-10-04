@@ -309,6 +309,7 @@ app.post("/addmenu", upload.single("file"), async (req, res) => {
 app.put("/editmenu", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
+    console.log(file);
     const { id, type, name, price } = req.body;
     console.log(req.body);
     const newminetype = "image/jpeg";
@@ -329,6 +330,7 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
 
     const oldMenuPic = MenuData.MenuPic;
     const imagePath = oldMenuPic.split('/').pop();
+
 
     if (file) {
 
@@ -355,14 +357,15 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
         res.status(200).json(data);
       }
     } else {
-      const img = oldMenuPic;
-      const { data, error } = await supabase.from("Menu").update({  TypeID: type, NameFood: name, Price :price, MenuPic: img }).eq("Id", id).select("*");
+      return res.status(200).json({ MenuData });
+      // const img = oldMenuPic;
+      // const { data, error } = await supabase.from("Menu").update({  TypeID: type, NameFood: name, Price :price, MenuPic: img }).eq("Id", id).select("*");
 
-      if (error) {
-        res.status(500).json({ error });
-      } else {
-        res.status(200).json(data);
-      }
+      // if (error) {
+      //   res.status(500).json({ error });
+      // } else {
+      //   res.status(200).json(data);
+      // }
     }
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -372,6 +375,15 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
 app.get("/showmenu", async (req, res) => {
   const { RestaurantId } = req.query;
   const { data, error } = await supabase.from("Menu").select('Id,RestaurantId,NameFood,Type(Name),Price,MenuPic').eq("RestaurantId", RestaurantId);
+  if (error) {
+    res.status(500).json({ error });
+  } else {
+    res.status(200).json(data);
+  }
+});
+
+app.get("/category", async (req, res) => {
+  const { data, error } = await supabase.from("Type").select("*");
   if (error) {
     res.status(500).json({ error });
   } else {

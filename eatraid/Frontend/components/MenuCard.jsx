@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import styles from './MenuCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -44,6 +44,21 @@ const MenuCard = (props) => {
     const [Imagefile, setImagefile] = useState('');
     const [error, setError] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [category,setCategory] = useState('');
+
+    useEffect(() => {
+        const fetchcategoryData = async () => {
+            try {
+                const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
+                console.log(category.data);
+                setCategory(category);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchcategoryData();
+    }, []);
+
 
 
     // เมื่อทำการกดปุ่ม edit บน Card เป็นการดึงค่าเดิมออกมาใส่ใน popup modal ที่ทำการแก้ไข 

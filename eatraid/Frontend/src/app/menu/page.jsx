@@ -55,6 +55,21 @@ export default function menu() {
     const [formData, setFormData] = useState({ foodname: '', type: '', price: '' });
     const categoryDropdownWithDefault = ["Select type", ...categoryDropdown];
     const [errorMessage, setErrorMessage] = useState('');
+    const [category,setCategory] = useState('');
+
+    useEffect(() => {
+        const fetchcategoryData = async () => {
+            try {
+                const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
+                console.log(category.data);
+                setCategory(category);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchcategoryData();
+    }, []);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -388,11 +403,7 @@ export default function menu() {
                             {currentItems.map((restaurant) => (
                                 <MenuCard
                                     key={restaurant.Id}
-                                    id={restaurant.RestaurantId}
-                                    // img={restaurant.MenuPic
-                                    //     ? restaurant.MenuPic
-                                    //     : "https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/Profile/profile_b251e172-fdee-46d3-a507-8e47d6cf9dac.jpeg"
-                                    //     }
+                                    id={restaurant.Id}
                                     img={restaurant.MenuPic ? restaurant.MenuPic : null} 
                                     name={restaurant.NameFood}
                                     type={restaurant.Type.Name}
