@@ -1,46 +1,14 @@
 'use client';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './menu.module.css';
 import Navbar from '../../../components/Navbar';
 import Image from 'next/image';
-import image1 from '../../../public/imgTest4.png';
-import image2 from '../../../public/imgTest5.png';
-import image3 from '../../../public/imgTest6.png';
 import MenuCard from '../../../components/MenuCard';
 import { BsChevronDoubleLeft, BsCheckLg, BsChevronDoubleRight, BsPlus, BsXSquareFill, BsUpload, BsImages, BsExclamationCircle, BsCheckCircleFill, BsFillTrashFill } from "react-icons/bs";
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
 
-// ข้อมูลปลอม
-const categoryDropdown = ["fastfood", "dessert", "noodle", "Cooked to order", "beverages", "Japanese", "Western", "Chinese",
-    "Local food", "Quick meal", "healthy"]
-// ข้อมูลปลอม
-// backend ตอนดึงข้อมูลให้ดึงเข้ามาใส่ในตัวแปร data data ตอนนี้เป็นแค่ข้อมูลจำลอง 
-// const data = [
-    // { id: 1, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 2, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    // { id: 3, name: 'food C', image: image3, type: 'Western', price: '50' },
-    // { id: 4, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 5, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    // { id: 6, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 7, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    // { id: 8, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 9, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    // { id: 10, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 11, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    // { id: 12, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 13, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    // { id: 14, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 15, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 16, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    // { id: 17, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 18, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    // { id: 19, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 20, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    // { id: 21, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    // { id: 22, name: 'food B', image: image2, type: 'noodle', price: '50' }
-// ];
 
 export default function menu() {
     const [userId, setUserId] = useState(null);
@@ -53,9 +21,8 @@ export default function menu() {
     const [isLoading, setIsLoading] = useState(false); // State สำหรับสถานะการรอ
     const [isAddSuccess, setIsAddSuccess] = useState(false); // State สำหรับการเพิ่มสำเร็จ
     const [formData, setFormData] = useState({ foodname: '', type: '', price: '' });
-    const categoryDropdownWithDefault = ["Select type", ...categoryDropdown];
     const [errorMessage, setErrorMessage] = useState('');
-    const [category,setCategory] = useState('');
+    const [category, setCategory] = useState('');
 
     useEffect(() => {
         const fetchcategoryData = async () => {
@@ -75,7 +42,7 @@ export default function menu() {
         const fetchData = async () => {
             try {
                 const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
-                    withCredentials: true, 
+                    withCredentials: true,
                 });
                 console.log(user.data[0].Id);
                 setUserId(user.data[0].Id);
@@ -84,7 +51,7 @@ export default function menu() {
             }
         };
         fetchData();
-    }, []); // Empty array means this runs once on component mount
+    }, []); 
 
     useEffect(() => {
         const fetchMenuData = async () => {
@@ -104,7 +71,7 @@ export default function menu() {
             }
         };
         fetchMenuData();
-    }, [userId]); 
+    }, [userId]);
 
 
 
@@ -268,9 +235,10 @@ export default function menu() {
                                         onChange={handleChange}
                                         required
                                     >
-                                        {categoryDropdownWithDefault.map((category, index) => (
-                                            <option key={index} value={category === "Select type" ? "" : category} disabled={category === "Select type"}>
-                                                {category}
+                                        <option value="" disabled>Select Type</option>
+                                        {category.data && category.data.map((items, index) => (
+                                            <option key={index} value={items.Id}>
+                                                {items.Name}
                                             </option>
                                         ))}
                                     </select>
@@ -404,7 +372,7 @@ export default function menu() {
                                 <MenuCard
                                     key={restaurant.Id}
                                     id={restaurant.Id}
-                                    img={restaurant.MenuPic ? restaurant.MenuPic : null} 
+                                    img={restaurant.MenuPic ? restaurant.MenuPic : null}
                                     name={restaurant.NameFood}
                                     type={restaurant.Type.Name}
                                     price={restaurant.Price}

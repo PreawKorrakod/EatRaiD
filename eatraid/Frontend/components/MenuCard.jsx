@@ -1,5 +1,5 @@
 'use client';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './MenuCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,21 +14,6 @@ const MenuCard = (props) => {
     // เป็นค่า props ที่ดึงมา  // User เป็นตัวแปร User สร้างมาเก็บค่าของ User/owner ที่กำลัง  เพื่อเอามาเทียบว่าเท่ากับ owner ไหม ถ้าไม่ตรงจะไม่ขึ้นปุ่ม edit
     const { id, img, name, type, price, owner, user } = props;
 
-    // ตัวแปร caiegoryDropdown // ตอนดึง type ให้ดึงมาใส่ตัวแปร categoryDropdown
-    const categoryDropdown = [
-        // { label: "Select type", value: 0 },
-        { label: "fastfood", value: 1 },
-        { label: "dessert", value: 2 },
-        { label: "noodle", value: 3 },
-        { label: "Cooked to order", value: 4 },
-        { label: "beverages", value: 5 },
-        { label: "Japanese", value: 6 },
-        { label: "Western", value: 7 },
-        { label: "Chinese", value: 8 },
-        { label: "Local food", value: 9 },
-        { label: "Quick meal", value: 10 },
-        { label: "healthy", value: 11 }
-    ];
 
     const [selectedMenu, setSelectedMenu] = useState({ name, type, price, img });// เก็บค่าข้อมูลเดิมก่อนที่จะทำการ Edit ใหม่
 
@@ -44,7 +29,7 @@ const MenuCard = (props) => {
     const [Imagefile, setImagefile] = useState('');
     const [error, setError] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [category,setCategory] = useState('');
+    const [category, setCategory] = useState('');
 
     useEffect(() => {
         const fetchcategoryData = async () => {
@@ -259,10 +244,10 @@ const MenuCard = (props) => {
                                             onChange={(e) => setEditType(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled>Select Type</option>
-                                            {categoryDropdown.map((category, index) => (
-                                                <option key={index} value={category.value}>
-                                                    {category.label}
+                                            <option value="" disabled> Select Type </option>
+                                            {category.data && category.data.map((items, index) => (
+                                                <option key={index} value={items.Id}>
+                                                    {items.Name}
                                                 </option>
                                             ))}
                                         </select>
