@@ -85,19 +85,22 @@ export default function menu() {
 
     const handleMenuUpdate = (id, newName, newType, newPrice, newMenuPic) => {
         setData((prevData) => 
-            prevData.map((restaurant) =>
-                restaurant.Id === id
-                    ? { 
-                        ...restaurant, 
+            prevData.map((restaurant) => {
+                if ( restaurant.Id === id) {
+                    // Update the restaurant's menu
+                    return {
+                        ...restaurant,
                         NameFood: newName, 
                         Type: { Name: newType },
                         Price: newPrice, 
-                        MenuPic: newMenuPic 
-                      }
-                    : restaurant
-            )
+                        MenuPic: newMenuPic
+                    };
+                }
+                return restaurant;
+            })
         );
     };
+    
     
     // จำลองการดึงค่า User ออกมาจาก Session เพื่อนำมาเช็คว่าควรมีปุ่ม edit ไหม ว่าตรงกับ OwnerID หรือเปล่า
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
