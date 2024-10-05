@@ -113,7 +113,7 @@ export default function menu() {
     // จำลองการดึงค่า User ออกมาจาก Session เพื่อนำมาเช็คว่าควรมีปุ่ม edit ไหม ว่าตรงกับ OwnerID หรือเปล่า
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
     const handleFileChange = (e) => {
-        const file = e.target.files[0]; // รับค่ารูปภาพเที่เข้ามาใหม่
+        const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -121,14 +121,16 @@ export default function menu() {
             };
             reader.readAsDataURL(file);
             setImagefile(file);
-            // ใช้ตัวแปร file คือ ตัวแปรเก็บค่ารูป อันนี้คือต้องดึงเข้าไปเก็บที่ back
+            setErrorImg(''); // เคลียร์ error รูปภาพเมื่ออัปโหลดรูปใหม่
         }
-    }
+    };
+
 
 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        setError(''); // เคลียร์ error เมื่อมีการแก้ไขข้อมูล
     };
 
 
@@ -157,6 +159,65 @@ export default function menu() {
 
     // Backend เชื่อม Addmenu ตรงนี้
     // ในการรับข้อมูลให้ใช้ formData.foodname formData.type formData.price ได้เลย
+    // const handleConfirm = async (e) => {
+    //     e.preventDefault();
+
+    //     // ตรวจสอบว่ามีไฟล์รูปภาพหรือไม่
+    //     if (!Imagefile) {
+    //         setErrorImg('Please upload an image.');
+    //         return;
+    //     }
+
+    //     // ตรวจสอบข้อมูลอื่นๆ
+    //     if (!formData.foodname || !formData.type || !formData.price) {
+    //         setError('Please fill in all the fields.');
+    //         return;
+    //     }
+
+    //     // สร้าง FormData สำหรับการอัปโหลดข้อมูลและไฟล์
+    //     const formDataToSend = new FormData();
+    //     formDataToSend.append('file', Imagefile); // ฟิลด์นี้ต้องตรงกับที่เซิร์ฟเวอร์คาดหวัง
+    //     formDataToSend.append('RestaurantId', userId);
+    //     formDataToSend.append('NameFood', formData.foodname);
+    //     formDataToSend.append('TypeID', formData.type);
+    //     formDataToSend.append('Price', formData.price);
+
+    //     const addmenu = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/addmenu`, formDataToSend, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data',
+    //         },
+    //         withCredentials: true,
+    //     });
+
+    //     setData(prevData => [...prevData, {
+    //         Id: addmenu.data.data[0].Id,
+    //         NameFood: formData.foodname,
+    //         Price: formData.price,
+    //         Type: formData.type,
+    //         MenuPic: addmenu.data.data[0].MenuPic
+    //     }]);
+
+
+    //     handleaddMenu();
+
+    //     try {
+    //         // จำลองการส่งข้อมูลไปยัง backend
+    //         await new Promise((resolve) => setTimeout(resolve, 2000)); // รอ 2 วินาทีเพื่อจำลองการโหลด
+
+    //         setIsAddSuccess(true); // ตั้งค่าสถานะสำเร็จ
+    //         setIsLoading(false); // หยุดโหลด
+    //         setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
+    //         console.log('Add menu name : ', formData.foodname)
+    //         console.log('Add menu type : ', formData.type)
+    //         console.log('Add menu price : ', formData.price)
+    //         setIsAlertModalOpen(false)
+
+    //     } catch (err) {
+    //         setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
+    //         setErrorMessage('Failed to add menu. Please try again.');
+    //     }
+    // };
+
     const handleConfirm = async (e) => {
         e.preventDefault();
 
@@ -180,41 +241,48 @@ export default function menu() {
         formDataToSend.append('TypeID', formData.type);
         formDataToSend.append('Price', formData.price);
 
-        const addmenu = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/addmenu`, formDataToSend, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            withCredentials: true,
-        });
-
-        setData(prevData => [...prevData, {
-            Id: addmenu.data.data[0].Id,
-            NameFood: formData.foodname,
-            Price: formData.price,
-            Type: formData.type,
-            MenuPic: addmenu.data.data[0].MenuPic
-        }]);
-
-
-        handleaddMenu();
+        setIsLoading(true); // เริ่มการโหลด
+        setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาดก่อนเริ่ม
 
         try {
-            // จำลองการส่งข้อมูลไปยัง backend
-            await new Promise((resolve) => setTimeout(resolve, 2000)); // รอ 2 วินาทีเพื่อจำลองการโหลด
+            const addmenu = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/addmenu`, formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                withCredentials: true,
+            });
 
-            setIsAddSuccess(true); // ตั้งค่าสถานะสำเร็จ
-            setIsLoading(false); // หยุดโหลด
-            setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
-            console.log('Add menu name : ', formData.foodname)
-            console.log('Add menu type : ', formData.type)
-            console.log('Add menu price : ', formData.price)
+            // อัปเดต data หลังเพิ่มเมนูสำเร็จ
+            setData(prevData => [...prevData, {
+                Id: addmenu.data.data[0].Id,
+                NameFood: formData.foodname,
+                Price: formData.price,
+                Type: formData.type,
+                MenuPic: addmenu.data.data[0].MenuPic
+            }]);
+
+            handleaddMenu();
+
+            setIsAddSuccess(true); // แสดงข้อความเพิ่มเมนูสำเร็จ
+            setIsLoading(false); // หยุดการโหลด
+
+            // รีเซ็ตข้อมูลฟอร์ม
+            setFormData({ foodname: '', type: '', price: '' });
+            setMenuImage('');
+            setImagefile(null);
+
+            setTimeout(() => {
+                setIsAddSuccess(false); // ซ่อนข้อความ "Add success" หลังจากเวลาผ่านไป
+            }, 2000); // ซ่อนข้อความหลังจาก 2 วินาที
+
             setIsAlertModalOpen(false)
 
         } catch (err) {
-            setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
+            setIsLoading(false); // หยุดการโหลดถ้ามีข้อผิดพลาด
             setErrorMessage('Failed to add menu. Please try again.');
         }
     };
+
 
 
 
@@ -232,7 +300,7 @@ export default function menu() {
                         </div>
                     ) : isAddSuccess ? (
                         <div className={styles.successContainer}>
-                            <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />Successfully edited!</p>
+                            <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />Successfully Add!</p>
                         </div>
                     ) : errorMessage ? (
                         <div className={styles.successContainer}>
@@ -337,7 +405,7 @@ export default function menu() {
                                 <button
                                     type="submit"
                                     className={styles.Confirmbtn}
-                                    disabled={isLoading || error || errorImg} // ปิดปุ่มระหว่างการโหลดหรือตอนที่มี error
+                                    disabled={isLoading || error || errorImg} // ปิดปุ่มเฉพาะเมื่อมีการโหลด หรือยังมี error อยู่
                                     onClick={(e) => handleConfirm(e)} // เรียกใช้ฟังก์ชัน Confirm เมื่อกดปุ่ม
                                 >
                                     {isLoading ? "Adding..." : "Add"}
