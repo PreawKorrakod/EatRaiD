@@ -11,6 +11,9 @@ import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa6";
 import Image from "next/image";
 
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+
 const categoryDropdown = ["Thai", "Japanese"]; //from backend
 const time_hr = Array.from({ length: 24 }, (_, i) =>
   String(i).padStart(2, "0")

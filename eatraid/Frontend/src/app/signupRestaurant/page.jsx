@@ -69,7 +69,7 @@ export default function signupRestaurant() {
                     sessionStorage.setItem('userData', JSON.stringify(userData));
                     router.push('/signupdetail');
                 }).catch(error => {
-                    console.error('Error during signup:', error.response.data.message);
+                    console.error('Error during signup:', error);
                     setError('This email already register. Please try again.');
                 });
             } catch (error) {
