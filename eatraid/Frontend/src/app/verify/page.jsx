@@ -23,9 +23,7 @@ export default function Verify() {
     if (storedUserID) {
       const parsedUserID = JSON.parse(storedUserID);
       setUserID(parsedUserID); // Store in state
-      console.log("Email:", parsedUserID.email);
-      console.log("ID:", parsedUserID.id);
-      console.log("Role:", parsedUserID.role);
+      console.log("Data:", parsedUserID);
 
     } else {
       router.push("/");  // Redirect to home if no user ID
@@ -65,7 +63,17 @@ export default function Verify() {
           email: userID.email,
           OTP: otp.join(""),
           role: userID.role,
-          user: userID.id
+          profilePic: null,
+          user: userID.id,
+          Name: userID.Name, 
+          OpenTime: userID.OpenTime, 
+          CloseTime: userID.CloseTime, 
+          Location: userID.Location, 
+          Latitude: userID.Latitude, 
+          Longitude: userID.Longitude,
+          BusinessDay: userID.BusinessDay, 
+          Tel: userID.Tel, 
+          Line: userID.Line
 
         }).then(async res => {
           console.log("Navigate based on role", res)

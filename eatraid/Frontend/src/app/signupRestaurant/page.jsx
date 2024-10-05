@@ -64,6 +64,7 @@ export default function signupRestaurant() {
 
                 }).then(async res => {
                     const id = res.data.data.user.id;
+                    console.log('res',res)
                     const userData = { email, id }; // สร้าง object ที่รวม email, role และ id
                     console.log("signup successful navigate to Detail", userData);
                     sessionStorage.setItem('userData', JSON.stringify(userData));

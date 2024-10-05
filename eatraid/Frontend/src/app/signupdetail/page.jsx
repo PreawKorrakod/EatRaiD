@@ -149,7 +149,18 @@ export default function SignupDetail() {
     const id = userData.id;
     const role = 'owner';
     const email = userData.email;
-    const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
+    const profilePic = profileImage;
+    const Name = NameOwner || "-";
+    const OpenTime = `${openTimeHR}:${openTimeMIN}`;
+    const CloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
+    const Location = location || "-"; 
+    const Latitude = 0; 
+    const Longitude = 0; 
+    const BusinessDay = selectedBusinessDays.join(',');
+    const Tel = numberPhone || "-";
+    const Line = LineContact || "-";
+    const userID = {  email, role, id, profilePic, 
+      Name, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay, Tel, Line };
     console.log("signup successful navigate to verify", userID);
     sessionStorage.setItem('userID', JSON.stringify(userID));
     router.push('/verify');
