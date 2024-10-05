@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const port = 3300;
 
@@ -334,7 +334,7 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
 
     if (file) {
 
-      await supabase.storage.from("Menu").remove([imagePath]); 
+      await supabase.storage.from("Menu").remove([imagePath]);
 
       const { data: updateData, error: uploadError } = await supabase.storage
         .from("Menu")
@@ -349,7 +349,7 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
 
       const img = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
 
-      const { data, error } = await supabase.from("Menu").update({ TypeID: type, NameFood: name, Price :price, MenuPic: img}).eq("Id", id).select("*");
+      const { data, error } = await supabase.from("Menu").update({ TypeID: type, NameFood: name, Price: price, MenuPic: img }).eq("Id", id).select("*");
 
       if (error) {
         res.status(500).json({ error });
@@ -359,7 +359,7 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
     } else {
       // return res.status(400).json({ msg: "No file uploaded" });
       const img = oldMenuPic;
-      const { data, error } = await supabase.from("Menu").update({  TypeID: type, NameFood: name, Price :price, MenuPic: img }).eq("Id", id).select("*");
+      const { data, error } = await supabase.from("Menu").update({ TypeID: type, NameFood: name, Price: price, MenuPic: img }).eq("Id", id).select("*");
 
       if (error) {
         res.status(500).json({ error });
@@ -384,6 +384,25 @@ app.get("/showmenu", async (req, res) => {
 
 app.delete("/deletemenu", async (req, res) => {
   const { id } = req.body;
+
+  const { data: MenuData, error: fetchError } = await supabase
+    .from("Menu")
+    .select("MenuPic")
+    .eq("Id", id)
+    .single();
+
+  const imagepath = MenuData.MenuPic.split('/').pop();
+  console.log(imagepath);
+
+  await supabase.storage.from("Menu").remove([imagepath]);
+
+  if (fetchError) {
+    throw fetchError;
+  }
+  if (!MenuData) {
+    throw new Error("Post not found.");
+  }
+
   if (!req.session.userId) {
     return res.status(401).json({ msg: "User not authenticated" });
   } else {
