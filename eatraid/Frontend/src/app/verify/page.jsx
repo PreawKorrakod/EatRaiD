@@ -26,8 +26,9 @@ export default function Verify() {
     }
   }, []);
     
+  
+  if (!userID) return router.push("/"); ; // กลับหน้า Home
 
-  if (!userID) return <div>Loading...</div>; // แสดง Loading หากยังไม่มีข้อมูล
   // console.log('userID',userID)
   const handleInputChange = (e, index) => {
     const value = e.target.value;
@@ -65,6 +66,7 @@ export default function Verify() {
           }).then(async res => {
               console.log("Navigate based on role", res)
               // Navigate based on role
+              
               if (userID.role === "customer") {
                 router.push("/"); // Redirect to home page
               } else if (userID.role === "owner") {

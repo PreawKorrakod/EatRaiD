@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./signupdetail.module.css";
 import { BsChevronDown } from "react-icons/bs";
 import { FaLine } from "react-icons/fa6";
@@ -26,8 +26,36 @@ const businessDays = [
   "Saturday",
 ];
 
-export default function SignupDetail({ params }) {
-  const { email: initialEmail, userID, role } = params;
+export default function SignupDetail() {
+
+  const [category, setCategory] = useState('');
+  const [userID, setUserID] = useState(null);
+
+  useEffect(() => {
+    const fetchcategoryData = async () => {
+      try {
+        const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
+        // console.log(category.data);
+        setCategory(category.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchcategoryData();
+  }, []);
+
+  useEffect(() => {
+    const storedUserID = sessionStorage.getItem('userID');
+    if (storedUserID) {
+      setUserID(JSON.parse(storedUserID));
+      console.log(JSON.parse(storedUserID));
+    } else {
+      router.push("/");  // Redirect to home if no user ID
+    }
+  }, []);
+
+  // if (!userID) return router.push("/");  // กลับหน้า Home
+
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(categoryDropdown[0]);
   const [openTimeHR, setOpenTimeHR] = useState(time_hr[0]);
@@ -43,6 +71,11 @@ export default function SignupDetail({ params }) {
 
   const [profileImage, setProfileImage] = useState("");
   const [Imagefile, setImagefile] = useState("");
+
+  const [NameOwner, setNameOwner] = useState(""); //เก็บชื่อที่ตัวแปร NameOwner
+  const [numberPhone, setNumberPhone] = useState(""); //เก็บเบอร์ที่ตัวแปร numberPhone
+  const [LineContact, setLineContact] = useState(""); // เก็บไลน์ที่ตัวแปร numberPhone
+
 
   const handleChangeCategory = (event) => {
     setSelectedOption(event.target.value);
@@ -95,6 +128,7 @@ export default function SignupDetail({ params }) {
       };
       reader.readAsDataURL(file);
       setImagefile(file);
+      // backend เก็บรูปใช้ตัวแปร Imagefile 
     }
   };
 
@@ -109,7 +143,14 @@ export default function SignupDetail({ params }) {
     console.log("Selected business days:", selectedBusinessDays);
     console.log("Location:", location);
 
-    router.push("/verify");
+    const id = res.data.data.user.id;
+    const role = 'owner';
+    const email = userID.email;
+    console.log('email', userID.email);
+    const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
+    console.log("signup successful navigate to verify", userID);
+    sessionStorage.setItem('userID', JSON.stringify(userID));
+    router.push('/verify');
   };
 
   return (
@@ -154,16 +195,23 @@ export default function SignupDetail({ params }) {
               </div>
               <div className={styles.colContainer}>
                 <h2 className={styles.normalText}>Name</h2>
-                <input name="Name" className={styles.textfieldStyle} />
+
+                <input name="Name"
+                  value={NameOwner}
+                  className={styles.textfieldStyle}
+                  onChange={(e) => setNameOwner(e.target.value)}
+                />
+
                 <h2 className={styles.normalText}>Category</h2>
                 <select
                   className={styles.ddTextfieldStyle}
                   value={selectedOption}
                   onChange={handleChangeCategory}
                 >
-                  {categoryDropdown.map((category, index) => (
-                    <option key={index} value={category}>
-                      {category}
+                  <option value="" disabled>Select Type</option>
+                  {category && category.map((items, index) => (
+                    <option key={index} value={items.Id}>
+                      {items.Name}
                     </option>
                   ))}
                 </select>
@@ -284,11 +332,23 @@ export default function SignupDetail({ params }) {
               <div className={styles.colContact}>
                 <div className={styles.rowContainer}>
                   <IoCall className={styles.iconStyle} />
-                  <input name="Phone" className={styles.textfieldStyle} />
+
+                  <input name="Phone"
+                    value={numberPhone}
+                    className={styles.textfieldStyle}
+                    onChange={(e) => setNumberPhone(e.target.value)}
+                  />
+
                 </div>
                 <div className={styles.rowContainer}>
                   <FaLine className={styles.iconStyle} />
-                  <input name="Line" className={styles.textfieldStyle} />
+
+                  <input name="Line"
+                    value={LineContact}
+                    className={styles.textfieldStyle}
+                    onChange={(e) => setLineContact(e.target.value)}
+                  />
+
                 </div>
               </div>
             </div>
