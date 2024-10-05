@@ -24,7 +24,8 @@ export default function Verify() {
       const parsedUserID = JSON.parse(storedUserID);
       setUserID(parsedUserID); // Store in state
       console.log("Data:", parsedUserID);
-
+      
+      console.log('img in verify',parsedUserID.file)
     } else {
       router.push("/");  // Redirect to home if no user ID
     }
@@ -59,21 +60,26 @@ export default function Verify() {
       console.log("Verifying OTP:", otp.join(""));
 
       try {
-        axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
-          email: userID.email,
-          OTP: otp.join(""),
-          role: userID.role,
-          profilePic: null,
-          user: userID.id,
-          Name: userID.Name, 
-          OpenTime: userID.OpenTime, 
-          CloseTime: userID.CloseTime, 
-          Location: userID.Location, 
-          Latitude: userID.Latitude, 
-          Longitude: userID.Longitude,
-          BusinessDay: userID.BusinessDay, 
-          Tel: userID.Tel, 
-          Line: userID.Line
+        const formData = new FormData();
+        formData.append("email", userID.email);
+        formData.append("OTP", otp.join(""));
+        formData.append("role", userID.role);
+        formData.append("user", userID.id);
+        formData.append("Name", userID.Name); 
+        formData.append("OpenTime", userID.OpenTime); 
+        formData.append("CloseTime", userID.CloseTime); 
+        formData.append("Location", userID.Location); 
+        formData.append("Latitude", userID.Latitude); 
+        formData.append("Longitude", userID.Longitude);
+        formData.append("BusinessDay", userID.BusinessDay); 
+        formData.append("Tel", userID.Tel); 
+        formData.append("Line", userID.Line);
+        formData.append("file", userID.file);
+
+        axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
 
         }).then(async res => {
           console.log("Navigate based on role", res)

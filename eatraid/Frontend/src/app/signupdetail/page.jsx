@@ -131,6 +131,7 @@ export default function SignupDetail() {
       };
       reader.readAsDataURL(file);
       setImagefile(file);
+      console.log('img',Imagefile,'fdgs', file)
       // backend เก็บรูปใช้ตัวแปร Imagefile 
     }
   };
@@ -142,14 +143,15 @@ export default function SignupDetail() {
       return;
     }
 
-    console.log("Confirm button clicked");
-    console.log("Selected business days:", selectedBusinessDays);
-    console.log("Location:", location);
+    // console.log("Confirm button clicked");
+    // console.log("Selected business days:", selectedBusinessDays);
+    // console.log("Location:", location);
+    // console.log('image',Imagefile)
 
     const id = userData.id;
     const role = 'owner';
     const email = userData.email;
-    const profilePic = profileImage;
+    const file = Imagefile || null;
     const Name = NameOwner || "-";
     const OpenTime = `${openTimeHR}:${openTimeMIN}`;
     const CloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
@@ -159,7 +161,7 @@ export default function SignupDetail() {
     const BusinessDay = selectedBusinessDays.join(',');
     const Tel = numberPhone || "-";
     const Line = LineContact || "-";
-    const userID = {  email, role, id, profilePic, 
+    const userID = {  email, role, id, file, 
       Name, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay, Tel, Line };
     console.log("signup successful navigate to verify", userID);
     sessionStorage.setItem('userID', JSON.stringify(userID));
