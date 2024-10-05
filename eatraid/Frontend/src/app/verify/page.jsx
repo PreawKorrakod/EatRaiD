@@ -6,6 +6,7 @@ import { MdMarkEmailUnread } from "react-icons/md";
 import { FaArrowLeft } from "react-icons/fa6";
 import { BsExclamationCircle } from "react-icons/bs";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
@@ -16,6 +17,7 @@ export default function Verify() {
   const router = useRouter();
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [error, setError] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
 
 
   useEffect(() => {
@@ -24,12 +26,16 @@ export default function Verify() {
       const parsedUserID = JSON.parse(storedUserID);
       setUserID(parsedUserID); // Store in state
       console.log("Data:", parsedUserID);
-      
-      console.log('img in verify',parsedUserID.file)
+
+      const storedImage = localStorage.getItem('profileImage');
+      if (storedImage) {
+        setProfileImage(storedImage); // ดึงรูปภาพจาก localStorage
+        console.log('Image from localStorage:', storedImage);
+      }
     } else {
-      router.push("/");  // Redirect to home if no user ID
+      router.push("/"); // Redirect to home if no user ID
     }
-  }, []);
+  }, [router]);
 
 
 
@@ -74,7 +80,7 @@ export default function Verify() {
         formData.append("BusinessDay", userID.BusinessDay); 
         formData.append("Tel", userID.Tel); 
         formData.append("Line", userID.Line);
-        formData.append("file", userID.file);
+        formData.append("file", profileImage);
 
         axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, formData, {
           headers: {
@@ -175,6 +181,7 @@ export default function Verify() {
             {error}
           </div>
         )}
+        {/* {profileImage && <Image src={profileImage} alt="Profile" width={900} height={900}/>} */}
       </div>
     </div>
   );

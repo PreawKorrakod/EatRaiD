@@ -128,11 +128,10 @@ export default function SignupDetail() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result);
+        localStorage.setItem('profileImage', reader.result); // เก็บเป็น Base64 string ใน localStorage
       };
       reader.readAsDataURL(file);
       setImagefile(file);
-      console.log('img',Imagefile,'fdgs', file)
-      // backend เก็บรูปใช้ตัวแปร Imagefile 
     }
   };
 
@@ -161,7 +160,7 @@ export default function SignupDetail() {
     const BusinessDay = selectedBusinessDays.join(',');
     const Tel = numberPhone || "-";
     const Line = LineContact || "-";
-    const userID = {  email, role, id, file, 
+    const userID = {  email, role, id, 
       Name, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay, Tel, Line };
     console.log("signup successful navigate to verify", userID);
     sessionStorage.setItem('userID', JSON.stringify(userID));
