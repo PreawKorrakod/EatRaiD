@@ -276,7 +276,7 @@ export default function menu() {
                                         required
                                     >
                                         <option value="" disabled>Select Type</option>
-                                        {category.data && category.data.map((items, index) => (
+                                        {category && category.map((items, index) => (
                                             <option key={index} value={items.Id}>
                                                 {items.Name}
                                             </option>
