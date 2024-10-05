@@ -133,15 +133,8 @@ const MenuCard = (props) => {
             console.log("Type:", editType);
             console.log("Image:", Imagefile);
 
-            const updatedMenu = {
-                id: cardId,
-                name: editName,
-                price: editPrice,
-                type: editType,
-                img: res.data[0].MenuPic,
-            };
+            onEdit({ id: cardId, name: editName, price: editPrice, type: editType, img: res.data[0].MenuPic });
 
-            props.onEdit(updatedMenu.id, updatedMenu.price, updatedMenu.type, updatedMenu.img);
 
             setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
 
@@ -217,7 +210,14 @@ const MenuCard = (props) => {
                                     <div className={styles.Menudisplay}>
                                         {/* Input สำหรับรูปภาพเมนู */}
                                         {MenuImage ? (
-                                            <Image src={MenuImage} alt={`Restaurant${name}`} className={styles.Imagecover} width={500} height={950} />
+                                            // อันนี้รูปเดิมที่มาจากค่า props ไม่ต้องแก้อะไร
+                                            <Image
+                                                className={styles.MenuPicContainer}
+                                                alt="Menu"
+                                                src={MenuImage}
+                                                layout="fill"
+                                                objectFit="cover"
+                                            />
                                         ) : (
                                             <div className={styles.MenuPicContainer}><BsImages className={styles.Imageicon} />No Picture</div>
                                         )}
