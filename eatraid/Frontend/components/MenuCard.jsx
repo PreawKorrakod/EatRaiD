@@ -12,7 +12,7 @@ import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
 const MenuCard = (props) => {
 
     // เป็นค่า props ที่ดึงมา  // User เป็นตัวแปร User สร้างมาเก็บค่าของ User/owner ที่กำลัง  เพื่อเอามาเทียบว่าเท่ากับ owner ไหม ถ้าไม่ตรงจะไม่ขึ้นปุ่ม edit
-    const { id, img, name, type, price, owner, user, onEdit } = props;
+    const { id, img, name, type, price, owner, user ,onEdit} = props;
 
 
     const [selectedMenu, setSelectedMenu] = useState({ name, type, price, img });// เก็บค่าข้อมูลเดิมก่อนที่จะทำการ Edit ใหม่
@@ -133,8 +133,15 @@ const MenuCard = (props) => {
             console.log("Type:", editType);
             console.log("Image:", Imagefile);
 
-            onEdit({ id: cardId, name: editName, price: editPrice, type: editType, img: res.data[0].MenuPic });
-
+            const updatedMenu = {
+                id: cardId,
+                name: editName,
+                price: editPrice,
+                type: editType,
+                img: res.data[0].MenuPic,
+            };
+    
+            props.onEdit(updatedMenu.id, updatedMenu.price, updatedMenu.type, updatedMenu.img);
 
             setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
 

@@ -67,12 +67,12 @@ export default function menu() {
                 });
                 // console.log(menu.data);
                 setData(menu.data);
-                
+
                 return () => {
                     setIsUpdated(false);
                     setIsAdd(false);
                 };
-            
+
             } catch (error) {
                 console.error('Error fetching menu data:', error);
                 // setError('Failed to fetch menu data.');
@@ -80,22 +80,22 @@ export default function menu() {
             }
         };
         fetchMenuData();
-    }, [userId, isAdd ,isUpdated]); // เพิ่ม isUpdated ใน dependencies นี้
+    }, [userId, isAdd, isUpdated]); // เพิ่ม isUpdated ใน dependencies นี้
 
     const handleaddMenu = () => {
         setIsAdd(prev => !prev);
     };
 
-    const handleMenuUpdate = (id,name,price,type,img) => {
-        setData(prevData => 
-            prevData.map(item => 
+    const handleMenuUpdate = (id, name, price, type, img) => {
+        setData(prevData =>
+            prevData.map(item =>
                 item.Id === id ? { ...item, NameFood: name, Price: price, Type: type, MenuPic: img } : item
             )
         );
         setIsUpdated(prev => !prev);
     };
-    
-    
+
+
 
     // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
     const Userfromsession = userId
@@ -107,7 +107,7 @@ export default function menu() {
         setData((prevData) => prevData.filter((restaurant) => restaurant.Id !== restaurantId));
     };
 
-    
+
 
 
     // จำลองการดึงค่า User ออกมาจาก Session เพื่อนำมาเช็คว่าควรมีปุ่ม edit ไหม ว่าตรงกับ OwnerID หรือเปล่า
@@ -159,26 +159,44 @@ export default function menu() {
     // ในการรับข้อมูลให้ใช้ formData.foodname formData.type formData.price ได้เลย
     const handleConfirm = async (e) => {
         e.preventDefault();
-        if (!Imagefile) { // เป็นการเช็คว่ามีไฟล์รูปภาพหรือเปล่า
+
+        // ตรวจสอบว่ามีไฟล์รูปภาพหรือไม่
+        if (!Imagefile) {
             setErrorImg('Please upload an image.');
             return;
         }
 
-        await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/addmenu`, {
-            RestaurantId: userId,
-            NameFood: formData.foodname,
-            TypeId: formData.type,
-            Price: formData.price,
-            MenuPic: Imagefile,
+        // ตรวจสอบข้อมูลอื่นๆ
+        if (!formData.foodname || !formData.type || !formData.price) {
+            setError('Please fill in all the fields.');
+            return;
+        }
+
+        // สร้าง FormData สำหรับการอัปโหลดข้อมูลและไฟล์
+        const formDataToSend = new FormData();
+        formDataToSend.append('file', Imagefile); // ฟิลด์นี้ต้องตรงกับที่เซิร์ฟเวอร์คาดหวัง
+        formDataToSend.append('RestaurantId', userId);
+        formDataToSend.append('NameFood', formData.foodname);
+        formDataToSend.append('TypeID', formData.type);
+        formDataToSend.append('Price', formData.price);
+
+        const addmenu = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/addmenu`, formDataToSend, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
             withCredentials: true,
         });
 
-        if (error) return; // ไม่ให้ดำเนินการถ้ามี error
-        handleaddMenu();
+        setData(prevData => [...prevData, {
+            Id: addmenu.data.data[0].Id,
+            NameFood: formData.foodname,
+            Price: formData.price,
+            Type: formData.type,
+            MenuPic: addmenu.data.data[0].MenuPic
+        }]);
 
-        setIsLoading(true); // ตั้งค่าสถานะกำลังโหลด
-        setError(''); // ล้าง error ก่อนเริ่มส่งข้อมูล
-        
+
+        handleaddMenu();
 
         try {
             // จำลองการส่งข้อมูลไปยัง backend
@@ -197,6 +215,7 @@ export default function menu() {
             setErrorMessage('Failed to add menu. Please try again.');
         }
     };
+
 
 
     // Modal Add popup
