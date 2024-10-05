@@ -17,21 +17,23 @@ export default function Verify() {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [error, setError] = useState("");
 
- 
+
   useEffect(() => {
     const storedUserID = sessionStorage.getItem('userID');
     if (storedUserID) {
-      setUserID(JSON.parse(storedUserID));
-      console.log(JSON.parse(storedUserID));
+      const parsedUserID = JSON.parse(storedUserID);
+      setUserID(parsedUserID); // Store in state
+      console.log("Email:", parsedUserID.email);
+      console.log("ID:", parsedUserID.id);
+      console.log("Role:", parsedUserID.role);
+
     } else {
       router.push("/");  // Redirect to home if no user ID
     }
   }, []);
-    
-  
-  if (!userID) return router.push("/"); ; // กลับหน้า Home
 
-  // console.log('userID',userID)
+
+
   const handleInputChange = (e, index) => {
     const value = e.target.value;
     if (/^[0-9]*$/.test(value) && value.length <= 1) {
@@ -60,26 +62,26 @@ export default function Verify() {
 
       try {
         axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
-          email: userID.email, 
+          email: userID.email,
           OTP: otp.join(""),
-          role: userID.role, 
+          role: userID.role,
           user: userID.id
 
-          }).then(async res => {
-              console.log("Navigate based on role", res)
-              // Navigate based on role
-              
-              if (userID.role === "customer") {
-                router.push("/"); // Redirect to home page
-              } else if (userID.role === "owner") {
-                router.push("/info"); 
-              }
-          }).catch(error => {
-              console.error('Error during verify OTP:', error);
-              setError('Wrong OTP. Try again.');
-          });
-        } catch (error) {
-          console.log(error);
+        }).then(async res => {
+          console.log("Navigate based on role", res)
+          // Navigate based on role
+
+          if (userID.role === "customer") {
+            router.push("/"); // Redirect to home page
+          } else if (userID.role === "owner") {
+            router.push("/info");
+          }
+        }).catch(error => {
+          console.error('Error during verify OTP:', error);
+          setError('Wrong OTP. Try again.');
+        });
+      } catch (error) {
+        console.log(error);
       }
 
       setError("");
@@ -91,14 +93,14 @@ export default function Verify() {
       axios.post(`${NEXT_PUBLIC_BASE_API_URL}/resend-OTP`, {
         email: userID.email,
 
-        }).then(async res => {
-            console.log('resend OTP successfully')
-        }).catch(error => {
-            console.error('Error during resend OTP:', error);
-            setError("Can't resend OTP. Try again.");
-        });
-      } catch (error) {
-        console.log(error);
+      }).then(async res => {
+        console.log('resend OTP successfully')
+      }).catch(error => {
+        console.error('Error during resend OTP:', error);
+        setError("Can't resend OTP. Try again.");
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -119,7 +121,7 @@ export default function Verify() {
           <h1 className={styles.title}>Please check your email</h1>
           <h2 className={styles.normalText}>
             We've sent a code to{" "}
-            <span className={styles.emailText}>{userID.email}</span>
+            <span className={styles.emailText}>{userID ? userID.email : 'loading...'}</span>
           </h2>
           <div className={styles.otpBox}>
             {[...Array(6)].map((_, index) => (

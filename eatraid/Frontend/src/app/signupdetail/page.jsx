@@ -46,7 +46,7 @@ export default function SignupDetail() {
 
   useEffect(() => {
     const storedUserData = sessionStorage.getItem('userData');
-    if (storedUserID) {
+    if (storedUserData) {
       setUserData(JSON.parse(storedUserData));
       console.log(JSON.parse(storedUserData));
     } else {
@@ -146,7 +146,6 @@ export default function SignupDetail() {
     const id = userData.id;
     const role = 'owner';
     const email = userData.email;
-    console.log('email', userData.email);
     const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
     console.log("signup successful navigate to verify", userID);
     sessionStorage.setItem('userID', JSON.stringify(userID));
