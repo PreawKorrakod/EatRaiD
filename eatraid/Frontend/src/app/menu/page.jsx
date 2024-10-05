@@ -23,12 +23,15 @@ export default function menu() {
     const [formData, setFormData] = useState({ foodname: '', type: '', price: '' });
     const [errorMessage, setErrorMessage] = useState('');
     const [category, setCategory] = useState('');
+    const [isUpdated, setIsUpdated] = useState(false); // เพิ่ม state นี้
+    const [isAdd, setIsAdd] = useState(false); // เพิ่ม state นี้
+
 
     useEffect(() => {
         const fetchcategoryData = async () => {
             try {
                 const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
-                console.log(category.data);
+                // console.log(category.data);
                 setCategory(category.data);
             } catch (error) {
                 console.error('Error fetching user data:', error);
@@ -44,14 +47,14 @@ export default function menu() {
                 const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
                     withCredentials: true,
                 });
-                console.log(user.data[0].Id);
+                // console.log(user.data[0].Id);
                 setUserId(user.data[0].Id);
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
         };
         fetchData();
-    }, []);
+    }, [userId]);
 
     useEffect(() => {
         const fetchMenuData = async () => {
@@ -62,8 +65,14 @@ export default function menu() {
                     params: { RestaurantId: userId },
                     withCredentials: true,
                 });
-                console.log(menu.data);
+                // console.log(menu.data);
                 setData(menu.data);
+                
+                return () => {
+                    setIsUpdated(false);
+                    setIsAdd(false);
+                };
+            
             } catch (error) {
                 console.error('Error fetching menu data:', error);
                 // setError('Failed to fetch menu data.');
@@ -71,13 +80,28 @@ export default function menu() {
             }
         };
         fetchMenuData();
-    }, [data, userId]);
+    }, [userId, isAdd ,isUpdated]); // เพิ่ม isUpdated ใน dependencies นี้
+
+    const handleaddMenu = () => {
+        setIsAdd(prev => !prev);
+    };
+
+    const handleMenuUpdate = (id,name,price,type,img) => {
+        setData(prevData => 
+            prevData.map(item => 
+                item.Id === id ? { ...item, NameFood: name, Price: price, Type: type, MenuPic: img } : item
+            )
+        );
+        setIsUpdated(prev => !prev);
+    };
+    
+    
 
     // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
     const Userfromsession = userId
     const OwnerID = data[0]?.RestaurantId
-    console.log('User ID : ', Userfromsession)
-    console.log('Owner ID : ', OwnerID)
+    // console.log('User ID : ', Userfromsession)
+    // console.log('Owner ID : ', OwnerID)
 
     const handleDelete = (restaurantId) => {
         setData((prevData) => prevData.filter((restaurant) => restaurant.Id !== restaurantId));
@@ -140,10 +164,21 @@ export default function menu() {
             return;
         }
 
+        await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/addmenu`, {
+            RestaurantId: userId,
+            NameFood: formData.foodname,
+            TypeId: formData.type,
+            Price: formData.price,
+            MenuPic: Imagefile,
+            withCredentials: true,
+        });
+
         if (error) return; // ไม่ให้ดำเนินการถ้ามี error
+        handleaddMenu();
 
         setIsLoading(true); // ตั้งค่าสถานะกำลังโหลด
         setError(''); // ล้าง error ก่อนเริ่มส่งข้อมูล
+        
 
         try {
             // จำลองการส่งข้อมูลไปยัง backend
@@ -383,6 +418,7 @@ export default function menu() {
                                     price={restaurant.Price}
                                     owner={OwnerID}
                                     user={Userfromsession}
+                                    onEdit={handleMenuUpdate}
                                     onRemove={handleDelete}
                                 />
                             ))}
