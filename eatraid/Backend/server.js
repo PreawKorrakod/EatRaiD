@@ -81,79 +81,101 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/verify-OTP", upload.single("file"), async (req, res) => {
-  const { email, OTP, role, user
+app.post("/verify-OTP",  async (req, res) => {
+  const { email, OTP, role, user, profilePic
     , Name, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay, Tel, Line } = req.body;
-  const file = req.file;
+  // const file = req.file;
   const newminetype = "image/jpeg";
   const newfilename = `profile_${user}_${uuid4()}.jpeg`;
+  const arr = profilePic.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1]; // หา MIME type
+  const b64Data = arr[1]; // ข้อมูล Base64
+  const byteCharacters = atob(b64Data); // ถอด Base64
+  const byteNumbers = new Uint8Array(byteCharacters.length);
 
-    console.log(email, OTP, role, user, file
-      , Name, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay, Tel, Line)
+  // เปลี่ยนข้อมูลที่ได้เป็น Uint8Array
+  for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+
+  // สร้าง Blob จาก Uint8Array
+  const blob = new Blob([byteNumbers], { type: mime });
+
+  // สร้าง URL สำหรับ Blob
+  const fileURL = URL.createObjectURL(blob);
+
+  // สร้าง File object
+  const file = new File([blob], newfilename, { type: mime });
+
   const { data: { session }, error } = await supabase.auth.verifyOtp({
     email: email,
     token: OTP,
     type: 'email',
   });
   if (error) {
-    res.status(400).json({error: error, msg: 'Wrong OTP. Try again.'});
+    console.log(error)
+    res.status(400).json({error: error, message: 'Wrong OTP. Try again.'});
   } else {
     if (role == 'customer') {
       const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email }]).select("*");
       if (error) {
-        res.status(400).json({error, message: "Error while insert user data"});
+        res.status(500).json({error, message: "Error while insert user data"});
       }
       else {
         res.status(200).json({ message: "insert custommer data to table user successfully", data: data })
       }
     } else if (role == 'owner') {
-      console.log('fsdfdsf')
-      const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: file, Email: email }]).select("*");
-      if (error) {
-        res.status(400).json({error, message: "Error while insert user data"});
-      }
-      else {
-            const { ownerData, error } = await supabase.from('Restaurant').insert([{
-              RestaurantId: user, Name: Name,
-              OpenTime: OpenTime, CloseTime: CloseTime,
-              Location: Location, Latitude: Latitude, Longitude: Longitude,
-              BusinessDay: BusinessDay, Tel: Tel, Line: Line
-            }]).select("*")
-            if (error) {
-              const { error: delete_error } = await supabase
-                .from('User')
-                .delete()
-                .eq('Id', user);
-              if (delete_error) {
-                res.status(500).json({
-                  "error to delete data": delete_error,
-                  "error to insert reataurant data data": error
-                });
-              } else {
-                res.status(400).json({ message: "error in inserting data so delete error data", error: error })
-              }
-            }
-            else {
-              if (file) {
-                const { data: updateData, error: uploadError } = await supabase.storage
-                  .from("Profile")
-                  .upload(newfilename, file.buffer, {
-                    contentType: newminetype,
-                    upsert: true,
-                  });
-                if (uploadError) throw uploadError;
-                else {
-                  const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
-                  const { Picdata, Picdataerror } = await supabase.from("User").update({ ProfilePic }).eq("id", id).select("*");
-                  if (Picdataerror) return res.status(500).json({ Picdataerror });
-                  return res.status(200).json({ message: "insert restaurant data with profile picture successfully",  user: data, restaurant: ownerData, pic:Picdata });
+      if (file) {
+        const arrayBuffer = await file.arrayBuffer(); // แปลงเป็น ArrayBuffer
+        const { data: updateData, error: uploadError } = await supabase.storage
+            .from("Profile")
+            .upload(newfilename, arrayBuffer, {
+                contentType: newminetype,
+                upsert: true,
+            });
+        if (uploadError) {
+            console.error(uploadError); // แสดง error เพื่อวิเคราะห์ปัญหา
+            throw uploadError;
+        } else {
+          const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
+
+
+          const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: ProfilePic, Email: email }]).select("*");
+          if (error) {
+            res.status(500).json({error, message: "Error while insert user data"});
+          }
+          else {
+            console.log('owner')
+                const { ownerData, error } = await supabase.from('Restaurant').insert([{
+                  RestaurantId: user, Name: Name,
+                  OpenTime: OpenTime, CloseTime: CloseTime,
+                  Location: Location, Latitude: Latitude, Longitude: Longitude,
+                  BusinessDay: BusinessDay, Tel: Tel, Line: Line
+                }]).select("*")
+                if (error) {
+                  const { error: delete_error } = await supabase
+                    .from('User')
+                    .delete()
+                    .eq('Id', user);
+                  if (delete_error) {
+                    res.status(500).json({
+                      "error to delete data": delete_error,
+                      "error to insert reataurant data data": error
+                    });
+                  } else {
+                    res.status(500).json({ message: "error while inserting data so delete error data", error: error })
+                  }
                 }
-              }
-              res.status(200).json({ message: "insert restaurant data without profile picture successfully", user: data, restaurant: ownerData})
-            }
+                else {
+                  res.status(200).json({ message: "insert restaurant data without profile picture successfully", user: data, restaurant: ownerData})
+                }
+          }
+        }
+      } else {
+        res.status(400).json({ message: 'No profile picture' });
       }
     } else {
-      res.status(400).json({ message: 'wrong role' });
+      res.status(500).json({ message: 'wrong role' });
     }
   }
 });

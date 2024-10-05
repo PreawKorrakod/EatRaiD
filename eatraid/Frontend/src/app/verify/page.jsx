@@ -25,14 +25,10 @@ export default function Verify() {
     if (storedUserID) {
       const parsedUserID = JSON.parse(storedUserID);
       setUserID(parsedUserID); // Store in state
-      console.log("Data:", parsedUserID);
+      console.log("Data:", parsedUserID, parsedUserID.file);
 
-      const storedImage = localStorage.getItem('profileImage');
-      if (storedImage) {
-        setProfileImage(storedImage); // ดึงรูปภาพจาก localStorage
-        console.log('Image from localStorage:', storedImage);
-      }
     } else {
+      sessionStorage.removeItem('userID');
       router.push("/"); // Redirect to home if no user ID
     }
   }, [router]);
@@ -66,26 +62,21 @@ export default function Verify() {
       console.log("Verifying OTP:", otp.join(""));
 
       try {
-        const formData = new FormData();
-        formData.append("email", userID.email);
-        formData.append("OTP", otp.join(""));
-        formData.append("role", userID.role);
-        formData.append("user", userID.id);
-        formData.append("Name", userID.Name); 
-        formData.append("OpenTime", userID.OpenTime); 
-        formData.append("CloseTime", userID.CloseTime); 
-        formData.append("Location", userID.Location); 
-        formData.append("Latitude", userID.Latitude); 
-        formData.append("Longitude", userID.Longitude);
-        formData.append("BusinessDay", userID.BusinessDay); 
-        formData.append("Tel", userID.Tel); 
-        formData.append("Line", userID.Line);
-        formData.append("file", profileImage);
-
-        axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+        axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
+          email: userID.email,
+          OTP: otp.join(""),
+          role: userID.role,
+          profilePic: userID.file,
+          user: userID.id,
+          Name: userID.Name, 
+          OpenTime: userID.OpenTime, 
+          CloseTime: userID.CloseTime, 
+          Location: userID.Location, 
+          Latitude: userID.Latitude, 
+          Longitude: userID.Longitude,
+          BusinessDay: userID.BusinessDay, 
+          Tel: userID.Tel, 
+          Line: userID.Line
 
         }).then(async res => {
           console.log("Navigate based on role", res)
@@ -94,11 +85,14 @@ export default function Verify() {
           if (userID.role === "customer") {
             router.push("/"); // Redirect to home page
           } else if (userID.role === "owner") {
+            sessionStorage.removeItem('userData');
             router.push("/info");
           }
         }).catch(error => {
           console.error('Error during verify OTP:', error);
-          setError('Wrong OTP. Try again.');
+          if (error.status == 400){
+            setError(error.response.data.message);
+          }
         });
       } catch (error) {
         console.log(error);

@@ -32,7 +32,7 @@ const businessDays = [
 export default function SignupDetail() {
 
   const [category, setCategory] = useState('');
-  const [userData, setUserData] = useState(null);
+  const [userID, setuserID] = useState(null);
 
   useEffect(() => {
     const fetchcategoryData = async () => {
@@ -48,10 +48,10 @@ export default function SignupDetail() {
   }, []);
 
   useEffect(() => {
-    const storedUserData = sessionStorage.getItem('userData');
-    if (storedUserData) {
-      setUserData(JSON.parse(storedUserData));
-      console.log(JSON.parse(storedUserData));
+    const storeduserID = sessionStorage.getItem('userID');
+    if (storeduserID) {
+      setuserID(JSON.parse(storeduserID));
+      console.log(JSON.parse(storeduserID));
     } else {
       router.push("/");  // Redirect to home if no user ID
     }
@@ -128,7 +128,6 @@ export default function SignupDetail() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result);
-        localStorage.setItem('profileImage', reader.result); // เก็บเป็น Base64 string ใน localStorage
       };
       reader.readAsDataURL(file);
       setImagefile(file);
@@ -146,24 +145,27 @@ export default function SignupDetail() {
     // console.log("Selected business days:", selectedBusinessDays);
     // console.log("Location:", location);
     // console.log('image',Imagefile)
-
-    const id = userData.id;
+    const displayOpenTime = `${openTimeHR}:${openTimeMIN}`;
+    const displayCloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
+    
+    const id = userID.id;
     const role = 'owner';
-    const email = userData.email;
-    const file = Imagefile || null;
+    const email = userID.email;
+    const file = profileImage;
     const Name = NameOwner || "-";
-    const OpenTime = `${openTimeHR}:${openTimeMIN}`;
-    const CloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
+    const OpenTime = displayOpenTime === "00:00" ? "-" : displayOpenTime;
+    const CloseTime = displayCloseTime === "00:00" ? "-" : displayCloseTime; 
     const Location = location || "-"; 
     const Latitude = 0; 
     const Longitude = 0; 
     const BusinessDay = selectedBusinessDays.join(',');
     const Tel = numberPhone || "-";
     const Line = LineContact || "-";
-    const userID = {  email, role, id, 
+    sessionStorage.removeItem('userID');
+    const newUserID = {  email, role, id, file,
       Name, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay, Tel, Line };
-    console.log("signup successful navigate to verify", userID);
-    sessionStorage.setItem('userID', JSON.stringify(userID));
+    console.log("signup successful navigate to verify", newUserID);
+    sessionStorage.setItem('userID', JSON.stringify(newUserID)); 
     router.push('/verify');
   };
 
