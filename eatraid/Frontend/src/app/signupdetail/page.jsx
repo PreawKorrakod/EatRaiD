@@ -29,7 +29,7 @@ const businessDays = [
 export default function SignupDetail() {
 
   const [category, setCategory] = useState('');
-  const [userID, setUserID] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const fetchcategoryData = async () => {
@@ -45,10 +45,10 @@ export default function SignupDetail() {
   }, []);
 
   useEffect(() => {
-    const storedUserID = sessionStorage.getItem('userID');
+    const storedUserData = sessionStorage.getItem('userData');
     if (storedUserID) {
-      setUserID(JSON.parse(storedUserID));
-      console.log(JSON.parse(storedUserID));
+      setUserData(JSON.parse(storedUserData));
+      console.log(JSON.parse(storedUserData));
     } else {
       router.push("/");  // Redirect to home if no user ID
     }
@@ -143,10 +143,10 @@ export default function SignupDetail() {
     console.log("Selected business days:", selectedBusinessDays);
     console.log("Location:", location);
 
-    const id = res.data.data.user.id;
+    const id = userData.id;
     const role = 'owner';
-    const email = userID.email;
-    console.log('email', userID.email);
+    const email = userData.email;
+    console.log('email', userData.email);
     const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
     console.log("signup successful navigate to verify", userID);
     sessionStorage.setItem('userID', JSON.stringify(userID));

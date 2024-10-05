@@ -64,9 +64,9 @@ export default function signupRestaurant() {
 
                 }).then(async res => {
                     const id = res.data.data.user.id;
-                    const userID = { email, id }; // สร้าง object ที่รวม email, role และ id
-                    console.log("signup successful navigate to verify", userID);
-                    sessionStorage.setItem('userID', JSON.stringify(userID));
+                    const userData = { email, id }; // สร้าง object ที่รวม email, role และ id
+                    console.log("signup successful navigate to Detail", userData);
+                    sessionStorage.setItem('userData', JSON.stringify(userData));
                     router.push('/signupdetail');
                 }).catch(error => {
                     console.error('Error during signup:', error.response.data.message);

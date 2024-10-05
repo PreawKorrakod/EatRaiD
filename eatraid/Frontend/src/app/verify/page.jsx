@@ -21,8 +21,10 @@ export default function Verify() {
   useEffect(() => {
     const storedUserID = sessionStorage.getItem('userID');
     if (storedUserID) {
-      setUserID(JSON.parse(storedUserID)); // แปลง JSON string เป็น object
-      console.log(JSON.parse(storedUserID))
+      setUserID(JSON.parse(storedUserID));
+      console.log(JSON.parse(storedUserID));
+    } else {
+      router.push("/");  // Redirect to home if no user ID
     }
   }, []);
     
