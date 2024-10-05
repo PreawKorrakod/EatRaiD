@@ -74,36 +74,40 @@ const MenuCard = (props) => {
 
 
 
-    // ฟังก์ชันลบ  backend ตรงนี้นะ
     const handleRemove = async (cardId) => {
-        setIsLoading(true); // เริ่มโหลด เป็นการตั้งสถานะโหลดของ frontend 
+        setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
+        setIsSuccess(false); // ตั้งเป็น false ก่อนที่จะทำการลบ
+        setIsLoading(true); // เริ่มการโหลด
+
+    
         try {
+            // ลบข้อมูล
             await axios.delete(`${NEXT_PUBLIC_BASE_API_URL}/deletemenu`, {
                 data: { id: cardId },
                 withCredentials: true
-            })
+            });
 
-            props.onRemove(props.id);
-            // เวลา 2 วินาทีจำลองการลบ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
-            new Promise((resolve) =>
-                setTimeout(resolve, 2000));
-            console.log(`ลบภาพที่ id ${cardId}`);
+            // แสดงข้อความสำเร็จ
+            setIsLoading(false);
+            setIsSuccess(true);
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            console.log("Delete successful"); // ตรวจสอบการลบสำเร็จ
 
-            // อันนี้จำเป็นต้องวางไว้หลังจากลบข้อมูล โค้ดของ Backend ถ้าเกิดลบสำเร็จ
-            setIsLoading(false); // หยุดโหลด
-            setIsSuccess(true); // ลบสำเร็จ
-            setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
+    
+            // แสดงข้อความสำเร็จเป็นระยะเวลา (ปรับค่าที่นี่)
             setTimeout(() => {
-                setIsAlertModalOpen(false);
-                setIsSuccess(false); // รีเซ็ตสถานะการลบสำเร็จ
-            }, 2000); // ซ่อน modal หลังจากแสดงข้อความสำเร็จ 2 วินาที
+                setIsSuccess(false); // รีเซ็ตสถานะสำเร็จ
+            }, 5000); // แสดงนาน 5 วินาที
 
+            // อัปเดตสถานะ
+            props.onRemove(cardId); // เรียกฟังก์ชันที่จัดการการลบใน parent component
+    
         } catch (error) {
-            setIsLoading(false); // หยุดโหลดถ้าเกิดข้อผิดพลาด
-            setErrorMessage('Error occurred while removing');
+            setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
+            setErrorMessage('Error occurred while deleting'); // ตั้งค่าข้อความข้อผิดพลาด
+            console.error(error);
         }
     };
-
 
     // ฟังก์ชัน edit ตรงนี้นะ
     const handleConfirm = async (event, cardId) => {
@@ -111,12 +115,17 @@ const MenuCard = (props) => {
             event.preventDefault();
         }
 
+        setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // จำลองการรอ 2 วินาที
+
         const formData = new FormData();
         formData.append('file', Imagefile); // 'file' ต้องตรงกับที่ Backend คาดหวัง
         formData.append('id', cardId);
         formData.append('name', editName);
         formData.append('price', editPrice);
         formData.append('type', editType);
+
+
         try {
             const res = await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editmenu`, formData, {
                 headers: {
@@ -136,18 +145,17 @@ const MenuCard = (props) => {
             onEdit({ id: cardId, name: editName, price: editPrice, type: editType, img: res.data[0].MenuPic });
 
 
-            setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
+            // setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
 
-            await new Promise((resolve) => setTimeout(resolve, 2000)); // จำลองการรอ 2 วินาที
+            // await new Promise((resolve) => setTimeout(resolve, 2000)); // จำลองการรอ 2 วินาที
 
             setIsLoading(false); // หยุดโหลด
             setIsEditSuccess(true); // แก้ไขสำเร็จ
-            setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
             setTimeout(() => {
                 console.log(`แก้ไขเมนูที่ id: ${cardId}`);
                 setIsAlertModalOpen(false);
                 setIsEditSuccess(false); // รีเซ็ตสถานะสำเร็จ
-            }, 2000); // ซ่อน modal หลังจากแสดงข้อความสำเร็จ 2 วินาที
+            }, 3000); // ซ่อน modal หลังจากแสดงข้อความสำเร็จ 2 วินาที
         } catch (error) {
             setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
             setErrorMessage('Error occurred while editing'); // ตั้งค่าข้อความข้อผิดพลาด
@@ -187,10 +195,7 @@ const MenuCard = (props) => {
                         <BsXSquareFill className={styles.close} onClick={() => setIsAlertModalOpen(false)} />
                         <h2 className={styles.headerTextModal}>Edit Menu</h2>
                         {isLoading ? (
-                            <div className={styles.loadingContainer}>
-                                <div className={styles.loading}></div>
-                                <p className={styles.wait}>Please wait...</p>
-                            </div>
+                            <p className={styles.wait}>Please wait...</p>
                         ) : isSuccess ? (
                             <div className={styles.successContainer}>
                                 <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />Successfully deleted!</p>

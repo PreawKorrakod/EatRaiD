@@ -159,67 +159,10 @@ export default function menu() {
 
     // Backend เชื่อม Addmenu ตรงนี้
     // ในการรับข้อมูลให้ใช้ formData.foodname formData.type formData.price ได้เลย
-    // const handleConfirm = async (e) => {
-    //     e.preventDefault();
-
-    //     // ตรวจสอบว่ามีไฟล์รูปภาพหรือไม่
-    //     if (!Imagefile) {
-    //         setErrorImg('Please upload an image.');
-    //         return;
-    //     }
-
-    //     // ตรวจสอบข้อมูลอื่นๆ
-    //     if (!formData.foodname || !formData.type || !formData.price) {
-    //         setError('Please fill in all the fields.');
-    //         return;
-    //     }
-
-    //     // สร้าง FormData สำหรับการอัปโหลดข้อมูลและไฟล์
-    //     const formDataToSend = new FormData();
-    //     formDataToSend.append('file', Imagefile); // ฟิลด์นี้ต้องตรงกับที่เซิร์ฟเวอร์คาดหวัง
-    //     formDataToSend.append('RestaurantId', userId);
-    //     formDataToSend.append('NameFood', formData.foodname);
-    //     formDataToSend.append('TypeID', formData.type);
-    //     formDataToSend.append('Price', formData.price);
-
-    //     const addmenu = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/addmenu`, formDataToSend, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data',
-    //         },
-    //         withCredentials: true,
-    //     });
-
-    //     setData(prevData => [...prevData, {
-    //         Id: addmenu.data.data[0].Id,
-    //         NameFood: formData.foodname,
-    //         Price: formData.price,
-    //         Type: formData.type,
-    //         MenuPic: addmenu.data.data[0].MenuPic
-    //     }]);
-
-
-    //     handleaddMenu();
-
-    //     try {
-    //         // จำลองการส่งข้อมูลไปยัง backend
-    //         await new Promise((resolve) => setTimeout(resolve, 2000)); // รอ 2 วินาทีเพื่อจำลองการโหลด
-
-    //         setIsAddSuccess(true); // ตั้งค่าสถานะสำเร็จ
-    //         setIsLoading(false); // หยุดโหลด
-    //         setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
-    //         console.log('Add menu name : ', formData.foodname)
-    //         console.log('Add menu type : ', formData.type)
-    //         console.log('Add menu price : ', formData.price)
-    //         setIsAlertModalOpen(false)
-
-    //     } catch (err) {
-    //         setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
-    //         setErrorMessage('Failed to add menu. Please try again.');
-    //     }
-    // };
-
     const handleConfirm = async (e) => {
-        e.preventDefault();
+        if (e && typeof e.preventDefault === 'function') {
+            e.preventDefault();
+        }
 
         // ตรวจสอบว่ามีไฟล์รูปภาพหรือไม่
         if (!Imagefile) {
@@ -233,6 +176,8 @@ export default function menu() {
             return;
         }
 
+        setIsLoading(true); // เริ่มการโหลด
+
         // สร้าง FormData สำหรับการอัปโหลดข้อมูลและไฟล์
         const formDataToSend = new FormData();
         formDataToSend.append('file', Imagefile); // ฟิลด์นี้ต้องตรงกับที่เซิร์ฟเวอร์คาดหวัง
@@ -241,8 +186,9 @@ export default function menu() {
         formDataToSend.append('TypeID', formData.type);
         formDataToSend.append('Price', formData.price);
 
-        setIsLoading(true); // เริ่มการโหลด
+        
         setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาดก่อนเริ่ม
+        setIsAddSuccess(false); // เริ่มจาก false เพื่อแน่ใจว่าไม่แสดงผลก่อนเวลา
 
         try {
             const addmenu = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/addmenu`, formDataToSend, {
@@ -261,30 +207,35 @@ export default function menu() {
                 MenuPic: addmenu.data.data[0].MenuPic
             }]);
 
-            handleaddMenu();
 
-            setIsAddSuccess(true); // แสดงข้อความเพิ่มเมนูสำเร็จ
+            setIsLoading(true); // เริ่มการโหลด
+            await new Promise((resolve) => setTimeout(resolve, 2000)); 
+        
             setIsLoading(false); // หยุดการโหลด
+            setIsAddSuccess(true); // แสดงข้อความเพิ่มเมนูสำเร็จ
 
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
+            setTimeout(() => {
+                setIsAddSuccess(false); // ซ่อนข้อความ "Add success" หลังจากเวลาผ่านไป
+                setIsAlertModalOpen(false);
+            }, 2000); // ซ่อนข้อความหลังจาก 2 วินาที
+
+            
+            handleaddMenu();
             // รีเซ็ตข้อมูลฟอร์ม
             setFormData({ foodname: '', type: '', price: '' });
             setMenuImage('');
             setImagefile(null);
 
-            setTimeout(() => {
-                setIsAddSuccess(false); // ซ่อนข้อความ "Add success" หลังจากเวลาผ่านไป
-            }, 2000); // ซ่อนข้อความหลังจาก 2 วินาที
-
-            setIsAlertModalOpen(false)
 
         } catch (err) {
             setIsLoading(false); // หยุดการโหลดถ้ามีข้อผิดพลาด
             setErrorMessage('Failed to add menu. Please try again.');
         }
     };
-
-
-
+    
 
     // Modal Add popup
     const renderAlertModal = () => {
@@ -296,15 +247,15 @@ export default function menu() {
                     <h2 className={styles.headerTextModal}>Add Menu</h2>
                     {isLoading ? (
                         <div>
-                            <p className={styles.wait}>loading...</p>
-                        </div>
-                    ) : isAddSuccess ? (
-                        <div className={styles.successContainer}>
-                            <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />Successfully Add!</p>
+                            <p className={styles.wait}>Please wait...</p>
                         </div>
                     ) : errorMessage ? (
                         <div className={styles.successContainer}>
                             <p className={styles.errorText}><BsExclamationCircle className={styles.iconExc2} />{errorMessage}</p>
+                        </div>
+                    ) : isAddSuccess ? (
+                        <div className={styles.successContainer}>
+                            <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />New Menu Added!</p>
                         </div>
                     ) : (
                         // ส่วนของการ input ข้อมูลใหม่ของ User ที่ต้องการ edit 
