@@ -150,7 +150,7 @@ export default function Navbar() {
                             <div>
                                 <button className={styles.SignOutbtn} onClick={() =>
                                     setIsLogoutModalOpen(true)}>
-                                    <BsBoxArrowRight size={30} className={styles.SignOuticon} />
+                                    <BsBoxArrowRight size={25} className={styles.SignOuticon} />
                                     Sign out
                                 </button>
                             </div>

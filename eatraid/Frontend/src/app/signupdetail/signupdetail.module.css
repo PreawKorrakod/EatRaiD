@@ -7,14 +7,50 @@
 .bigContainer {
     width: 70vw;
     height: 85vh;
+    /* background-color: #673a0d; */
     background-color: #FFFBF7;
     border-radius: 50px;
-    padding: 30px;
+    padding: 15px 30px 10px 30px;
     margin: auto;
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     margin-top: 30px;
+}
+
+.bottomContainer {
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+}
+
+.LoginButton{
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+    color: #527853;
+    text-decoration: underline;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: color 0.3s ease;
+}
+
+.LoginButton:hover {
+    color: #3b5234;
+    background-color: #e2ddd7;
+}
+
+.bottomText {
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+    color: #527853;
+    width: max-content;
+    min-width: fit-content;
+    margin: 0px 10px 0px 10px
 }
 
 .title {
@@ -23,7 +59,6 @@
     font-weight: 800;
     color: #527853;
     text-align: center;
-    padding-top: 20px;
 }
 
 .normalText {
@@ -32,6 +67,17 @@
     font-weight: normal;
     color: #527853;
     width: max-content;
+    min-width: fit-content;
+    margin: 0px 0px 10px 10px
+}
+
+.picText {
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-weight: normal;
+    color: black;
+    opacity: 30%;
+    margin-bottom: 10px;
 }
 
 .inputContainer {
@@ -39,31 +85,82 @@
     height: 50vh;
     display: flex;
     flex-direction: row;
-    margin: 2rem;
-    background-color: rgb(34, 154, 70);
+    margin:  1rem 2rem 1.5rem 2rem;
+    /* background-color: rgb(34, 154, 70); */
 }
 
 .textfieldBigContainerL {
-    width: 36vw;
+    width: 32vw;
     height: 60vh;
     display: flex;
     flex-direction: column;
+    /* background-color: #ffcccb; */
+}
+
+.rowContainer {
+    display: flex;
+    flex-direction: row;
+    /* background-color: #d8000c; */
+}
+
+.rowContainer2 {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-left: 20px;
+    /* background-color: #424653; */
+    /* margin-right: 10px; */
+}
+
+.colContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px 0px 10px;
+    /* background-color: #203066; */
+}
+
+.colTime {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0px 0px 10px;
+    /* background-color: #203066; */
+}
+
+.colContainer2 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 10px 0px 10px;
+    /* background-color: #203066; */
+}
+
+.colContact {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 0px 10px 10px;
+    margin-bottom: 10px;
+    /* background-color: #203066; */
 }
 
 .textfieldBigContainerR {
-    width: 28vw;
+    width: 25vw;
     height: 60vh;
     display: flex;
     flex-direction: column;
+    margin-left: 25px;
 }
 
 .textfieldSubContainer {
-    width: 30vw;
+    width: 100%;
     height: 5vh;
     display: flex;
     flex-direction: row;
-    margin: 13px;
+    margin: 10px 0px 10px 0px;
     align-items: center;
+    /* background-color: #d8000c; */
 }
 
 .textfieldSubContainerR {
@@ -76,30 +173,33 @@
 }
 
 .picBigContainer {
-    width: 27vw;
-    height: 10vh;
+    width: 15vw;
+    height: 23vh;
     display: flex;
     flex-direction: row;
-    margin: 13px;
+    margin: 10px;
+    /* overflow: hidden; */
+    position: relative;
 }
 
 .textfieldStyle {
     height: 5vh;
     width: 100%;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 0px 0px 10px 10px;
+    /* background-color: #7f6b9b; */
     background-color: #EEE2D8;
     border: none;
     border-radius: 5px;
     box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
     font-family: 'Poppins';
-    font-size: 20px;
+    font-size: 18px;
     font-weight: normal;
-    color: #527853;
+    color: #233624;
+    padding-left: 10px;
 }
 
 .textfieldStyleMini {
-    width: 2vw;
+    width: 7vw;
     height: 5vh;
     margin-left: 10px;
     margin-right: 10px;
@@ -115,10 +215,12 @@
 
 .ddTextfieldStyle {
     width: 100%;
-    padding: 10px 30px 10px 10px;
+    height: 5vh;
+    padding-left: 10px;
+    max-height: 10vh;
     margin-left: 10px;
-    margin-right: 10px;
-    font-size: 16px;
+    /* margin-right: 10px; */
+    font-size: 18px;
     color: #333;
     background-color: #EEE2D8;
     border: 1px solid #ccc;
@@ -126,10 +228,13 @@
     outline: none;
     cursor: pointer;
     transition: border-color 0.3s ease;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
 }
 
 .ddTextfieldStyle:focus {
     border-color: #7f7f7f;
+    height: 5vh;
+
 }
 
 .dropdownIcon {
@@ -137,15 +242,24 @@
     right: 1px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 20px;
+    font-size: 40px;
     color: #527853;
     pointer-events: none;
 }
 
 .mapContainer {
     width: 25vw;
-    height: 18vh;
+    height: 20vh;
     margin: 0px 0px 10px 20px;
+    background-color: #EEE2D8;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+}
+
+.mapContainer2 {
+    width: 25vw;
+    height: 18vh;
     background-color: #EEE2D8;
     align-items: center;
     border-radius: 10px;
@@ -154,13 +268,32 @@
 
 .pictureContainer {
     width: 15vw;
-    height: 15vh;
+    height: 23vh; 
     margin-left: 10px;
     background-color: #EEE2D8;
-    align-items: center;
     border-radius: 10px;
-    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    box-shadow: 2px 2.5px 1px rgba(143, 142, 142, 0.45);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    cursor: pointer; 
+    text-align: center;
+    overflow: hidden;
+    position: relative;
 }
+
+.iconPicStyle {
+    font-size: 80px; 
+    color: black;
+    opacity: 13%;
+}
+
+.uploadedImage {
+    width: 100%; 
+    height: 100%; 
+    border-radius: 10px; 
+}
+
 
 .locationTextfield {
     width: 25vw;
@@ -174,12 +307,21 @@
     font-size: 20px;
     font-weight: normal;
     color: #527853;
+    padding-left: 10px;
 }
 
 .iconStyle {
-    font-size: 80px;
-    color: black;
+    font-size: 40px;
+    color: #3b573c;
     margin-left: 20px;
+}
+
+.iconArrowStyle {
+    font-size: 30px;
+    color: #3b573c;
+    margin: 10px 0px 0px 20px;
+    background-color: transparent;
+    border: none;
 }
 
 .confirmButton {
@@ -195,8 +337,96 @@
     outline: none;
     transition: background-color 0.3s ease;
     text-align: center;
+    width: max-content;
+    align-self: center;
+    margin: 20px 0px 10px 0px;
 }
 
 .confirmButton:hover {
     background-color: #466A47;
 }
+
+.dropdown {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    margin: 10px 0px 10px 0px;
+}
+
+.dropdownHeader {
+    width: 100%;
+    height: 5vh;
+    background-color: #EEE2D8;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+    
+}
+
+.dropdownList {
+    position: absolute;
+    background-color: #EEE2D8;
+    border: 5px solid rgb(164, 159, 155)2D8;
+    border-radius: 5px;
+    margin: 5px 0px 0px 10px;
+    width: 100%;
+    max-height: 30vh;
+    overflow-y: auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.checkbox input {
+    margin-right: 10px;
+}
+
+.ErrorChecking {
+    width: max-content;
+    background-color: #ffcccb; 
+    color: #d8000c; 
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #d8000c; 
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    position: relative; 
+    top: 0; 
+    z-index: 10; 
+  }
+
+  .Alerticon {
+    margin-right: 8px; 
+  }
+
+  .uploadbtn {
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .uploadText {
+    color: #333;
+  }
+  
