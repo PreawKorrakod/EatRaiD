@@ -2,15 +2,132 @@
   width: 100%;
   height: auto;
   min-height: 100vmin;
-  background-color: #F9E8D9;
+  background-color: #FFFFFF;
 }
 
 .Container{
   width: 100%;
-  height: 100%;
-  padding-top: 4vh;
+  height: auto;
+  padding-top: 1.5vh;
   padding-left: 6.5vw;
   padding-right: 6.5vw;
-  padding-bottom: 4vh;
-  background-color: #F9E8D9;
+  padding-bottom: 2vh;
+  display: flex; 
+  flex-direction: row;
+}
+
+.Search_Filter_wrapper{
+  width: 100%;
+  background-color: white;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.search_wrapper{
+  width: 100%;
+  /* padding-left: 10%;
+  padding-right: 10%; */
+  padding-bottom: 1%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.SearchBox{
+  width: 100%;
+  height: 4.5vh;
+  border: 1px solid #dbdbdb;
+  border-right: none;
+  display: flex ;
+  flex-direction: row ;
+  justify-content: center;
+  align-items: center;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  overflow: hidden;
+  box-shadow: none; 
+  transition: box-shadow 0.3s ease; 
+}
+
+.SearchBox.active {
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.25); /* เพิ่ม shadow เมื่อมีคลาส active */
+}
+
+.Search_inside{
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: 0.5rem; 
+  display: flex;
+  align-items: center;
+  padding-right: 0.5rem;
+  padding-left: 0.2rem;
+  border-right: 2px solid rgba(0, 0, 0, 0.103) ;
+  border-radius: 1.5px;
+  margin-right: 0.2rem;
+}
+
+.inputSearch{
+  padding-left: 0.2rem;
+  width: 100%;
+  border: none;
+  color:rgba(0, 0, 0, 0.76);
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
+  margin-left: 0.1rem; 
+}
+
+.inputSearch::placeholder {
+  color: rgba(0, 0, 0, 0.22);
+}
+
+
+.inputSearch:focus {
+  outline: none; 
+}
+
+.icon_Search{
+  color: rgba(0, 0, 0, 0.76);
+}
+
+
+.SearchBox_btn{
+  width: max-content;
+  background: linear-gradient(180deg, #BD4A10 0%, #DD6413 100%);
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  height: 4.5vh;
+  border: none;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+
+.Filter_wrapper{
+  width: 100%;
+  height: 12vh;
+  /* background-color: aqua; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.List_Containner{
+  background-color: aquamarine;
+  width: 200%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
 }
