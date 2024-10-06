@@ -20,9 +20,7 @@ export default function Navbar() {
 
 
     const profileRef = useRef(null);
-    const profileImage = '';
     const router = useRouter();
-
 
 
     useEffect(() => {
@@ -63,6 +61,12 @@ export default function Navbar() {
         };
     }, []);
 
+    function getInitials(isUserEmail) {
+        const name = isUserEmail.split('@')[0]; // ตัดเอาส่วนชื่อก่อน @
+        const initials = name.split('.').map(n => n[0].toUpperCase()).join(''); // ดึงตัวแรกของแต่ละส่วน
+        return initials;
+    }
+
     // ฟังก์ชัน Logout ตรงนี้เลยคับ
     const handleLogout = async () => {
         try {
@@ -76,7 +80,7 @@ export default function Navbar() {
                 setIsUserLoggedIn(false);
                 setIsEmailUser('');
                 setIsOwnerLoggedIn(false);
-               
+
             } else {
                 console.error('Logout failed');
             }
@@ -117,9 +121,9 @@ export default function Navbar() {
                                 Cancel
                             </button>
                             <button
-                                type="button" 
+                                type="button"
                                 className={styles.Logoutbtn}
-                                onClick={handleLogout} 
+                                onClick={handleLogout}
                             >
                                 Sign out
                             </button>
@@ -168,24 +172,20 @@ export default function Navbar() {
                                 onClick={() => setIsOpen_Profile(!isOpen_Profile)}
                                 ref={profileRef}
                             >
-                                {profileImage ? (
-                                    <Image
-                                        src={imgTest}
-                                        alt="Profile Picture"
-                                        className={styles.profilePic}
-                                    />
+                                {isUserEmail ? (
+                                    <div className={styles.profileInitials}>
+                                        {getInitials(isUserEmail)}
+                                    </div>
                                 ) : (
                                     <BsPersonCircle className={styles.profileicon} />
                                 )}
                                 {isOpen_Profile && (
                                     <div className={styles.profile_content}>
                                         <div className={styles.profileImage}>
-                                            {profileImage ? (
-                                                <Image
-                                                    src={imgTest}
-                                                    alt="Profile Picture"
-                                                    className={styles.profileicon}
-                                                />
+                                            {isUserEmail ? (
+                                                <div className={styles.profileInitials2}>
+                                                    {getInitials(isUserEmail)}
+                                                </div>
                                             ) : (
                                                 <BsPersonCircle className={styles.profileicon_Content} />
                                             )}

@@ -8,7 +8,6 @@
     z-index: 2000;
     align-items: center;
     justify-content: space-between;
-    /* background: linear-gradient(90deg, #EE7214 0%, #881E0B 100%); */
     background: linear-gradient(90deg,  #881E0B 0%, #EE7214 80%);
     box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.45);
     position: sticky;
@@ -191,13 +190,16 @@
     text-decoration: none;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    display:flex ;
     width: 30px;
     height: 30px;
     position: relative;
     cursor: pointer; 
     box-shadow: 0 2px 5px 2px rgba(242, 163, 67, 0.352);
-    /* border: solid 2px #f4f4f4 ; */
+    border: solid 2px #FFFF ;
     border-radius: 1000px;
+    background-color: #FFFF;
 }
 
 .profile_content {
@@ -209,7 +211,7 @@
     min-width: max-content; 
     max-height: max-content;
     right: 0; 
-    /* top: 2rem; */
+    top: 2rem;
     box-shadow: 0px 8px 16px 0px rgba(188, 185, 185, 0.509);
     z-index: 1;
     padding-left: 1rem;
@@ -243,6 +245,18 @@
     height: 100%;
     object-fit: cover;
 }
+
+.profileInitials{
+    display: flex; 
+    font-weight: bold;
+    text-transform: uppercase;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    color: rgba(255, 255, 255, 0);
+} 
 
 .profilePic{
     width: 100%;
