@@ -45,9 +45,15 @@ export default function Login() {
             });
     
             const user = response.data[0];
+            const role = user.Role
             console.log("Info:", user);
+            console.log("role:", role);
 
-            router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
+            if (role === 'owner'){
+                router.push(`${NEXT_PUBLIC_BASE_WEB_URL}/info`);
+            }else{
+                router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
+            }   
         } catch (error) {
             console.log(error);
             setError('Your email or password is incorrect. Try again.');

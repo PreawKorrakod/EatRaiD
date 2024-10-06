@@ -5,7 +5,7 @@ import Topbar from "../../../components/Topbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { BsX, BsCheck, BsArrowLeft } from "react-icons/bs";
+import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle } from "react-icons/bs";
 import { redirect, useRouter } from "next/navigation";
 
 import axios from 'axios';
@@ -15,6 +15,7 @@ export default function signupRestaurant() {
     const [email, setEmail] = useState(""); // เพิ่ม state สำหรับ email
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState('');
     const minPasswordLength = 6;
 
     const router = useRouter();
@@ -37,37 +38,46 @@ export default function signupRestaurant() {
     const handleSubmit = async (e) => {
         e.preventDefault(); // ป้องกันไม่ให้ page reload
 
+        if (!isPasswordValid ) {
+            setError('Please complete the password and confirm password.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match. Please check and try again.');
+            return;
+        }
+    
         // ตรวจสอบว่าฟอร์มมีข้อมูลครบหรือไม่
         if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
         }
+    
+        setError('');
 
-        try {
+
+        if (isPasswordMatching) {
             try {
-                // axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
-                //     email: email,
-                //     password: password
+                axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
+                    email: email,
+                    password: password
 
-                // }).then(async res => {
-                const id = '6963b19d-683c-471f-ae2f-6d76acecbac7';
-                const role = 'owner'
-                const userID = { email, role, id }; // สร้าง object ที่รวม email, role และ id
-                console.log("signup successful navigate to verify", userID);
-                sessionStorage.setItem('userID', JSON.stringify(userID));
-                router.push('/verify');
-                // });
-                //     }).catch(error => {
-                //         console.error('Error during signup:', error.response.data.message);
-                //         setError('This email already register. Please try again.');
-                //         // alert('This email already register. Please try again.')
-                //     });
+                }).then(async res => {
+                    const id = res.data.data.user.id;
+                    console.log('res',res)
+                    const userID = { email, id }; // สร้าง object ที่รวม email, role และ id
+                    console.log("signup successful navigate to Detail", userID);
+                    sessionStorage.setItem('userID', JSON.stringify(userID));
+                    router.push('/signupdetail');
+                }).catch(error => {
+                    console.error('Error during signup:', error);
+                    setError('This email already register. Please try again.');
+                });
             } catch (error) {
                 console.log("Error:", error);
             }
 
-        } catch (error) {
-            console.log("Error:", error);
-        }
+        } 
     };
 
     return (
@@ -105,20 +115,22 @@ export default function signupRestaurant() {
                                     required
                                 />
                                 <div className={styles.passwordCheckIcon}>
-                                    {isPasswordValid ? (
-                                        <>
-                                            <BsCheck className={styles.checkIcon} />
-                                            <p className={styles.passwordSuccess}>
-                                                Password is valid.
-                                            </p>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <BsX className={styles.xIcon} />
-                                            <p className={styles.passwordWarning}>
-                                                {minPasswordLength - password.length} more character(s) needed.
-                                            </p>
-                                        </>
+                                    {password.length > 0 && (
+                                        isPasswordValid ? (
+                                            <>
+                                                <BsCheck className={styles.checkIcon} />
+                                                <p className={styles.passwordSuccess}>
+                                                    Password is valid.
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <BsX className={styles.xIcon} />
+                                                <p className={styles.passwordWarning}>
+                                                    {minPasswordLength - password.length} more character(s) needed.
+                                                </p>
+                                            </>
+                                        )
                                     )}
                                 </div>
                             </div>
@@ -148,6 +160,12 @@ export default function signupRestaurant() {
                                         )
                                     )}
                                 </div>
+                                {error && (
+                                    <div className={styles.ErrorChecking}>
+                                        <BsExclamationCircle className={styles.Alerticon} />
+                                        {error}
+                                    </div>
+                                )}
                             </div>
                             <div className={styles.Loginbtn_wrapper}>
                                 <button

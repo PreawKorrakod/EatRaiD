@@ -41,13 +41,15 @@
     width: 45%;
     height: 100%;
     overflow: hidden;
+    background-color: #F9E8D9 ;
+    border-radius: 10px;
 }
 
 .Imagecover{
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px;
+    /* border-radius: 10px; */
 }
 
 
@@ -336,6 +338,11 @@
     color: #b4a599;
 }
 
+.Imageicon{
+    width: 20%;
+    height: 20%;
+}
+
 .Uploadbtn{
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -490,4 +497,29 @@
     height: 10vh;
     justify-content: center;
     align-items: center;
+}
+
+.loadingContainer{
+    width: 20vw;
+    height: 10vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.loading{
+    border-top: 10px solid blue;
+    border-right: 10px solid green;
+    border-bottom: 10px solid red;
+    border-left: 10px solid pink;
+    border-radius: 50%;
+    width: 10rem;
+    height: 10rem;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
