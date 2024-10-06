@@ -10,7 +10,7 @@
   height: auto;
   padding-left: 5vw;
   padding-right: 5vw;
-  padding-bottom: 2vh;
+  padding-bottom: 5vh;
   display: flex; 
   flex-direction: row;
 }
@@ -95,7 +95,7 @@
 
 .SearchBox_btn{
   width: max-content;
-  background: linear-gradient(180deg, #BD4A10 0%, #DD6413 100%);
+  background: linear-gradient(90deg, #df462b 0%, #ff6905 80%);
   display: flex;
   align-items: center; 
   justify-content: center;
