@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styles from "./page.module.css";
 import Navbar from "../../components/Navbar";
 import HomeCard from "../../components/HomeCard";
+import Image from "next/image";
 import { IoSearch } from "react-icons/io5";
 import image1 from "../../public/imgTest1.png";
 import image2 from "../../public/imgTest2.png";
@@ -26,7 +27,6 @@ export default function Home() {
 
   const responsive = {
     superLargeDesktop: {
-      // the naming can be any, depends on you.
       breakpoint: { max: 4000, min: 3000 },
       items: 5,
     },
@@ -44,12 +44,35 @@ export default function Home() {
     },
   };
 
+  const showRes = () => {
+    return data.map((item) => (
+      <div key={item.id} className={styles.restaurantItem}>
+        <div className={styles.resTmageCover}>
+          <Image
+            src={item.image.src}
+            alt={item.name}
+            className={styles.resImage}
+            width={300}
+            height={300}
+          />
+        </div>
+        <div className={styles.Resinfo}>
+          <div className={styles.nameRes}>{item.name}</div>
+          <div className={styles.typeRes}>{item.type}</div>
+        </div>
+        <div className={styles.ResSelect}>
+          <input type="Checkbox" />
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <div className={styles.page}>
       <Navbar></Navbar>
       <div className={styles.Container}>
         <div className={styles.Search_Filter_wrapper}>
-          <from className={styles.search_wrapper}>
+          <form className={styles.search_wrapper}>
             <div
               className={`${styles.SearchBox} ${
                 isFocused ? styles.active : ""
@@ -73,7 +96,7 @@ export default function Home() {
             <button type="submit" className={styles.SearchBox_btn}>
               Search
             </button>
-          </from>
+          </form>
           <div className={styles.Filter_wrapper}>
             <div className={styles.Filter_header}>Filter Restaurant</div>
             <div className={styles.Filter_Contaniner}></div>
@@ -121,9 +144,7 @@ export default function Home() {
                     Uncheck to remove from random
                   </div>
                 </div>
-                <div className={styles.listRes}>
-
-                </div>
+                <div className={styles.listRes}>{showRes()}</div>
               </div>
             </div>
           </div>
