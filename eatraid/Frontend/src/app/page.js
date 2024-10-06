@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styles from "./page.module.css";
 import Navbar from "../../components/Navbar";
 import HomeCard from "../../components/HomeCard";
+import Footer from "../../components/footer";
 import Image from "next/image";
 import { IoSearch } from "react-icons/io5";
 import image1 from "../../public/imgTest1.png";
@@ -150,6 +151,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Footer></Footer>
     </div>
   );
 }
