@@ -8,30 +8,26 @@
 .Container{
   width: 100%;
   height: auto;
-  padding-top: 1.5vh;
-  padding-left: 6.5vw;
-  padding-right: 6.5vw;
+  padding-left: 5vw;
+  padding-right: 5vw;
   padding-bottom: 2vh;
   display: flex; 
   flex-direction: row;
 }
 
 .Search_Filter_wrapper{
-  width: 100%;
+  width: 30%;
   background-color: white;
+  margin-top: 1rem;
   padding: 0.5rem;
   margin-bottom: 0.5rem;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
 .search_wrapper{
   width: 100%;
-  /* padding-left: 10%;
-  padding-right: 10%; */
   padding-bottom: 1%;
   display: flex;
   flex-direction: row;
@@ -117,7 +113,6 @@
 .Filter_wrapper{
   width: 100%;
   height: 12vh;
-  /* background-color: aqua; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -125,9 +120,156 @@
 }
 
 .List_Containner{
-  background-color: aquamarine;
-  width: 200%;
-  height: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 70%;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.random_wrapper{
+  width: 100%;
+  min-height: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  /* background-color: #BD4A10; */
+}
+
+.slider {
+  margin: auto;
+  text-align: center;
+}
+
+.RandomContainer{
+  width: 100%;
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 0.5rem;
+}
+
+.Randombtn {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  width: max-content;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: all 0.3s ease; 
+  background: linear-gradient(180deg, #ff5804 0%, #ff9100 100%);
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.Randombtn span{
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.randomicon{
+  margin-right: 0.5rem;
+}
+
+
+.Randombtn span::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  transition: all 0.5s ease;
+  z-index: -1;
+  transform: skewX(0deg);
+}
+
+.Randombtn span:hover::before {
+  left: 100%;
+  background: white;
+}
+
+.Randombtn:hover {
+  color: white;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+.Randombtn:active {
+  background: linear-gradient(180deg, #ffa66a 0%,  #ff5804 100%); /* ไล่สีกลับกันเมื่อกด */
+  transform: translateY(3px); 
+  transition: all 0.1s ease; 
+}
+
+.Res_wrapper{
+  width: 100%;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.AllmenuContaniner{
+  margin-top: 1rem;
+  width: 100%;
+  padding-bottom: 0.5rem;
+  border-radius: 10px;
+  border: 1px solid #dbdbdb;
+  overflow: hidden;
+}
+
+.Allmenu_header{
+  padding-left: 0.5rem;
+  padding-top: 0.2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.45);
+  z-index: 99;
+}
+
+.title{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 1rem;
+
+}
+
+.ShowSelect{
+  font-size: smaller;
+  width: max-content;
+  display: flex;
+  align-items: center;
+}
+
+.Showlength{
+  margin-left: 0.2rem;
+  width: max-content;
+  max-width: max-content;
+  background-color: #e7e7e7;
+  padding-top: 0.1rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 5px;
+}
+
+.subtitle{
+  width: 100%;
+  font-size: small;
+  color: #afafaf;
 }

@@ -1,0 +1,75 @@
+.card {
+    margin: 10px 10px;
+    justify-items: center;
+    padding: 0.80vw;
+    background-color: white;
+}
+
+.main_content{
+    display: flex;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+
+.singleDest{
+    overflow: hidden;
+    min-height: 35vh; 
+    max-height: 35vh; 
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    border-radius: 1rem;
+    padding-right: 0.6rem;
+    padding-left: 0.6rem;
+    padding-top: 0.6rem;
+    box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.45);
+    background-color: white;
+}
+
+.singleDest:hover{
+    box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.74);
+    scale: 1.05;
+    transition: .3s ease;
+}
+
+.dastImage{
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+}
+
+.Imagecover{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+
+.dastFooter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 1vh;
+    width: 100%;
+    height: min-content;
+}
+
+.destText {
+    color: black;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    width: 80%;
+    margin-right: 2vw;
+}
+
+.destText p{ 
+    font-size: larger; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+
+
