@@ -403,10 +403,12 @@ export default function Info() {
           objectFit="cover"
         />
       </div>
-
       <div className={styles.bigContainer}>
+      <button className={styles.editButton} onClick={handleEditClick}>
+            Edit Profile
+          </button>
         <div className={styles.rowCon1}>
-          <div className={styles.toggleContainer}>
+        <div className={styles.toggleContainer}>
             <label className={styles.switch}>
               <input
                 type="checkbox"
@@ -419,11 +421,10 @@ export default function Info() {
               {isOpen ? "Open" : "Close"}
             </span>
           </div>
-          <button className={styles.editButton} onClick={handleEditClick}>
-            Edit Profile
-          </button>
+          
         </div>
         <h1 className={styles.title}>{infoData.name}</h1>
+       
         <div className={styles.rowCon}>
           <div className={styles.halfCon}>
             <div className={styles.rowCon}>
@@ -473,6 +474,7 @@ export default function Info() {
             </div>
           </div>
         </div>
+        
       </div>
       {isModalOpen && <Modal />}
     </div>

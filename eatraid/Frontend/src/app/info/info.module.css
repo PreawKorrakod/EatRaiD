@@ -2,20 +2,21 @@
 .mainBg {
     width: 100vw;
     height: 100vh;
-    background-color: #F9E8D9;
+    /* background-color: #F9E8D9; */
+    background-color: #fff;
     display: flex;
     flex-direction: column;
 }
 
 .bigContainer {
     width: 80vw;
-    height: 60vh;
+    height: 65vh;
     background-color: white;
     /* background-color: #FFF4EB; */
     border-radius: 15px;
     padding: 1rem 2rem 0.7rem 2rem;
     margin: auto;
-    box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.1); */
     display: flex;
     flex-direction: column;
     margin-top: -10vh;
@@ -117,7 +118,7 @@
     text-align: end;
     width: max-content;
     align-self: self-end;
-    margin: 1rem 0px 1rem 0px;
+    margin: -80px 0px 20px 0px;
 }
 
 .editButton:hover {
@@ -130,7 +131,7 @@
     font-weight: 800;
     color: #527853;
     text-align: center;
-    margin-bottom: 10px;
+    margin: 30px 0px 10px 0px;
 }
 
 .rowCon {
@@ -178,7 +179,7 @@
     font-weight: normal;
     color: #527853;
     width: max-content;
-    margin: 0px 0px 0.7rem 0.7rem;
+    margin: 0px 0px 0.7rem 40px;
 }
 
 .mapCon {
@@ -196,6 +197,7 @@
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
+    align-self: center;
 }
   
 .switch {
