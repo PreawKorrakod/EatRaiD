@@ -9,6 +9,7 @@ import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
 import imgTest from '../../Frontend/public/TestProfile.jpg';
 import { useRouter } from "next/navigation";
+import logo from '../public/LOGO.png';
 
 
 export default function Navbar() {
@@ -137,8 +138,13 @@ export default function Navbar() {
     return (
         <div className={styles.AllBar}>
             <div className={styles.Leftside}>
-                <Link href={isOwnerLoggedIn ? `/info` : `/`} className={styles.Logo}>
-                    EatRaiD
+                <Link href={isOwnerLoggedIn ? `/info` : `/`} className={styles.logotitle}>
+                    <div className={styles.Logo}>
+                        <Image src={logo} alt='logoEatraiD' width={1000} height={1000} className={styles.logoImage} />
+                    </div>
+                </Link>
+                <Link href={isOwnerLoggedIn ? `/info` : `/`} className={styles.LinkText}>
+                    <h1 className={styles.logotext}>EaiRaiD</h1>
                 </Link>
             </div>
             <div className={styles.Rightside}>

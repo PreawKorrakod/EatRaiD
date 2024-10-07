@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 3rem;
+    height: 3.5rem;
     top: 0;
     left: 0;
     z-index: 2000;
@@ -15,15 +15,54 @@
 
 .Leftside{
     width: 75%;
-    padding-left: 6rem;
+    padding-left: 5rem;
     text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+}
+
+.logotext{
+    color: #FFFF;
+    font-size: 24px;
+    font-family: Galindo;
+    width: fit-content;
+}
+
+.LinkText{
+    padding-left: 0.3rem;
+    color: #FFFF;
+    text-decoration: none;
+    align-items: center;
+    cursor: pointer;
+}
+
+.logotitle{
+    width: 100px ;
+    overflow: hidden;
+    height: 100%;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .Logo{
-    font-weight: 500;
-    color: #f4f4f4;
-    font-size: x-large;
+    display: flex;
+    flex-direction: row;
     text-decoration: none;
+    width: 145px;
+    height: 100%;
+    overflow: hidden;
+    margin-top: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.logoImage{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .Rightside{
@@ -188,12 +227,12 @@
 .btnContainer{
     width: fit-content;
     cursor: pointer; 
-    padding: 0.2rem;
+    padding: 0.3rem;
     border-radius: 50%;
 }
 
 .btnContainer:hover{
-    background-color: #57535384;
+    background-color: #afafafb3;
 }
 
 .profilebtn{
