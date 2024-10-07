@@ -137,7 +137,7 @@ export default function Navbar() {
     return (
         <div className={styles.AllBar}>
             <div className={styles.Leftside}>
-                <Link href={`/`} className={styles.Logo}>
+                <Link href={isOwnerLoggedIn ? `/info` : `/`}className={styles.Logo}>
                     EatRaiD
                 </Link>
             </div>
