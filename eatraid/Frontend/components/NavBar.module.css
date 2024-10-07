@@ -207,7 +207,7 @@
     display: flex;
     flex-direction: row;
     position: absolute;
-    background-color: #F9E8D9;
+    background-color: #FFFF;
     min-width: max-content; 
     max-height: max-content;
     right: 0; 
@@ -230,8 +230,11 @@
     border-radius: 1000px;
     justify-content: center;
     align-items: center; 
-    border: solid 3px black;
+    border: solid 3px #FFFF;
     font-size: xx-large;
+    background: linear-gradient(90deg, #ff5804 0%, #ff9100 100%);
+    color: #f4f4f4;
+    box-shadow: 0px 8px 16px 0px rgba(188, 185, 185, 0.509);
 }
 
 .profileicon_Content{
@@ -257,6 +260,18 @@
     width: 100%;
     height: 100%;
     color: rgb(0, 0, 0);
+}
+
+.profileInitials2{
+    display: flex; 
+    font-weight: bold;
+    text-transform: uppercase;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    color: #f4f4f4;
 } 
 
 .profilePic{
@@ -276,10 +291,10 @@
 .SignOutbtn_Profile{
     padding-left: 1rem ;
     padding-right: 1rem;
-    color: black;
-    background-color: #f4f4f4;
+    border:solid 2px #f44336;
+    background-color: #f44336; 
+    color: white;
     text-decoration: none;
-    border:solid 2px #f4f4f4;
     border-radius: 0.5rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
@@ -300,12 +315,9 @@
 }
 
 .SignOutbtn_Profile:hover{
-    scale: 1.1;
+    scale: 1.05;
     cursor: pointer;
-    color: #f4f4f4;
-    border:solid 2px #f44336;
-    background-color: #f44336;
-    transition: .3s ease;
+    opacity: 0.8;
 }
 
 .SignOuticon_Profile{

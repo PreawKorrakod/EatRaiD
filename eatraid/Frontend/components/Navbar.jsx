@@ -183,7 +183,7 @@ export default function Navbar() {
                                     <div className={styles.profile_content}>
                                         <div className={styles.profileImage}>
                                             {isUserEmail ? (
-                                                <div className={styles.profileInitials}>
+                                                <div className={styles.profileInitials2}>
                                                     {getInitials(isUserEmail)}
                                                 </div>
                                             ) : (
