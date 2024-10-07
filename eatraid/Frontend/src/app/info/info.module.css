@@ -203,6 +203,7 @@
     display: inline-block;
     width: 4vw; 
     height: 4vh;
+    /* background-color: #d8000c; */
 }
   
 .switch input {
@@ -226,10 +227,10 @@
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px; 
-    width: 26px; 
-    left: 4px; 
-    bottom: 4px; 
+    height: 3.2vh; 
+    width: 1.7vw; 
+    left: 0.2vw; 
+    bottom: 0.4vh; 
     background-color: white; 
     transition: .4s;
     border-radius: 50%; 
