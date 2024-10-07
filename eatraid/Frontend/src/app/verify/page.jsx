@@ -6,6 +6,7 @@ import { MdMarkEmailUnread } from "react-icons/md";
 import { FaArrowLeft } from "react-icons/fa6";
 import { BsExclamationCircle } from "react-icons/bs";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
@@ -16,19 +17,24 @@ export default function Verify() {
   const router = useRouter();
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [error, setError] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
 
- 
+
   useEffect(() => {
     const storedUserID = sessionStorage.getItem('userID');
     if (storedUserID) {
-      setUserID(JSON.parse(storedUserID)); // แปลง JSON string เป็น object
-      console.log(JSON.parse(storedUserID))
-    }
-  }, []);
-    
+      const parsedUserID = JSON.parse(storedUserID);
+      setUserID(parsedUserID); // Store in state
+      console.log("Data:", parsedUserID, parsedUserID.file);
 
-  if (!userID) return <div>Loading...</div>; // แสดง Loading หากยังไม่มีข้อมูล
-  // console.log('userID',userID)
+    } else {
+      sessionStorage.removeItem('userID');
+      router.push("/"); // Redirect to home if no user ID
+    }
+  }, [router]);
+
+
+
   const handleInputChange = (e, index) => {
     const value = e.target.value;
     if (/^[0-9]*$/.test(value) && value.length <= 1) {
@@ -57,25 +63,39 @@ export default function Verify() {
 
       try {
         axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
-          email: userID.email, 
+          email: userID.email,
           OTP: otp.join(""),
-          role: userID.role, 
-          user: userID.id
+          role: userID.role,
+          profilePic: userID.file,
+          user: userID.id,
+          Name: userID.Name, 
+          OpenTime: userID.OpenTime, 
+          CloseTime: userID.CloseTime, 
+          Location: userID.Location, 
+          Latitude: userID.Latitude, 
+          Longitude: userID.Longitude,
+          BusinessDay: userID.BusinessDay, 
+          Tel: userID.Tel, 
+          Line: userID.Line
 
-          }).then(async res => {
-              console.log("Navigate based on role", res)
-              // Navigate based on role
-              if (userID.role === "customer") {
-                router.push("/"); // Redirect to home page
-              } else if (userID.role === "owner") {
-                router.push("/info"); 
-              }
-          }).catch(error => {
-              console.error('Error during verify OTP:', error);
-              setError('Wrong OTP. Try again.');
-          });
-        } catch (error) {
-          console.log(error);
+        }).then(async res => {
+          console.log("Navigate based on role", res)
+          // Navigate based on role
+
+          if (userID.role === "customer") {
+            router.push("/"); // Redirect to home page
+          } else if (userID.role === "owner") {
+            sessionStorage.removeItem('userData');
+            router.push("/info");
+          }
+        }).catch(error => {
+          console.error('Error during verify OTP:', error);
+          if (error.status == 400){
+            setError(error.response.data.message);
+          }
+        });
+      } catch (error) {
+        console.log(error);
       }
 
       setError("");
@@ -87,14 +107,14 @@ export default function Verify() {
       axios.post(`${NEXT_PUBLIC_BASE_API_URL}/resend-OTP`, {
         email: userID.email,
 
-        }).then(async res => {
-            console.log('resend OTP successfully')
-        }).catch(error => {
-            console.error('Error during resend OTP:', error);
-            setError("Can't resend OTP. Try again.");
-        });
-      } catch (error) {
-        console.log(error);
+      }).then(async res => {
+        console.log('resend OTP successfully')
+      }).catch(error => {
+        console.error('Error during resend OTP:', error);
+        setError("Can't resend OTP. Try again.");
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -115,7 +135,7 @@ export default function Verify() {
           <h1 className={styles.title}>Please check your email</h1>
           <h2 className={styles.normalText}>
             We've sent a code to{" "}
-            <span className={styles.emailText}>{userID.email}</span>
+            <span className={styles.emailText}>{userID ? userID.email : 'loading...'}</span>
           </h2>
           <div className={styles.otpBox}>
             {[...Array(6)].map((_, index) => (
@@ -155,6 +175,7 @@ export default function Verify() {
             {error}
           </div>
         )}
+        {/* {profileImage && <Image src={profileImage} alt="Profile" width={900} height={900}/>} */}
       </div>
     </div>
   );

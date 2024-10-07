@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./signupdetail.module.css";
 import { BsChevronDown } from "react-icons/bs";
 import { FaLine } from "react-icons/fa6";
@@ -10,6 +10,9 @@ import { AiOutlinePicture } from "react-icons/ai";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa6";
 import Image from "next/image";
+
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
 const categoryDropdown = ["Thai", "Japanese"]; //from backend
 const time_hr = Array.from({ length: 24 }, (_, i) =>
@@ -26,8 +29,36 @@ const businessDays = [
   "Saturday",
 ];
 
-export default function SignupDetail({ params }) {
-  const { email: initialEmail, userID, role } = params;
+export default function SignupDetail() {
+
+  const [category, setCategory] = useState('');
+  const [userID, setuserID] = useState(null);
+
+  useEffect(() => {
+    const fetchcategoryData = async () => {
+      try {
+        const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
+        // console.log(category.data);
+        setCategory(category.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchcategoryData();
+  }, []);
+
+  useEffect(() => {
+    const storeduserID = sessionStorage.getItem('userID');
+    if (storeduserID) {
+      setuserID(JSON.parse(storeduserID));
+      console.log(JSON.parse(storeduserID));
+    } else {
+      router.push("/");  // Redirect to home if no user ID
+    }
+  }, []);
+
+  // if (!userID) return router.push("/");  // กลับหน้า Home
+
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(categoryDropdown[0]);
   const [openTimeHR, setOpenTimeHR] = useState(time_hr[0]);
@@ -43,6 +74,11 @@ export default function SignupDetail({ params }) {
 
   const [profileImage, setProfileImage] = useState("");
   const [Imagefile, setImagefile] = useState("");
+
+  const [NameOwner, setNameOwner] = useState(""); //เก็บชื่อที่ตัวแปร NameOwner
+  const [numberPhone, setNumberPhone] = useState(""); //เก็บเบอร์ที่ตัวแปร numberPhone
+  const [LineContact, setLineContact] = useState(""); // เก็บไลน์ที่ตัวแปร numberPhone
+
 
   const handleChangeCategory = (event) => {
     setSelectedOption(event.target.value);
@@ -105,11 +141,32 @@ export default function SignupDetail({ params }) {
       return;
     }
 
-    console.log("Confirm button clicked");
-    console.log("Selected business days:", selectedBusinessDays);
-    console.log("Location:", location);
-
-    router.push("/verify");
+    // console.log("Confirm button clicked");
+    // console.log("Selected business days:", selectedBusinessDays);
+    // console.log("Location:", location);
+    // console.log('image',Imagefile)
+    const displayOpenTime = `${openTimeHR}:${openTimeMIN}`;
+    const displayCloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
+    
+    const id = userID.id;
+    const role = 'owner';
+    const email = userID.email;
+    const file = profileImage;
+    const Name = NameOwner || "-";
+    const OpenTime = displayOpenTime === "00:00" ? "-" : displayOpenTime;
+    const CloseTime = displayCloseTime === "00:00" ? "-" : displayCloseTime; 
+    const Location = location || "-"; 
+    const Latitude = 0; 
+    const Longitude = 0; 
+    const BusinessDay = selectedBusinessDays.join(',');
+    const Tel = numberPhone || "-";
+    const Line = LineContact || "-";
+    sessionStorage.removeItem('userID');
+    const newUserID = {  email, role, id, file,
+      Name, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay, Tel, Line };
+    console.log("signup successful navigate to verify", newUserID);
+    sessionStorage.setItem('userID', JSON.stringify(newUserID)); 
+    router.push('/verify');
   };
 
   return (
@@ -154,16 +211,23 @@ export default function SignupDetail({ params }) {
               </div>
               <div className={styles.colContainer}>
                 <h2 className={styles.normalText}>Name</h2>
-                <input name="Name" className={styles.textfieldStyle} />
+
+                <input name="Name"
+                  value={NameOwner}
+                  className={styles.textfieldStyle}
+                  onChange={(e) => setNameOwner(e.target.value)}
+                />
+
                 <h2 className={styles.normalText}>Category</h2>
                 <select
                   className={styles.ddTextfieldStyle}
                   value={selectedOption}
                   onChange={handleChangeCategory}
                 >
-                  {categoryDropdown.map((category, index) => (
-                    <option key={index} value={category}>
-                      {category}
+                  <option value="" disabled>Select Type</option>
+                  {category && category.map((items, index) => (
+                    <option key={index} value={items.Id}>
+                      {items.Name}
                     </option>
                   ))}
                 </select>
@@ -284,11 +348,23 @@ export default function SignupDetail({ params }) {
               <div className={styles.colContact}>
                 <div className={styles.rowContainer}>
                   <IoCall className={styles.iconStyle} />
-                  <input name="Phone" className={styles.textfieldStyle} />
+
+                  <input name="Phone"
+                    value={numberPhone}
+                    className={styles.textfieldStyle}
+                    onChange={(e) => setNumberPhone(e.target.value)}
+                  />
+
                 </div>
                 <div className={styles.rowContainer}>
                   <FaLine className={styles.iconStyle} />
-                  <input name="Line" className={styles.textfieldStyle} />
+
+                  <input name="Line"
+                    value={LineContact}
+                    className={styles.textfieldStyle}
+                    onChange={(e) => setLineContact(e.target.value)}
+                  />
+
                 </div>
               </div>
             </div>
