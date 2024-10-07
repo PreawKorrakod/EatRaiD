@@ -83,7 +83,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/verify-OTP",  async (req, res) => {
+app.post("/verify-OTP", async (req, res) => {
   const { email, OTP, role, user, profilePic
     , Name, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay, Tel, Line } = req.body;
   // const file = req.file;
@@ -97,7 +97,7 @@ app.post("/verify-OTP",  async (req, res) => {
 
   // เปลี่ยนข้อมูลที่ได้เป็น Uint8Array
   for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
   }
 
   // สร้าง Blob จาก Uint8Array
@@ -120,7 +120,7 @@ app.post("/verify-OTP",  async (req, res) => {
     if (role == 'customer') {
       const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: null, Email: email }]).select("*");
       if (error) {
-        res.status(500).json({error, message: "Error while insert user data"});
+        res.status(500).json({ error, message: "Error while insert user data" });
       }
       else {
         res.status(200).json({ message: "insert custommer data to table user successfully", data: data })
@@ -129,47 +129,47 @@ app.post("/verify-OTP",  async (req, res) => {
       if (file) {
         const arrayBuffer = await file.arrayBuffer(); // แปลงเป็น ArrayBuffer
         const { data: updateData, error: uploadError } = await supabase.storage
-            .from("Profile")
-            .upload(newfilename, arrayBuffer, {
-                contentType: newminetype,
-                upsert: true,
-            });
+          .from("Profile")
+          .upload(newfilename, arrayBuffer, {
+            contentType: newminetype,
+            upsert: true,
+          });
         if (uploadError) {
-            console.error(uploadError); // แสดง error เพื่อวิเคราะห์ปัญหา
-            throw uploadError;
+          console.error(uploadError); // แสดง error เพื่อวิเคราะห์ปัญหา
+          throw uploadError;
         } else {
           const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
 
 
           const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: ProfilePic, Email: email }]).select("*");
           if (error) {
-            res.status(500).json({error, message: "Error while insert user data"});
+            res.status(500).json({ error, message: "Error while insert user data" });
           }
           else {
             console.log('owner')
-                const { ownerData, error } = await supabase.from('Restaurant').insert([{
-                  RestaurantId: user, Name: Name,
-                  OpenTime: OpenTime, CloseTime: CloseTime,
-                  Location: Location, Latitude: Latitude, Longitude: Longitude,
-                  BusinessDay: BusinessDay, Tel: Tel, Line: Line
-                }]).select("*")
-                if (error) {
-                  const { error: delete_error } = await supabase
-                    .from('User')
-                    .delete()
-                    .eq('Id', user);
-                  if (delete_error) {
-                    res.status(500).json({
-                      "error to delete data": delete_error,
-                      "error to insert reataurant data data": error
-                    });
-                  } else {
-                    res.status(500).json({ message: "error while inserting data so delete error data", error: error })
-                  }
-                }
-                else {
-                  res.status(200).json({ message: "insert restaurant data without profile picture successfully", user: data, restaurant: ownerData})
-                }
+            const { ownerData, error } = await supabase.from('Restaurant').insert([{
+              RestaurantId: user, Name: Name,
+              OpenTime: OpenTime, CloseTime: CloseTime,
+              Location: Location, Latitude: Latitude, Longitude: Longitude,
+              BusinessDay: BusinessDay, Tel: Tel, Line: Line
+            }]).select("*")
+            if (error) {
+              const { error: delete_error } = await supabase
+                .from('User')
+                .delete()
+                .eq('Id', user);
+              if (delete_error) {
+                res.status(500).json({
+                  "error to delete data": delete_error,
+                  "error to insert reataurant data data": error
+                });
+              } else {
+                res.status(500).json({ message: "error while inserting data so delete error data", error: error })
+              }
+            }
+            else {
+              res.status(200).json({ message: "insert restaurant data without profile picture successfully", user: data, restaurant: ownerData })
+            }
           }
         }
       } else {
@@ -569,9 +569,10 @@ app.get("/category", async (req, res) => {
 });
 
 app.get("/showinfo", async (req, res) => {
-  const { RestaurantId, Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay } = req.body;
+  const { RestaurantId } = req.query;
+
   const { data, error } = await supabase.from("Restaurant")
-    .select('Name,Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay')
+    .select('Name, Location, BusinessDay, Tel, Line, OpenTimeHr , OpenTimeMin , CloseTimeHr , CloseTimeMin , User(ProfilePic)')
     .eq("RestaurantId", RestaurantId);
   if (error) {
     res.status(500).json({ error });

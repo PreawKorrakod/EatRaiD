@@ -4,14 +4,17 @@ import styles from "./info.module.css";
 import { BsChevronDown } from "react-icons/bs";
 import { FaLine } from "react-icons/fa6";
 import { IoCall } from "react-icons/io5";
-import Topbar from "../../../components/Topbar";
+import Navbar from "../../../components/Navbar";
 import { useRouter } from "next/navigation";
 import { AiOutlinePicture } from "react-icons/ai";
 import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa6";
+import axios from "axios";
+import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
 export default function Info() {
   const router = useRouter();
+  const [userId, setUserId] = useState(null);
   const [infoData, setInfoData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,9 +37,7 @@ export default function Info() {
   const [openTimeMIN, setOpenTimeMIN] = useState("");
   const [closeTimeHR, setCloseTimeHR] = useState("");
   const [closeTimeMIN, setCloseTimeMIN] = useState("");
-  const [selectedBusinessDays, setSelectedBusinessDays] = useState(
-    new Array(7).fill(true)
-  );
+  const [selectedBusinessDays, setSelectedBusinessDays] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [location, setLocation] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -59,47 +60,104 @@ export default function Info() {
   ];
 
   useEffect(() => {
-    // Simulated fetch from backend
-    const test = {
-      image: "/DecPic.png",
-      name: "Restaurant name",
-      category: "Thai",
-      businessDay: "Sunday",
-      openTimeHR: "12",
-      openTimeMin: "15",
-      closeTimeHR: "18",
-      closeTimeMin: "45",
-      contactCall: "0888",
-      contactLine: "hi",
-      location: "subscribe rama7",
+    const fetchData = async () => {
+      try {
+        const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
+          withCredentials: true,
+        });
+        if (user !== null) {
+          console.log(user.data[0].Id);
+          setUserId(user.data[0].Id);
+        } else {
+          router.push(`/`);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
     };
-    setInfoData(test);
-  }, []);
+    fetchData();
+  }, [userId]);
+
+  useEffect(() => {
+    const fetchInfo = async () => {
+      try {
+        const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/showinfo`, {
+          params: { RestaurantId: userId },
+          withCredentials: true,
+        });
+        if (response.data) {
+          console.log("Restaurant info:", response.data[0]);
+          const selectedDays = [];
+          const days = response.data[0].BusinessDay.split(',');
+          for (let i = 0; i < days.length; i++) {
+            if (days[i] === 'true') {
+              selectedDays.push(true);
+            } else {
+              selectedDays.push(false);
+            }
+          }
+          setSelectedBusinessDays(selectedDays);
+          setInfoData(response.data[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching restaurant info:", error);
+      }
+    }
+    fetchInfo();
+  }, [userId]);
+
+
+
+  const openday = [];
+  if (infoData) {
+    const beforeshow_open = [];
+    const beforeshow_close = [];
+    const split = infoData.BusinessDay.split(',');
+    for (let i = 0; i < split.length; i++) {
+      if (split[i] === 'true') {
+        beforeshow_open.push(businessDays[i]);
+      } else {
+        beforeshow_close.push(businessDays[i]);
+      }
+    }
+    if (beforeshow_open.length === 7) {
+      openday.push('Everyday');
+    } else if (beforeshow_open.length < 4) {
+      openday.push(beforeshow_open.join(', '));
+    } else if (beforeshow_open.length >= 4) {
+      openday.push("Everyday except " + beforeshow_close.join(', '));
+    }
+  }
+
+  console.log('openDays:', openday);
+
+
 
   useEffect(() => {
     if (infoData) {
       setFormData({
-        name: infoData.name,
+        name: infoData.Name,
         category: infoData.category,
-        businessDay: infoData.businessDay,
-        openTimeHR: infoData.openTimeHR,
-        openTimeMin: infoData.openTimeMin,
-        closeTimeHR: infoData.closeTimeHR,
-        closeTimeMin: infoData.closeTimeMin,
-        contactCall: infoData.contactCall,
-        contactLine: infoData.contactLine,
-        location: infoData.location,
-        profileImage: infoData.image,
+        businessDay: openday,
+        openTimeHR: infoData.OpenTimeHr,
+        openTimeMin: infoData.OpenTimeMin,
+        closeTimeHR: infoData.CloseTimeHr,
+        closeTimeMin: infoData.CloseTimeMin,
+        contactCall: infoData.Tel,
+        contactLine: infoData.Line,
+        location: infoData.Location,
+        profileImage: infoData.User.ProfilePic,
       });
       setSelectedOption(infoData.category);
-      setOpenTimeHR(infoData.openTimeHR);
-      setOpenTimeMIN(infoData.openTimeMin);
-      setCloseTimeHR(infoData.closeTimeHR);
-      setCloseTimeMIN(infoData.closeTimeMin);
-      setLocation(infoData.location);
+      setOpenTimeHR(infoData.OpenTimeHR);
+      setOpenTimeMIN(infoData.OpenTimeMin);
+      setCloseTimeHR(infoData.CloseTimeHR);
+      setCloseTimeMIN(infoData.CloseTimeMin);
+      setLocation(infoData.Location);
     }
   }, [infoData]);
 
+  console.log("formData:", formData);
   if (!infoData) {
     return <div>Loading...</div>;
   }
@@ -144,13 +202,6 @@ export default function Info() {
     setCloseTimeMIN(event.target.value);
   };
 
-  const handleCheckboxChange = (index) => {
-    const updatedCheckedState = selectedBusinessDays.map((item, i) =>
-      i === index ? !item : item
-    );
-    setSelectedBusinessDays(updatedCheckedState);
-  };
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
@@ -171,6 +222,15 @@ export default function Info() {
     handleCloseModal();
   };
 
+  // console.log("selectedBusinessDays:", selectedBusinessDays);
+
+  const handleCheckboxChange = (index) => {
+    console.log("selectedBusinessDays:", selectedBusinessDays);
+    const updatedCheckedState = selectedBusinessDays.map((item, i) =>
+      i === index ? !item : item
+    );
+    setSelectedBusinessDays(updatedCheckedState);
+  };
 
   const Modal = () => {
     if (!isModalOpen) return null;
@@ -190,7 +250,7 @@ export default function Info() {
                         hidden
                         onChange={handleFileChange}
                       />
-                      {!profileImage ? (
+                      {!formData.profileImage ? (
                         <div>
                           <AiOutlinePicture className={styles.iconPicStyleM} />
                           <h2 className={styles.picTextM}>click to upload</h2>
@@ -198,7 +258,7 @@ export default function Info() {
                       ) : (
                         <Image
                           className={styles.uploadedImageM}
-                          src={profileImage}
+                          src={formData.profileImage}
                           alt="Uploaded"
                           layout="fill"
                           objectFit="cover"
@@ -235,9 +295,8 @@ export default function Info() {
                   <h2 className={styles.normalTextM}>Business days</h2>
                   <div className={styles.dropdownM} onClick={toggleDropdown}>
                     <div className={styles.dropdownHeaderM}>
-                      {selectedBusinessDays.every(Boolean)
-                        ? "Everyday"
-                        : "Selected Day(s)"}
+                      {
+                        formData.businessDay}
                       <BsChevronDown />
                     </div>
                     {dropdownOpen && (
@@ -255,6 +314,7 @@ export default function Info() {
                         ))}
                       </div>
                     )}
+
                   </div>
                 </div>
                 <div className={styles.rowContainerM}>
@@ -263,7 +323,7 @@ export default function Info() {
                     <div className={styles.textfieldSubContainerM}>
                       <select
                         className={styles.ddTextfieldStyleM}
-                        value={openTimeHR}
+                        value={formData.openTimeHR}
                         onChange={handleChangeOpenTimeHR}
                       >
                         {time_hr.map((hr, index) => (
@@ -275,7 +335,7 @@ export default function Info() {
                       <h2 className={styles.normalTextM}> : </h2>
                       <select
                         className={styles.ddTextfieldStyleM}
-                        value={openTimeMIN}
+                        value={formData.openTimeMin}
                         onChange={handleChangeOpenTimeMIN}
                       >
                         {time_min.map((min, index) => (
@@ -291,7 +351,7 @@ export default function Info() {
                     <div className={styles.textfieldSubContainerM}>
                       <select
                         className={styles.ddTextfieldStyleM}
-                        value={closeTimeHR}
+                        value={formData.closeTimeHR}
                         onChange={handleChangeCloseTimeHR}
                       >
                         {time_hr.map((hr, index) => (
@@ -303,7 +363,7 @@ export default function Info() {
                       <h2 className={styles.normalTextM}> : </h2>
                       <select
                         className={styles.ddTextfieldStyleM}
-                        value={closeTimeMIN}
+                        value={formData.closeTimeMin}
                         onChange={handleChangeCloseTimeMIN}
                       >
                         {time_min.map((min, index) => (
@@ -325,7 +385,7 @@ export default function Info() {
                   name="Location"
                   className={styles.locationTextfieldM}
                   rows={4}
-                  value={location}
+                  value={formData.location}
                   onChange={(e) => {
                     setLocation(e.target.value);
                   }}
@@ -393,11 +453,11 @@ export default function Info() {
 
   return (
     <div className={styles.mainBg}>
-      <Topbar />
+      <Navbar />
       <div className={styles.profileCon}>
         <Image
           className={styles.uploadedImage}
-          src={infoData.image}
+          src={infoData.User.ProfilePic}
           alt="Uploaded"
           layout="fill"
           objectFit="cover"
@@ -423,7 +483,7 @@ export default function Info() {
             Edit Profile
           </button>
         </div>
-        <h1 className={styles.title}>{infoData.name}</h1>
+        <h1 className={styles.title}>{infoData.Name}</h1>
         <div className={styles.rowCon}>
           <div className={styles.halfCon}>
             <div className={styles.rowCon}>
@@ -432,16 +492,16 @@ export default function Info() {
             </div>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Business day</h2>
-              <h2 className={styles.normalText2}>{infoData.businessDay}</h2>
+              <h2 className={styles.normalText2}>{openday}</h2>
             </div>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Open time</h2>
               <h2 className={styles.normalText3}>
-                {infoData.openTimeHR} : {infoData.openTimeMin}
+                {infoData.OpenTimeHr} : {infoData.OpenTimeMin}
               </h2>
               <h2 className={styles.normalText1}>Close time</h2>
               <h2 className={styles.normalText2}>
-                {infoData.closeTimeHR} : {infoData.closeTimeMin}
+                {infoData.CloseTimeHr} : {infoData.CloseTimeMin}
               </h2>
             </div>
             <div className={styles.rowCon}>
@@ -449,11 +509,11 @@ export default function Info() {
               <div className={styles.colCon}>
                 <div className={styles.rowCon}>
                   <IoCall className={styles.icon} />
-                  <h2 className={styles.normalText2}>{infoData.contactCall}</h2>
+                  <h2 className={styles.normalText2}>{infoData.Tel}</h2>
                 </div>
                 <div className={styles.rowCon}>
                   <FaLine className={styles.icon} />
-                  <h2 className={styles.normalText2}>{infoData.contactLine}</h2>
+                  <h2 className={styles.normalText2}>{infoData.Line}</h2>
                 </div>
               </div>
             </div>
@@ -461,11 +521,11 @@ export default function Info() {
 
           <div className={styles.halfCon}>
             <h2 className={styles.normalText}>Location</h2>
-            <h2 className={styles.locationCon}>{infoData.location}</h2>
+            <h2 className={styles.locationCon}>{infoData.Location}</h2>
             <div className="mapouter">
               <div className="gmap_canvas">
                 <iframe
-                  src={`https://maps.google.com/maps?output=embed&q=${infoData.location}`}
+                  src={`https://maps.google.com/maps?output=embed&q=${infoData.Location}`}
                   frameBorder="0"
                   className={styles.mapCon}
                 ></iframe>
