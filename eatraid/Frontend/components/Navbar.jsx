@@ -145,7 +145,7 @@ export default function Navbar() {
                 {isUserLoggedIn ? (
                     isOwnerLoggedIn ? (
                         <div className={styles.Rightside_Owner}>
-                            <Link href={`/`} className={styles.homebtn_User}>
+                            <Link href={`/info`} className={styles.homebtn_User}>
                                 Info
                             </Link>
                             <Link href={`/menu`} className={styles.favouritebtn}>
@@ -164,7 +164,7 @@ export default function Navbar() {
                             <Link href={`/`} className={styles.homebtn_User}>
                                 Home
                             </Link>
-                            <Link href={`/Favourite`} className={styles.favouritebtn}>
+                            <Link href={`/favoriteList`} className={styles.favouritebtn}>
                                 Favourite List
                             </Link>
                             <div
