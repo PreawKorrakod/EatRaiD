@@ -137,7 +137,7 @@ export default function Navbar() {
     return (
         <div className={styles.AllBar}>
             <div className={styles.Leftside}>
-                <Link href={isOwnerLoggedIn ? `/info` : `/`}className={styles.Logo}>
+                <Link href={isOwnerLoggedIn ? `/info` : `/`} className={styles.Logo}>
                     EatRaiD
                 </Link>
             </div>
@@ -167,41 +167,44 @@ export default function Navbar() {
                             <Link href={`/favoriteList`} className={styles.favouritebtn}>
                                 Favourite List
                             </Link>
-                            <div
-                                className={styles.profilebtn}
-                                onClick={() => setIsOpen_Profile(!isOpen_Profile)}
-                                ref={profileRef}
-                            >
-                                {isUserEmail ? (
-                                    <div className={styles.profileInitials}>
-                                        {getInitials(isUserEmail)}
-                                    </div>
-                                ) : (
-                                    <BsPersonCircle className={styles.profileicon} />
-                                )}
-                                {isOpen_Profile && (
-                                    <div className={styles.profile_content}>
-                                        <div className={styles.profileImage}>
-                                            {isUserEmail ? (
-                                                <div className={styles.profileInitials2}>
-                                                    {getInitials(isUserEmail)}
-                                                </div>
-                                            ) : (
-                                                <BsPersonCircle className={styles.profileicon_Content} />
-                                            )}
+                            <div className={styles.btnContainer}>
+                                <div
+                                    className={styles.profilebtn}
+                                    onClick={() => setIsOpen_Profile(!isOpen_Profile)}
+                                    ref={profileRef}
+                                >
+                                    {isUserEmail ? (
+                                        <div className={styles.profileInitials}>
+                                            {getInitials(isUserEmail)}
                                         </div>
-                                        <div className={styles.profileDetail}>
-                                            Email: {isUserEmail}
-                                            <div className={styles.SignOutSide}>
-                                                <button className={styles.SignOutbtn_Profile} onClick={() => setIsLogoutModalOpen(true)}>
-                                                    <BsBoxArrowRight size={25} className={styles.SignOuticon_Profile} />
-                                                    Sign out
-                                                </button>
+                                    ) : (
+                                        <BsPersonCircle className={styles.profileicon} />
+                                    )}
+                                    {isOpen_Profile && (
+                                        <div className={styles.profile_content}>
+                                            <div className={styles.profileImage}>
+                                                {isUserEmail ? (
+                                                    <div className={styles.profileInitials2}>
+                                                        {getInitials(isUserEmail)}
+                                                    </div>
+                                                ) : (
+                                                    <BsPersonCircle className={styles.profileicon_Content} />
+                                                )}
+                                            </div>
+                                            <div className={styles.profileDetail}>
+                                                Email: {isUserEmail}
+                                                <div className={styles.SignOutSide}>
+                                                    <button className={styles.SignOutbtn_Profile} onClick={() => setIsLogoutModalOpen(true)}>
+                                                        <BsBoxArrowRight size={25} className={styles.SignOuticon_Profile} />
+                                                        Sign out
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
+
                         </div>
                     )
                 ) : (

@@ -185,6 +185,17 @@
     margin-right: 0.2rem;
 }
 
+.btnContainer{
+    width: fit-content;
+    cursor: pointer; 
+    padding: 0.2rem;
+    border-radius: 50%;
+}
+
+.btnContainer:hover{
+    background-color: #57535384;
+}
+
 .profilebtn{
     color: #f4f4f4;
     text-decoration: none;
@@ -198,9 +209,11 @@
     cursor: pointer; 
     box-shadow: 0 2px 5px 2px rgba(242, 163, 67, 0.352);
     border: solid 2px #FFFF ;
-    border-radius: 1000px;
+    border-radius: 50%;
     background-color: #FFFF;
+    padding: 0.5rem;
 }
+
 
 .profile_content {
     cursor: default;
@@ -304,7 +317,7 @@
     display: flex;
     flex-direction: row; 
     margin-top: 1rem;
-    box-shadow: 0px 8px 16px 0px rgba(188, 185, 185, 0.509);
+    box-shadow: 0px 8px 16px 0px rgba(179, 176, 176, 0.509);
 }
 
 .SignOutSide{
