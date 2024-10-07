@@ -1,19 +1,27 @@
 'use client';
+import axios from 'axios';
 import styles from './login.module.css';
 import image1 from '../../../public/DecPic1.png';
 import Topbar from '../../../components/Topbar';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
-import { BsExclamationCircle } from "react-icons/bs";
+import { useContext, useState } from 'react';
+import { BsExclamationCircle, BsArrowLeft } from "react-icons/bs";
+import { redirect, useRouter } from "next/navigation";
 
-export default function login() {
+import { NEXT_PUBLIC_BASE_API_URL, NEXT_PUBLIC_BASE_WEB_URL } from '../../../src/app/config/supabaseClient.js';
+import session from '../../../session';
+import { json } from 'react-router-dom';
+// import { General, supabase } from '../../../session';
+
+
+export default function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         // ตรวจสอบว่ากรอกข้อมูลครบหรือไม่
         if (!formData.email || !formData.password) {
             setError('Please fill in both email and password.');
@@ -25,16 +33,34 @@ export default function login() {
 
         // Backend
         try {
-            // ตัวอย่างการจำลอง error จาก backend หากข้อมูลไม่ถูกต้อง
-            const loginSuccessful = false; // แทนการเช็ค backend
+            await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/login`, {
+                email: formData.email,
+                password: formData.password
+            }, { withCredentials: true }).then((res) => {
+                console.log("Login success", res.data.user.id);
+            });
 
-            if (!loginSuccessful) {
-                setError('Your email or password is incorrect. Try again.');
-            }
+            const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
+                withCredentials: true, 
+            });
+    
+            const user = response.data[0];
+            const role = user.Role
+            console.log("Info:", user);
+            console.log("role:", role);
+
+            if (role === 'owner'){
+                router.push(`${NEXT_PUBLIC_BASE_WEB_URL}/info`);
+            }else{
+                router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
+            }   
         } catch (error) {
             console.log(error);
+            setError('Your email or password is incorrect. Try again.');
         }
     };
+
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,6 +71,9 @@ export default function login() {
             <Topbar></Topbar>
             <div className={styles.content_wrapper}>
                 <div className={styles.container}>
+                    <Link href={`/`}>
+                        <BsArrowLeft className={styles.back_icon} />
+                    </Link>
                     <div className={styles.From_Login}>
                         <div className={styles.From_Login_header}>
                             Log in
@@ -90,7 +119,7 @@ export default function login() {
                             <p>
                                 Don't have an account?
                             </p>
-                            <Link href={`/signup`} className={styles.Signup_link} >
+                            <Link href={`/signUpRole`} className={styles.Signup_link} >
                                 Sign up
                             </Link>
                         </div>

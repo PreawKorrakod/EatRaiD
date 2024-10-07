@@ -166,6 +166,7 @@
     align-items: center;
     display: flex;
     flex-direction: row;
+    font-size: small;
 }
 
 .SignOutbtn:hover{
@@ -180,8 +181,6 @@
 }
 
 .SignOuticon{
-    width: 30px;
-    height: 30px;
     justify-self: center;
     margin-right: 0.2rem;
 }
@@ -261,10 +260,10 @@
 .SignOutbtn_Profile{
     padding-left: 1rem ;
     padding-right: 1rem;
-    color: #f4f4f4;
-    background-color: #EE7214;
+    color: black;
+    background-color: #f4f4f4;
     text-decoration: none;
-    border:solid 2px #EE7214;
+    border:solid 2px #f4f4f4;
     border-radius: 0.5rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
@@ -287,6 +286,10 @@
 .SignOutbtn_Profile:hover{
     scale: 1.1;
     cursor: pointer;
+    color: #f4f4f4;
+    border:solid 2px #f44336;
+    background-color: #f44336;
+    transition: .3s ease;
 }
 
 .SignOuticon_Profile{
