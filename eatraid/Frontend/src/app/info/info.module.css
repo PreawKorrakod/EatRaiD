@@ -1,0 +1,722 @@
+/* px/16 = rem */
+.mainBg {
+    width: 100vw;
+    height: 100vh;
+    background-color: #F9E8D9;
+    display: flex;
+    flex-direction: column;
+}
+
+.bigContainer {
+    width: 80vw;
+    height: 60vh;
+    background-color: white;
+    /* background-color: #FFF4EB; */
+    border-radius: 15px;
+    padding: 1rem 2rem 0.7rem 2rem;
+    margin: auto;
+    box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    margin-top: -10vh;
+}
+
+.profileCon {
+    width: 18vw;
+    height: 33vh;
+    background-color: #F4F3F1;
+    border-radius: 50%;
+    margin-top: 1.25rem;
+    align-self: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.uploadedImage {
+    width: 100%; 
+    height: 100%; 
+    border-radius: 50%; 
+}
+
+.normalText {
+    font-family: 'Poppins';
+    font-size: 23px;
+    font-weight: 600;
+    color: #527853;
+    width: 11vw;
+    min-width: 11vw;
+    /* background-color: aqua; */
+    margin: 1px 0px 1rem 0.7rem
+}
+
+/* close time */
+.normalText1 {
+    font-family: 'Poppins';
+    font-size: 23px;
+    font-weight: 600;
+    color: #527853;
+    width: max-content;
+    min-width: fit-content;
+    margin: 1px 0px 1rem 0.7rem
+}
+
+/* data from back */
+.normalText2 {
+    font-family: 'Poppins';
+    font-size: 23px;
+    font-weight: normal;
+    color: #527853;
+    width: 100%;
+    margin: 1px 0px 1rem 0.7rem;
+    /* background-color: #fcfaf8; */
+}
+
+/* opentime HR */
+.normalText3 {
+    font-family: 'Poppins';
+    font-size: 23px;
+    font-weight: normal;
+    color: #527853;
+    width: 100%;
+    min-width: 7vw;
+    margin: 1px 0px 1rem 0.7rem;
+}
+
+/* category data */
+.normalText4 {
+    font-family: 'Poppins';
+    font-size: 23px;
+    font-weight: normal;
+    background-color: #527853;
+    color: white;
+    border-radius: 2.5vh;
+    width: fit-content;
+    height: 5vh;
+    padding: 5px 10px 5px 10px;
+    /* background-color: aqua; */
+    margin: 1px 0px 0rem 0.7rem
+}
+
+.editButton {
+    background-color: #527853;
+    color: #FFF4EB;
+    border-radius: 0.7rem;
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    padding: 0.7rem 1.5rem;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+    text-align: end;
+    width: max-content;
+    align-self: self-end;
+    margin: 1rem 0px 1rem 0px;
+}
+
+.editButton:hover {
+    background-color: #466A47;
+}
+
+.title {
+    font-family: 'Poppins';
+    font-size: 25px;
+    font-weight: 800;
+    color: #527853;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.rowCon {
+    display: flex;
+    flex-direction: row;
+    /* background-color: aquamarine; */
+}
+
+.rowCon1 {
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+}
+
+.rowCon2 {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+}
+
+.colCon {
+    display: flex;
+    flex-direction: column;
+}
+
+.halfCon {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    /* background-color: chartreuse; */
+}
+
+.icon {
+    font-size: 35px;
+    color: #466A47;
+    margin: 0.5px 0px 1rem 0.7rem;
+}
+
+.locationCon {
+    height: max-content;
+    font-family: 'Poppins';
+    font-size: 23px;
+    font-weight: normal;
+    color: #527853;
+    width: max-content;
+    margin: 0px 0px 0.7rem 0.7rem;
+}
+
+.mapCon {
+    width: 90%;
+    height: 20vh;
+    border-radius: 5px;
+    margin: 0px 0px 0.7rem 0.7rem;
+    background-color: #d0c4be;
+}
+
+.toggleContainer {
+    display: flex;
+    align-items: center;
+    margin: 10px 10px 1rem 10px;
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+}
+  
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 4vw; 
+    height: 4vh;
+}
+  
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+  
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc; 
+    transition: .4s;
+    border-radius: 34px; 
+}
+  
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px; 
+    width: 26px; 
+    left: 4px; 
+    bottom: 4px; 
+    background-color: white; 
+    transition: .4s;
+    border-radius: 50%; 
+}
+  
+  /* status on toggle */
+input:checked + .slider {
+    background-color: #527853; 
+}
+  
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+  
+.statusText {
+    margin-left: 10px; 
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    color: #527853;
+}
+  
+
+  /* modal */
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* align-self: center; */
+    /* background-color: #d8000c; */
+    z-index: 1000;
+}
+
+.modalContent {
+    width: 70vw;
+    height: 85vh;
+    /* background-color: #F9E8D9; */
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    text-align: center;
+    align-self: center;
+    align-items: center;
+    padding: 30px;
+    margin-top: 3rem;
+}
+
+.bigContainerM {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    /* background-color: #FFFBF7; */
+    border-radius: 50px;
+    padding: 15px 30px 10px 30px;
+    margin: auto;
+    /* box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1); */
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.bottomContainerM {
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.LoginButtonM {
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+    color: #527853;
+    text-decoration: underline;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: color 0.3s ease;
+}
+
+.LoginButtonM:hover {
+    color: #3b5234;
+    background-color: #e2ddd7;
+}
+
+.bottomTextM {
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+    color: #527853;
+    width: max-content;
+    min-width: fit-content;
+    margin: 0px 10px 0px 10px;
+}
+
+.titleM {
+    font-family: 'Poppins';
+    font-size: 42px;
+    font-weight: 800;
+    color: #527853;
+    text-align: center;
+}
+
+.normalTextM {
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    color: #527853;
+    width: max-content;
+    min-width: fit-content;
+    margin: 0px 0px 10px 10px;
+}
+
+.picTextM {
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-weight: normal;
+    color: black;
+    opacity: 30%;
+    margin-bottom: 10px;
+}
+
+.inputContainerM {
+    width: 62vw;
+    height: 50vh;
+    display: flex;
+    flex-direction: row;
+    margin: 1rem 2rem 1.5rem 2rem;
+}
+
+.textfieldBigContainerLM {
+    width: 32vw;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.rowContainerM {
+    display: flex;
+    flex-direction: row;
+}
+
+.rowContainer2M {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-left: 20px;
+}
+
+.colContainerM {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px 0px 10px;
+}
+
+.colTimeM {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0px 0px 10px;
+}
+
+.colContainer2M {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 10px 0px 10px;
+}
+
+.colContactM {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 0px 10px 10px;
+    margin-bottom: 10px;
+}
+
+.textfieldBigContainerRM {
+    width: 25vw;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    margin-left: 25px;
+}
+
+.textfieldSubContainerM {
+    width: 100%;
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0px 10px 0px;
+    align-items: center;
+}
+
+.textfieldSubContainerRM {
+    width: 27vw;
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    margin: 10px 20px 10px 0px;
+    align-items: center;
+}
+
+.picBigContainerM {
+    width: 15vw;
+    height: 23vh;
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    position: relative;
+}
+
+.textfieldStyleM {
+    height: 5vh;
+    width: 100%;
+    margin: 0px 0px 10px 10px;
+    background-color: #EEE2D8;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+    color: #233624;
+    padding-left: 10px;
+}
+
+.textfieldStyleMiniM {
+    width: 7vw;
+    height: 5vh;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #EEE2D8;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    color: #527853;
+}
+
+.ddTextfieldStyleM {
+    width: 100%;
+    height: 5vh;
+    padding-left: 10px;
+    max-height: 10vh;
+    margin-left: 10px;
+    font-size: 18px;
+    color: #333;
+    background-color: #EEE2D8;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+}
+
+.ddTextfieldStyleM:focus {
+    border-color: #7f7f7f;
+    height: 5vh;
+}
+
+.dropdownIconM {
+    position: absolute;
+    right: 1px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+    color: #527853;
+    pointer-events: none;
+}
+
+.mapContainerM {
+    width: 25vw;
+    height: 20vh;
+    margin: 0px 0px 10px 20px;
+    background-color: #EEE2D8;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 2px 2.5px 1px rgba(143, 142, 142, 0.45);
+}
+
+.mapContainer2M {
+    width: 25vw;
+    height: 18vh;
+    background-color: #EEE2D8;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 2px 2.5px 1px rgba(143, 142, 142, 0.45);
+}
+
+.pictureContainerM {
+    width: 15vw;
+    height: 23vh; 
+    margin-left: 10px;
+    background-color: #EEE2D8;
+    border-radius: 10px;
+    box-shadow: 2px 2.5px 1px rgba(143, 142, 142, 0.45);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    cursor: pointer; 
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.iconPicStyleM {
+    font-size: 80px; 
+    color: black;
+    opacity: 13%;
+}
+
+.uploadedImageM {
+    width: 100%; 
+    height: 100%; 
+    border-radius: 10px; 
+}
+
+.locationTextfieldM {
+    width: 25vw;
+    height: 10vh;
+    margin: -10px 10px 20px 20px;
+    background-color: #EEE2D8;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    color: #527853;
+    padding-left: 10px;
+}
+
+.iconStyleM {
+    font-size: 40px;
+    color: #3b573c;
+    margin-left: 20px;
+}
+
+.iconArrowStyleM {
+    font-size: 30px;
+    color: #3b573c;
+    margin: 10px 0px 0px 20px;
+    background-color: transparent;
+    border: none;
+}
+
+.saveButtonM {
+    background-color: #527853;
+    color: #FFF4EB;
+    border-radius: 10px;
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    width: max-content;
+    align-self: center;
+    margin: 40px 80px 10px 0px;
+    box-shadow: 2px 2.5px 5px rgba(143, 142, 142, 0.45);
+}
+
+.saveButtonM:hover {
+    background-color: #466A47;
+}
+
+.closeButtonM {
+    background-color: #EE7214;
+    color: #FFF4EB;
+    border-radius: 10px;
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    width: max-content;
+    align-self: center;
+    margin: 40px 0px 10px 0px;
+    box-shadow: 2px 2.5px 5px rgba(143, 142, 142, 0.45);
+}
+
+.closeButtonM:hover {
+    background-color: #b95910;
+}
+
+.dropdownM {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    margin: 10px 0px 10px 0px;
+}
+
+.dropdownHeaderM {
+    width: 100%;
+    height: 5vh;
+    background-color: #EEE2D8;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.dropdownListM {
+    position: absolute;
+    background-color: #EEE2D8;
+    border: 5px solid rgb(164, 159, 155);
+    border-radius: 5px;
+    margin: 5px 0px 0px 10px;
+    width: 100%;
+    max-height: 30vh;
+    overflow-y: auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.checkboxM {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.checkboxM input {
+    margin-right: 10px;
+}
+
+.ErrorCheckingM {
+    width: max-content;
+    background-color: #ffcccb; 
+    color: #d8000c; 
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #d8000c; 
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    position: relative; 
+    top: 0; 
+    z-index: 10; 
+}
+
+.AlerticonM {
+    margin-right: 8px; 
+}
+
+.uploadbtnM {
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.uploadTextM {
+    color: #333;
+}
