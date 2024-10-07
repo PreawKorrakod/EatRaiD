@@ -19,6 +19,11 @@ const data = [
   { id: 3, name: "food C", image: image3, type: "fastfood" },
   { id: 4, name: "food A", image: image1, type: "order to cooked" },
   { id: 5, name: "food B", image: image2, type: "noodle" },
+  { id: 6, name: "food B", image: image2, type: "noodle" },
+  { id: 7, name: "food B", image: image2, type: "noodle" },
+  { id: 8, name: "food B", image: image2, type: "noodle" },
+  { id: 9, name: "food B", image: image2, type: "noodle" },
+  { id: 10, name: "food B", image: image2, type: "noodle" },
 ];
 
 export default function Home() {
@@ -106,7 +111,14 @@ export default function Home() {
         <div className={styles.List_Containner}>
           <div className={styles.random_wrapper}>
             <div className={styles.slider}>
-              <Carousel responsive={responsive} style={{ zIndex: "900" }}>
+              <Carousel
+                responsive={responsive}
+                style={{ zIndex: "900" }}
+                autoPlay={true}
+                // centerMode={true}
+                // rewindWithAnimation={true}
+                // shouldResetAutoplay={true}
+              >
                 {data.map((card) => {
                   return (
                     <div key={card.id}>
@@ -135,10 +147,18 @@ export default function Home() {
               <div className={styles.AllmenuContaniner}>
                 <div className={styles.Allmenu_header}>
                   <div className={styles.title}>
-                    All Restaurant
-                    <div className={styles.ShowSelect}>
-                      Select{" "}
+                    <div className={styles.Lefttitle}>
+                      All Restaurant{" "}
                       <div className={styles.Showlength}>{data.length}</div>
+                    </div>
+                    <div className={styles.SelectChoice}>
+                      <input
+                        type="checkbox"
+                        className={styles.Checkboxinput}
+                        width={25}
+                        height={25}
+                      />
+                      <div className={styles.SelectText}>Select All</div>
                     </div>
                   </div>
                   <div className={styles.subtitle}>
