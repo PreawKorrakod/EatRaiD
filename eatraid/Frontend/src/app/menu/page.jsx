@@ -455,8 +455,7 @@ export default function menu() {
                                     type={restaurant.Type.Name}
                                     price={restaurant.Price}
                                     owner={OwnerID}
-                                    // user={Userfromsession}
-                                    role="owner"
+                                    user={Userfromsession}
                                     onEdit={handleMenuUpdate}
                                     onRemove={handleDelete}
                                 />

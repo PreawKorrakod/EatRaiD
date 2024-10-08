@@ -62,7 +62,9 @@ export default function restaurant() {
       pages.push(
         <button
           key={i}
-          className={`${styles.pageButton} ${currentPage === i ? styles.activePage : ''}`}
+          className={`${styles.pageButton} ${
+            currentPage === i ? styles.activePage : ""
+          }`}
           onClick={() => handlePageClick(i)}
         >
           {i}
@@ -71,7 +73,6 @@ export default function restaurant() {
     }
     return pages;
   };
-
 
   const [infoData, setInfoData] = useState(null);
   const [formData, setFormData] = useState({
@@ -145,27 +146,21 @@ export default function restaurant() {
     formData.status === "open" ? styles.statusOpen : styles.statusClosed;
   const statusText = formData.status === "open" ? "Open" : "Close";
 
-
-
   return (
     <div className={styles.mainBg}>
       <Topbar />
       <div className={styles.scrollableContainer}>
+          
+        <div className={styles.bigContainer}>
         <div className={styles.profileCon}>
-          <Image
-            className={styles.uploadedImage}
-            src={infoData.image}
-            alt="Uploaded"
-            layout="fill"
-            objectFit="cover"
-          />
-        </div>
-        <div>
-          <h1 className={styles.title}>{infoData.name}</h1>
-          <GoDotFill className={`${styles.iconDot} ${statusClass}`} />
-          <span className={`${styles.statusText} ${statusClass}`}>
-            {statusText}
-          </span>
+            <Image
+              className={styles.uploadedImage}
+              src={infoData.image}
+              alt="Uploaded"
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
           <button className={styles.editButton} onClick={handleFavClick}>
             Favorite
             {infoData.fav === "true" ? (
@@ -174,12 +169,69 @@ export default function restaurant() {
               <IoHeartOutline className={styles.favoriteIcon} />
             )}
           </button>
+          <div className={styles.rowCon2}>
+            <h1 className={styles.title}>{infoData.name}</h1>
+            <GoDotFill className={`${styles.iconDot} ${statusClass}`} />
+            <span className={`${styles.statusText} ${statusClass}`}>
+              {statusText}
+            </span>
+          </div>
+          <div className={styles.rowCon}>
+            <div className={styles.halfCon}>
+              <div className={styles.rowCon}>
+                <h2 className={styles.normalText}>Category</h2>
+                <h2 className={styles.normalText4}>{infoData.category}</h2>
+              </div>
+              <div className={styles.rowCon}>
+                <h2 className={styles.normalText}>Business day</h2>
+                <h2 className={styles.normalText2}>{infoData.businessDay}</h2>
+              </div>
+              <div className={styles.rowCon}>
+                <h2 className={styles.normalText}>Open time</h2>
+                <h2 className={styles.normalText3}>
+                  {infoData.openTimeHR} : {infoData.openTimeMin}
+                </h2>
+                <h2 className={styles.normalText1}>Close time</h2>
+                <h2 className={styles.normalText2}>
+                  {infoData.closeTimeHR} : {infoData.closeTimeMin}
+                </h2>
+              </div>
+              <div className={styles.rowCon}>
+                <h2 className={styles.normalText}>Contact</h2>
+                <div className={styles.colCon}>
+                  <div className={styles.rowCon}>
+                    <IoCall className={styles.icon} />
+                    <h2 className={styles.normalText2}>
+                      {infoData.contactCall}
+                    </h2>
+                  </div>
+                  <div className={styles.rowCon}>
+                    <FaLine className={styles.icon} />
+                    <h2 className={styles.normalText2}>
+                      {infoData.contactLine}
+                    </h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles.halfCon}>
+              <h2 className={styles.normalText}>Location</h2>
+              <h2 className={styles.locationCon}>{infoData.location}</h2>
+              <div className="mapouter">
+                <div className="gmap_canvas">
+                  <iframe
+                    src={`https://maps.google.com/maps?output=embed&q=${infoData.location}`}
+                    frameBorder="0"
+                    className={styles.mapCon}
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className={styles.MenuContainer}>
-          <div className={styles.Menuheader}>
-            Menu
-          </div>
+          <div className={styles.Menuheader}>Menu</div>
           {currentItems.length > 0 ? (
             <div className={styles.content_grid}>
               {/* backend มาเชื่อมให้ใส่ข้อมูล restaurant.(ชื่อคอลัมน์) นะ */}
@@ -191,7 +243,7 @@ export default function restaurant() {
                   name={restaurant.name}
                   type={restaurant.type}
                   price={restaurant.price}
-                  role = 'customer'
+                  role="customer"
                   // role = 'owner'
                 />
               ))}
