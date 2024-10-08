@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { AiOutlinePicture } from "react-icons/ai";
 import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa6";
+
+
 import axios from "axios";
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
@@ -33,6 +35,7 @@ export default function Info() {
   });
 
   const [selectedOption, setSelectedOption] = useState("");
+
   // const [openTimeHR, setOpenTimeHR] = useState(formData.openTimeHR);
   // const [openTimeMIN, setOpenTimeMIN] = useState(formData.openTimeMin);
   // const [closeTimeHR, setCloseTimeHR] = useState(formData.closeTimeHR);
@@ -44,11 +47,12 @@ export default function Info() {
   const [profileImage, setProfileImage] = useState("");
   const [imageFile, setImageFile] = useState("");
   const [typerestaurant, setTyperestaurant] = useState("");
-
   const categoryDropdown = ["Thai", "Japanese"]; // from backend
+  
   const time_hr = Array.from({ length: 24 }, (_, i) =>
     String(i).padStart(2, "0")
   );
+  
   const time_min = ["00", "15", "30", "45"];
   const businessDays = [
     "Sunday",
@@ -61,6 +65,7 @@ export default function Info() {
   ];
 
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
         const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
@@ -112,7 +117,7 @@ export default function Info() {
         });
         console.log("Restaurant Category:", category.data[0].TypeName);
         const type = category.data.map((item) => item.TypeName);
-        setTyperestaurant(type.join('/')); // ใช้ join เพื่อรวมเป็นสตริง
+        setTyperestaurant(type.join('/')); 
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -147,6 +152,8 @@ export default function Info() {
   }, [infoData]);
 
   console.log("formData:", formData);
+
+
   if (!infoData) {
     return <div>Loading...</div>;
   }
@@ -170,6 +177,7 @@ export default function Info() {
   const handleChangeCategory = (event) => {
     setSelectedOption(event.target.value);
   };
+
 
   // const handleChangeOpenTimeHR = (event) => {
   //   setOpenTimeHR(event.target.value);
@@ -237,6 +245,7 @@ export default function Info() {
       alert("Please upload a valid image file.");
     }
   };
+
 
   console.log("type:", typerestaurant);
   const handleSaveClick = async () => {
@@ -310,11 +319,6 @@ export default function Info() {
   } else if (beforeshow_open.length >= 4) {
     openday.push("Everyday except " + beforeshow_close.join(', '));
   }
-
-
-
-
-
 
   const handleCheckboxChange = (index) => {
     const updatedCheckedState = selectedBusinessDays.map((item, i) =>
@@ -406,7 +410,6 @@ export default function Info() {
                         ))}
                       </div>
                     )}
-
                   </div>
                 </div>
                 <div className={styles.rowContainerM}>
@@ -424,7 +427,6 @@ export default function Info() {
                           </option>
                         ))}
                       </select>
-
                       <select
                         className={styles.ddTextfieldStyleM}
                         value={formData.openTimeMin}
@@ -436,8 +438,12 @@ export default function Info() {
                           </option>
                         ))}
                       </select>
-
-                      <select
+                    </div>
+                  </div>
+                  <div className={styles.colTimeM}>
+                    <h2 className={styles.normalTextM}>Close time</h2>
+                    <div className={styles.textfieldSubContainerM}>
+                     <select
                         className={styles.ddTextfieldStyleM}
                         value={formData.closeTimeHR}
                         onChange={handleChangeCloseTimeHR}
@@ -448,7 +454,7 @@ export default function Info() {
                           </option>
                         ))}
                       </select>
-
+                      <h2 className={styles.normalTextM}> : </h2>
                       <select
                         className={styles.ddTextfieldStyleM}
                         value={formData.closeTimeMin}
@@ -551,10 +557,12 @@ export default function Info() {
           objectFit="cover"
         />
       </div>
-
       <div className={styles.bigContainer}>
+//       <button className={styles.editButton} onClick={handleEditClick}>
+//             Edit Profile
+//           </button>
         <div className={styles.rowCon1}>
-          <div className={styles.toggleContainer}>
+        <div className={styles.toggleContainer}>
             <label className={styles.switch}>
               <input
                 type="checkbox"
@@ -572,6 +580,7 @@ export default function Info() {
           </button>
         </div>
         <h1 className={styles.title}>{infoData.Name}</h1>
+
         <div className={styles.rowCon}>
           <div className={styles.halfCon}>
             <div className={styles.rowCon}>
@@ -581,6 +590,7 @@ export default function Info() {
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Business day</h2>
               <h2 className={styles.normalText2}>{openday}</h2>
+
             </div>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Open time</h2>

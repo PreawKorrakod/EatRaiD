@@ -12,7 +12,8 @@ import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
 const MenuCard = (props) => {
 
     // เป็นค่า props ที่ดึงมา  // User เป็นตัวแปร User สร้างมาเก็บค่าของ User/owner ที่กำลัง  เพื่อเอามาเทียบว่าเท่ากับ owner ไหม ถ้าไม่ตรงจะไม่ขึ้นปุ่ม edit
-    const { id, img, name, type, price, owner, user, onEdit } = props;
+    // const { id, img, name, type, price, owner, user, onEdit } = props;
+    const { id, img, name, type, price, owner, role, onEdit } = props;
 
 
     const [selectedMenu, setSelectedMenu] = useState({ name, type, price, img });// เก็บค่าข้อมูลเดิมก่อนที่จะทำการ Edit ใหม่
@@ -355,7 +356,7 @@ const MenuCard = (props) => {
                             </div>
                             <div className={styles.menu_buttom}>
                                 {/* check ว่ามีปุ่ม edit ไหม */}
-                                {user === owner ? <button
+                                { role === 'owner' ? <button
                                     className={styles.Editfood}
                                     onClick={() => handleEditClick()} >
                                     <BsPencilSquare className={styles.Editicon} />
