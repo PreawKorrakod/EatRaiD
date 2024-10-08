@@ -1,6 +1,5 @@
 .card {
     margin: 10px 10px;
-    justify-items: center;
     padding: 0.80vw;
     background-color: white;
 }
@@ -35,7 +34,7 @@
 
 .dastImage{
     width: 100%;
-    height: 50%;
+    height: 45%;
     overflow: hidden;
 }
 
@@ -50,8 +49,7 @@
 
 .dastFooter {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
     padding-top: 1vh;
     width: 100%;
     height: min-content;
@@ -61,15 +59,27 @@
     color: black;
     overflow: hidden; 
     text-overflow: ellipsis; 
-    width: 80%;
-    margin-right: 2vw;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    
 }
 
 .destText p{ 
-    font-size: larger; 
+    font-size: large; 
     overflow: hidden; 
     text-overflow: ellipsis; 
 }
 
+.showType{
+    font-size: small;
+    padding-top: 0.2rem;
+    padding-left: 1rem;
+    padding-bottom: 0.2rem;
+    width: 100%;
+}
 
+.typeComponent{
+    margin-right: 0.5rem ;
+}
 

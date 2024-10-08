@@ -3,7 +3,7 @@ import styles from './HomeCard.module.css'
 import Image from 'next/image';
 
 const HomeCard = (props) => {
-    const { id, img, name } = props;
+    const { id, img, name, type } = props;
 
     return (
         <div className={styles.card}>
@@ -15,10 +15,13 @@ const HomeCard = (props) => {
                     </div>
 
                     <div className={styles.dastFooter}>
-                        <div className={styles.link_blog2}>
-                            <div className={styles.destText}>
-                                <p>{name}</p>
-                            </div>
+                        <div className={styles.destText}>
+                            <p>{name}</p>
+                        </div>
+                        <div className={styles.showType}>
+                            {type.map((t, index) => (
+                                <span key={index} className={styles.typeComponent}>{t}</span>
+                            ))}
                         </div>
                     </div>
 

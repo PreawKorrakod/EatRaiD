@@ -14,16 +14,16 @@ import "react-multi-carousel/lib/styles.css";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 
 const data = [
-  { id: 1, name: "food A", image: image1, type: "noodle" },
-  { id: 2, name: "food B", image: image2, type: "fastfood" },
-  { id: 3, name: "food C", image: image3, type: "fastfood" },
-  { id: 4, name: "food A", image: image1, type: "order to cooked" },
-  { id: 5, name: "food B", image: image2, type: "noodle" },
-  { id: 6, name: "food B", image: image2, type: "noodle" },
-  { id: 7, name: "food B", image: image2, type: "noodle" },
-  { id: 8, name: "food B", image: image2, type: "noodle" },
-  { id: 9, name: "food B", image: image2, type: "noodle" },
-  { id: 10, name: "food B", image: image2, type: "noodle" },
+  { id: 1, name: "food A", image: image1, type: ["noodle", "fastfood"] },
+  { id: 2, name: "food B", image: image2, type: ["noodle", "fastfood"] },
+  { id: 3, name: "food C", image: image3, type: ["noodle", "fastfood"] },
+  { id: 4, name: "food A", image: image1, type: ["noodle", "fastfood"] },
+  { id: 5, name: "food B", image: image2, type: ["noodle", "fastfood"] },
+  { id: 6, name: "food B", image: image2, type: ["noodle", "fastfood"] },
+  { id: 7, name: "food B", image: image2, type: ["noodle", "fastfood"] },
+  { id: 8, name: "food B", image: image2, type: ["noodle", "fastfood"] },
+  { id: 9, name: "food B", image: image2, type: ["noodle", "fastfood"] },
+  { id: 10, name: "food B", image: image2, type: ["noodle", "fastfood"] },
 ];
 
 export default function Home() {
@@ -64,7 +64,13 @@ export default function Home() {
         </div>
         <div className={styles.Resinfo}>
           <div className={styles.nameRes}>{item.name}</div>
-          <div className={styles.typeRes}>{item.type}</div>
+          <div className={styles.typeRes}>
+            {item.type.map((t, index) => (
+              <span className={styles.typeComponents} key={index}>
+                {t}
+              </span>
+            ))}
+          </div>
         </div>
         <div className={styles.ResSelect}>
           <input type="Checkbox" />
@@ -123,6 +129,8 @@ export default function Home() {
                   return (
                     <div key={card.id}>
                       <HomeCard
+                      // เป็น id ร้านอาหาร ฝากส่ง id ร้านอาหารให้ด้วยคับ จะเอาไปไว้หลัง URL สำหรับเข้าถึงแต่ละ profile ของร้านอาหาร
+                        id={card.id}
                         img={card.image}
                         name={card.name}
                         type={card.type}
