@@ -453,6 +453,7 @@ export default function menu() {
                                     name={restaurant.NameFood}
                                     type={restaurant.Type.Name}
                                     price={restaurant.Price}
+                                    role = 'owner'
                                     // owner={OwnerID}
                                     // user={Userfromsession}
                                     onEdit={handleMenuUpdate}
