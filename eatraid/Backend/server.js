@@ -225,61 +225,61 @@ app.post("/resend-OTP", async (req, res) => {
 //   }
 // });
 
-app.put("/editprofile", upload.single("file"), async (req, res) => {
-  try {
-    const file = req.file;
-    const { id, RestaurantId, Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay } = req.body;
-    const newminetype = "image/jpeg";
-    const newfilename = `profile_${id}_${uuid4()}.jpeg`;
-    const { data: RestaurantData, dataerror } = await supabase.from('Restaurant')
-      .update({
-        Name,
-        Contact,
-        OpenTime,
-        CloseTime,
-        Location,
-        Latitude,
-        Longitude,
-        BusinessDay
-      })
-      .eq('RestaurantId', RestaurantId)
-      .select("*")
-    if (dataerror) return res.status(500).json({ dataerror });
-    if (file) {
-      const { data: ProfileData, error: fetchError } = await supabase
-        .from("User")
-        .select("ProfilePic")
-        .eq("id", id)
-        .single();
+// app.put("/editprofile", upload.single("file"), async (req, res) => {
+//   try {
+//     const file = req.file;
+//     const { id, RestaurantId, Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay } = req.body;
+//     const newminetype = "image/jpeg";
+//     const newfilename = `profile_${id}_${uuid4()}.jpeg`;
+//     const { data: RestaurantData, dataerror } = await supabase.from('Restaurant')
+//       .update({
+//         Name,
+//         Contact,
+//         OpenTime,
+//         CloseTime,
+//         Location,
+//         Latitude,
+//         Longitude,
+//         BusinessDay
+//       })
+//       .eq('RestaurantId', RestaurantId)
+//       .select("*")
+//     if (dataerror) return res.status(500).json({ dataerror });
+//     if (file) {
+//       const { data: ProfileData, error: fetchError } = await supabase
+//         .from("User")
+//         .select("ProfilePic")
+//         .eq("id", id)
+//         .single();
 
-      if (fetchError) {
-        throw fetchError;
-      }
-      if (!ProfileData) {
-        throw new Error("Post not found.");
-      }
-      const imagePath = ProfileData.ProfilePic.split('/').pop();
-      await supabase.storage.from("Profile").remove([imagePath]);
-      const { data: updateData, error: uploadError } = await supabase.storage
-        .from("Profile")
-        .upload(newfilename, file.buffer, {
-          contentType: newminetype,
-          upsert: true,
-        });
-      if (uploadError) throw uploadError;
-      else {
-        const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
-        const { Picdata, Picdataerror } = await supabase.from("User").update({ ProfilePic }).eq("id", id).select("*");
-        if (Picdataerror) return res.status(500).json({ Picdataerror });
-        return res.status(200).json({ Picdata });
-      }
-    } else {
-      return res.status(200).json({ RestaurantData, Picdata });
-    }
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
-  }
-});
+//       if (fetchError) {
+//         throw fetchError;
+//       }
+//       if (!ProfileData) {
+//         throw new Error("Post not found.");
+//       }
+//       const imagePath = ProfileData.ProfilePic.split('/').pop();
+//       await supabase.storage.from("Profile").remove([imagePath]);
+//       const { data: updateData, error: uploadError } = await supabase.storage
+//         .from("Profile")
+//         .upload(newfilename, file.buffer, {
+//           contentType: newminetype,
+//           upsert: true,
+//         });
+//       if (uploadError) throw uploadError;
+//       else {
+//         const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
+//         const { Picdata, Picdataerror } = await supabase.from("User").update({ ProfilePic }).eq("id", id).select("*");
+//         if (Picdataerror) return res.status(500).json({ Picdataerror });
+//         return res.status(200).json({ Picdata });
+//       }
+//     } else {
+//       return res.status(200).json({ RestaurantData, Picdata });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ msg: error.message });
+//   }
+// });
 
 
 app.post("/login", async (req, res) => {
@@ -344,8 +344,9 @@ app.get("/user", async (req, res) => {
 
 // ===========================home===========================
 
-app.get("/allrestaurant", async (req, res) => {
-  let { data, error } = await supabase.from('typerestaurant').select("*")
+app.get("/typerestaurant", async (req, res) => {
+  const {RestaurantId} = req.query;
+  let { data, error } = await supabase.from('typerestaurant').select("*").eq('RestaurantId', RestaurantId);
   if (error) {
     res.status(500).json(error);
   }
@@ -359,53 +360,71 @@ app.get("/allrestaurant", async (req, res) => {
 app.put("/editprofile", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
-    const { id, RestaurantId, Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay } = req.body;
+    const { id, RestaurantId, name, contactCall, contactLine, openTimeHR, openTimeMin, closeTimeHR, closeTimeMin, location, businessDay } = req.body;
+    console.log(req.body);
     const newminetype = "image/jpeg";
     const newfilename = `profile_${id}_${uuid4()}.jpeg`;
     const { data: RestaurantData, dataerror } = await supabase.from('Restaurant')
       .update({
-        Name,
-        Contact,
-        OpenTime,
-        CloseTime,
-        Location,
-        Latitude,
-        Longitude,
-        BusinessDay
+        Name: name,
+        Tel: contactCall,
+        Line: contactLine,
+        Location: location,
+        BusinessDay: businessDay,
+        OpenTimeHr: openTimeHR,
+        OpenTimeMin: openTimeMin,
+        CloseTimeHr: closeTimeHR,
+        CloseTimeMin: closeTimeMin,
       })
       .eq('RestaurantId', RestaurantId)
       .select("*")
-    if (dataerror) return res.status(500).json({ dataerror });
-    if (file) {
-      const { data: ProfileData, error: fetchError } = await supabase
-        .from("User")
-        .select("ProfilePic")
-        .eq("id", id)
-        .single();
 
-      if (fetchError) {
-        throw fetchError;
-      }
-      if (!ProfileData) {
-        throw new Error("Post not found.");
-      }
-      const imagePath = ProfileData.ProfilePic.split('/').pop();
+    console.log("restaurant data:", RestaurantData);
+    if (dataerror) return res.status(500).json({ dataerror });
+
+    const { data: UserData, error: fetchError } = await supabase
+      .from("User")
+      .select("ProfilePic")
+      .eq("Id", RestaurantId)
+      .single();
+
+    if (fetchError) {
+      throw fetchError;
+    }
+    if (!UserData) {
+      throw new Error("Post not found.");
+    }
+
+    console.log("user data:", UserData.ProfilePic);
+
+    const oldProfilePic = UserData.ProfilePic;
+    const imagePath = oldProfilePic.split('/').pop();
+
+    if (file) {
+
       await supabase.storage.from("Profile").remove([imagePath]);
+
       const { data: updateData, error: uploadError } = await supabase.storage
         .from("Profile")
         .upload(newfilename, file.buffer, {
           contentType: newminetype,
           upsert: true,
         });
+
       if (uploadError) throw uploadError;
-      else {
-        const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
-        const { Picdata, Picdataerror } = await supabase.from("User").update({ ProfilePic }).eq("id", id).select("*");
-        if (Picdataerror) return res.status(500).json({ Picdataerror });
-        return res.status(200).json({ Picdata });
+
+      const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
+      const { data, error } = await supabase.from("User").update({ ProfilePic }).eq("Id", RestaurantId).select("*");
+      if (error) {
+        res.status(500).json({ error });
+      } else {
+        res.status(200).json({data, RestaurantData});
       }
     } else {
-      return res.status(200).json({ RestaurantData, Picdata });
+      const ProfilePic = oldProfilePic;
+      const { data, error } = await supabase.from("User").update({ ProfilePic }).eq("Id", RestaurantId).select("*");
+      if (error) return res.status(500).json({ error });
+      return res.status(200).json({data, RestaurantData});
     }
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -428,7 +447,7 @@ app.post("/addmenu", upload.single("file"), async (req, res) => {
       const MenuPic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${PicData.fullPath}`;
       const { data, error } = await supabase.from('Menu').insert([{ RestaurantId, NameFood, Price, TypeID, MenuPic }]).select("*");
       if (error) throw error;
-      res.status(200).json({ data })
+      res.status(200).json(data)
     }
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -550,14 +569,6 @@ app.delete("/deletemenu", async (req, res) => {
   }
 });
 
-app.get("/category", async (req, res) => {
-  const { data, error } = await supabase.from("Type").select("*");
-  if (error) {
-    res.status(500).json({ error });
-  } else {
-    res.status(200).json(data);
-  }
-});
 
 app.get("/category", async (req, res) => {
   const { data, error } = await supabase.from("Type").select("*");
@@ -572,12 +583,19 @@ app.get("/showinfo", async (req, res) => {
   const { RestaurantId } = req.query;
 
   const { data, error } = await supabase.from("Restaurant")
-    .select('Name, Location, BusinessDay, Tel, Line, OpenTimeHr , OpenTimeMin , CloseTimeHr , CloseTimeMin , User(ProfilePic)')
+    .select('id , RestaurantId , Name , Location, BusinessDay, Tel, Line, OpenTimeHr , OpenTimeMin , CloseTimeHr , CloseTimeMin , User(ProfilePic)')
     .eq("RestaurantId", RestaurantId);
+
   if (error) {
     res.status(500).json({ error });
   } else {
-    res.status(200).json(data);
+    // ดึงเฉพาะข้อมูล ProfilePic จาก infoData.User
+    const modifiedData = data.map((infoData) => ({
+      ...infoData,
+      ProfilePic: infoData.User?.ProfilePic, // ดึง ProfilePic จาก User
+    }));
+
+    res.status(200).json(modifiedData);
   }
 });
 

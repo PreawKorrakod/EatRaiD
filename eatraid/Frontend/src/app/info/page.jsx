@@ -33,16 +33,17 @@ export default function Info() {
   });
 
   const [selectedOption, setSelectedOption] = useState("");
-  const [openTimeHR, setOpenTimeHR] = useState("");
-  const [openTimeMIN, setOpenTimeMIN] = useState("");
-  const [closeTimeHR, setCloseTimeHR] = useState("");
-  const [closeTimeMIN, setCloseTimeMIN] = useState("");
+  // const [openTimeHR, setOpenTimeHR] = useState(formData.openTimeHR);
+  // const [openTimeMIN, setOpenTimeMIN] = useState(formData.openTimeMin);
+  // const [closeTimeHR, setCloseTimeHR] = useState(formData.closeTimeHR);
+  // const [closeTimeMIN, setCloseTimeMIN] = useState(formData.closeTimeMin);
   const [selectedBusinessDays, setSelectedBusinessDays] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(formData.location);
   const [errorMessage, setErrorMessage] = useState("");
   const [profileImage, setProfileImage] = useState("");
   const [imageFile, setImageFile] = useState("");
+  const [typerestaurant, setTyperestaurant] = useState("");
 
   const categoryDropdown = ["Thai", "Japanese"]; // from backend
   const time_hr = Array.from({ length: 24 }, (_, i) =>
@@ -87,15 +88,7 @@ export default function Info() {
         });
         if (response.data) {
           console.log("Restaurant info:", response.data[0]);
-          const selectedDays = [];
-          const days = response.data[0].BusinessDay.split(',');
-          for (let i = 0; i < days.length; i++) {
-            if (days[i] === 'true') {
-              selectedDays.push(true);
-            } else {
-              selectedDays.push(false);
-            }
-          }
+          const selectedDays = response.data[0].BusinessDay.split(',').map(day => day === 'true');
           setSelectedBusinessDays(selectedDays);
           setInfoData(response.data[0]);
         }
@@ -107,38 +100,34 @@ export default function Info() {
   }, [userId]);
 
 
-
-  const openday = [];
-  if (infoData) {
-    const beforeshow_open = [];
-    const beforeshow_close = [];
-    const split = infoData.BusinessDay.split(',');
-    for (let i = 0; i < split.length; i++) {
-      if (split[i] === 'true') {
-        beforeshow_open.push(businessDays[i]);
-      } else {
-        beforeshow_close.push(businessDays[i]);
-      }
-    }
-    if (beforeshow_open.length === 7) {
-      openday.push('Everyday');
-    } else if (beforeshow_open.length < 4) {
-      openday.push(beforeshow_open.join(', '));
-    } else if (beforeshow_open.length >= 4) {
-      openday.push("Everyday except " + beforeshow_close.join(', '));
-    }
-  }
-
-  console.log('openDays:', openday);
-
+  console.log("infoData:", infoData?.RestaurantId);
 
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/typerestaurant`, {
+          params: { RestaurantId: infoData?.RestaurantId },
+          withCredentials: true,
+        });
+        console.log("Restaurant Category:", category.data[0].TypeName);
+        const type = category.data.map((item) => item.TypeName);
+        setTyperestaurant(type.join('/')); // ใช้ join เพื่อรวมเป็นสตริง
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchData();
+  }, [infoData?.RestaurantId]);
+
+  useEffect(() => {
     if (infoData) {
+      console.log("infoData:", infoData.id);
       setFormData({
+        Id: infoData.id,
         name: infoData.Name,
         category: infoData.category,
-        businessDay: openday,
+        // businessDay: openday,
         openTimeHR: infoData.OpenTimeHr,
         openTimeMin: infoData.OpenTimeMin,
         closeTimeHR: infoData.CloseTimeHr,
@@ -146,14 +135,14 @@ export default function Info() {
         contactCall: infoData.Tel,
         contactLine: infoData.Line,
         location: infoData.Location,
-        profileImage: infoData.User.ProfilePic,
+        profileImage: infoData.ProfilePic,
       });
-      setSelectedOption(infoData.category);
-      setOpenTimeHR(infoData.OpenTimeHR);
-      setOpenTimeMIN(infoData.OpenTimeMin);
-      setCloseTimeHR(infoData.CloseTimeHR);
-      setCloseTimeMIN(infoData.CloseTimeMin);
-      setLocation(infoData.Location);
+      // setSelectedOption(infoData.category);
+      // setOpenTimeHR(infoData.OpenTimeHR);
+      // setOpenTimeMIN(infoData.OpenTimeMin);
+      // setCloseTimeHR(infoData.CloseTimeHR);
+      // setCloseTimeMIN(infoData.CloseTimeMin);
+      // setLocation(infoData.Location);
     }
   }, [infoData]);
 
@@ -182,55 +171,158 @@ export default function Info() {
     setSelectedOption(event.target.value);
   };
 
+  // const handleChangeOpenTimeHR = (event) => {
+  //   setOpenTimeHR(event.target.value);
+  // };
+
+  // const handleChangeOpenTimeMIN = (event) => {
+  //   setOpenTimeMIN(event.target.value);
+  // };
+
+  // const handleChangeCloseTimeHR = (event) => {
+  //   const newCloseTimeHR = event.target.value;
+  //   if (parseInt(newCloseTimeHR) < parseInt(openTimeHR)) {
+  //     setOpenTimeHR(newCloseTimeHR);
+  //   }
+  //   setCloseTimeHR(newCloseTimeHR);
+  // };
+
+  // const handleChangeCloseTimeMIN = (event) => {
+  //   setCloseTimeMIN(event.target.value);
+  // };
+
   const handleChangeOpenTimeHR = (event) => {
-    setOpenTimeHR(event.target.value);
+    setFormData({ ...formData, openTimeHR: event.target.value });
   };
 
   const handleChangeOpenTimeMIN = (event) => {
-    setOpenTimeMIN(event.target.value);
+    setFormData({ ...formData, openTimeMin: event.target.value });
   };
 
   const handleChangeCloseTimeHR = (event) => {
     const newCloseTimeHR = event.target.value;
-    if (parseInt(newCloseTimeHR) < parseInt(openTimeHR)) {
-      setOpenTimeHR(newCloseTimeHR);
-    }
-    setCloseTimeHR(newCloseTimeHR);
+    // Optional: Add validation logic if needed
+    setFormData({ ...formData, closeTimeHR: newCloseTimeHR });
   };
 
   const handleChangeCloseTimeMIN = (event) => {
-    setCloseTimeMIN(event.target.value);
+    setFormData({ ...formData, closeTimeMin: event.target.value });
   };
+
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file && file.type.startsWith("image/")) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setProfileImage(reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //     setImageFile(file);
+  //   } else {
+  //     alert("Please upload a valid image file.");
+  //   }
+  // };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
+    if (file || file.type.startsWith("image/")) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result);
+        setFormData({ ...formData, profileImage: reader.result });
       };
       reader.readAsDataURL(file);
-      setImageFile(file);
     } else {
       alert("Please upload a valid image file.");
     }
   };
 
-  const handleSaveClick = () => {
-    // Handle confirmation logic here
-    console.log("Confirmed with data: ", formData);
-    handleCloseModal();
+  console.log("type:", typerestaurant);
+  const handleSaveClick = async () => {
+    console.log("formData:", formData.Id);
+
+    const businessDayString = selectedBusinessDays.map(day => day ? 'true' : 'false').join(',');
+
+    const updateData = new FormData();
+    updateData.append('id', formData.Id);
+    updateData.append('RestaurantId', userId);
+    updateData.append('name', formData.name);
+    updateData.append('file', imageFile);
+    updateData.append('businessDay', businessDayString);
+    updateData.append('openTimeHR', formData.openTimeHR);
+    updateData.append('openTimeMin', formData.openTimeMin);
+    updateData.append('closeTimeHR', formData.closeTimeHR);
+    updateData.append('closeTimeMin', formData.closeTimeMin);
+    updateData.append('contactCall', formData.contactCall);
+    updateData.append('contactLine', formData.contactLine);
+    updateData.append('location', formData.location);
+
+    try {
+      const res = await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editprofile`, updateData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+      });
+      console.log("Profile", res.data.data[0].ProfilePic);
+      console.log("Data saved successfully:", res.data.RestaurantData[0]);
+      const updatedInfoData = res.data.RestaurantData[0];
+      const updateprofileImage = res.data.data[0].ProfilePic;
+      setInfoData({
+        Id: updatedInfoData.id,
+        Name: updatedInfoData.Name,
+        BusinessDay: updatedInfoData.BusinessDay,
+        OpenTimeHr: updatedInfoData.OpenTimeHr,
+        OpenTimeMin: updatedInfoData.OpenTimeMin,
+        CloseTimeHr: updatedInfoData.CloseTimeHr,
+        CloseTimeMin: updatedInfoData.CloseTimeMin,
+        Tel: updatedInfoData.Tel,
+        Line: updatedInfoData.Line,
+        Location: updatedInfoData.Location,
+        ProfilePic: updateprofileImage,
+      });
+      if (res.status === 200) {
+        handleCloseModal();
+      }
+
+    } catch (error) {
+      console.error("Error saving data:", error);
+      setErrorMessage("Failed to save data. Please try again.");
+    }
   };
 
-  // console.log("selectedBusinessDays:", selectedBusinessDays);
+  const openday = [];
+
+  const beforeshow_open = [];
+  const beforeshow_close = [];
+  selectedBusinessDays.forEach((day, index) => {
+    if (day) {
+      beforeshow_open.push(businessDays[index]);
+    } else {
+      beforeshow_close.push(businessDays[index]);
+    }
+  });
+  if (beforeshow_open.length === 7) {
+    openday.push('Everyday');
+  } else if (beforeshow_open.length < 4) {
+    openday.push(beforeshow_open.join(', '));
+  } else if (beforeshow_open.length >= 4) {
+    openday.push("Everyday except " + beforeshow_close.join(', '));
+  }
+
+
+
+
+
 
   const handleCheckboxChange = (index) => {
-    console.log("selectedBusinessDays:", selectedBusinessDays);
     const updatedCheckedState = selectedBusinessDays.map((item, i) =>
       i === index ? !item : item
     );
     setSelectedBusinessDays(updatedCheckedState);
   };
+
 
   const Modal = () => {
     if (!isModalOpen) return null;
@@ -249,6 +341,7 @@ export default function Info() {
                         accept="image/*"
                         hidden
                         onChange={handleFileChange}
+                        required
                       />
                       {!formData.profileImage ? (
                         <div>
@@ -295,8 +388,7 @@ export default function Info() {
                   <h2 className={styles.normalTextM}>Business days</h2>
                   <div className={styles.dropdownM} onClick={toggleDropdown}>
                     <div className={styles.dropdownHeaderM}>
-                      {
-                        formData.businessDay}
+                      {openday}
                       <BsChevronDown />
                     </div>
                     {dropdownOpen && (
@@ -332,7 +424,7 @@ export default function Info() {
                           </option>
                         ))}
                       </select>
-                      <h2 className={styles.normalTextM}> : </h2>
+
                       <select
                         className={styles.ddTextfieldStyleM}
                         value={formData.openTimeMin}
@@ -344,11 +436,7 @@ export default function Info() {
                           </option>
                         ))}
                       </select>
-                    </div>
-                  </div>
-                  <div className={styles.colTimeM}>
-                    <h2 className={styles.normalTextM}>Close time</h2>
-                    <div className={styles.textfieldSubContainerM}>
+
                       <select
                         className={styles.ddTextfieldStyleM}
                         value={formData.closeTimeHR}
@@ -360,7 +448,7 @@ export default function Info() {
                           </option>
                         ))}
                       </select>
-                      <h2 className={styles.normalTextM}> : </h2>
+
                       <select
                         className={styles.ddTextfieldStyleM}
                         value={formData.closeTimeMin}
@@ -387,13 +475,13 @@ export default function Info() {
                   rows={4}
                   value={formData.location}
                   onChange={(e) => {
-                    setLocation(e.target.value);
+                    setFormData({ ...formData, location: e.target.value });
                   }}
                 />
                 <div className="mapouter">
                   <div className="gmap_canvas">
                     <iframe
-                      src={`https://maps.google.com/maps?output=embed&q=${location}`}
+                      src={`https://maps.google.com/maps?output=embed&q=${infoData.location}`}
                       frameBorder="0"
                       className={styles.mapContainerM}
                     ></iframe>
@@ -457,7 +545,7 @@ export default function Info() {
       <div className={styles.profileCon}>
         <Image
           className={styles.uploadedImage}
-          src={infoData.User.ProfilePic}
+          src={infoData.ProfilePic}
           alt="Uploaded"
           layout="fill"
           objectFit="cover"
@@ -488,7 +576,7 @@ export default function Info() {
           <div className={styles.halfCon}>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Category</h2>
-              <h2 className={styles.normalText4}>{infoData.category}</h2>
+              <h2 className={styles.normalText4}>{typerestaurant}</h2>
             </div>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Business day</h2>
