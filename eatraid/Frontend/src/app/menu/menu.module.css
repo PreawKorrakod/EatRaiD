@@ -37,7 +37,7 @@
 
 .AddContainer{
     width: 50%;
-    align-items:end;
+    align-items:flex-end;
     display: flex;
     justify-content: flex-end;
     padding-right: 1vw;
