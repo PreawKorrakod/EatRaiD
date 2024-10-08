@@ -37,7 +37,7 @@
 
 .AddContainer{
     width: 50%;
-    align-items:end;
+    align-items:flex-end;
     display: flex;
     justify-content: flex-end;
     padding-right: 1vw;
@@ -91,8 +91,6 @@
     padding-left: 2rem;
     padding-right: 2rem;
 } 
-
-
 
 .pagination {
     display: flex;
