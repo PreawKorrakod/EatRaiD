@@ -293,17 +293,6 @@ input:checked + .slider:before {
     align-self: center;
 }
 
-.content_grid {
-    background-color: #FFFBF7;
-    padding-top: 2vw;
-    padding-bottom: 2vw;
-    border-radius: 1rem;
-    display: grid;
-    justify-items: center;
-    gap: 2vw; 
-    grid-template-columns: repeat(3, 1fr); 
-    padding-right: 2.5vw;
-}
 
 .content_empty{
     background-color: #FFFBF7;
@@ -316,7 +305,26 @@ input:checked + .slider:before {
     padding-right: 2rem;
 } 
 
+.emptyMessage{
+    font-style: italic;
+    font-size: x-large;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #979595;
+}
 
+.content_grid {
+    background-color: #FFFBF7;
+    padding-bottom: 2vw;
+    border-radius: 1rem;
+    display: grid;
+    justify-items: center;
+    gap: 2vw; 
+    grid-template-columns: repeat(3, 1fr); 
+    padding-right: 2.5vw;
+}
 
 .pagination {
     display: flex;
@@ -346,12 +354,16 @@ input:checked + .slider:before {
     border: 1px solid #527853;
 }
 
-.emptyMessage{
-    font-style: italic;
-    font-size: x-large;
+.Menuheader{
     width: 100%;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: #979595;
+    font-size: 23px;
+    font-weight: normal;
+    color: #527853;
+}
+
+.MenuContainer{
+    width: 100%;
+    padding-left: 6.5rem;
+    padding-right: 6.5rem;
+    padding-top: 3.5rem;
 }

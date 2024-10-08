@@ -18,10 +18,61 @@ const data = [
   { id: 1, name: "food A", image: image1, type: "noodle", price: "50" },
   { id: 2, name: "food B", image: image2, type: "noodle", price: "50" },
   { id: 3, name: "food C", image: image3, type: "Western", price: "50" },
+  { id: 4, name: "food C", image: image3, type: "Western", price: "50" },
+  { id: 5, name: "food B", image: image2, type: "noodle", price: "50" },
+  { id: 6, name: "food C", image: image3, type: "Western", price: "50" },
+  { id: 7, name: "food C", image: image3, type: "Western", price: "50" },
   // ... more items
 ];
 
-export default function Info() {
+export default function restaurant() {
+  // Pagination settings
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6; // Number of items to show per page
+
+  // Calculate the items to display based on the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  // Handle page changes
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Generate the page numbers
+  const renderPageNumbers = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={`${styles.pageButton} ${currentPage === i ? styles.activePage : ''}`}
+          onClick={() => handlePageClick(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+    return pages;
+  };
+
+
   const [infoData, setInfoData] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -94,53 +145,7 @@ export default function Info() {
     formData.status === "open" ? styles.statusOpen : styles.statusClosed;
   const statusText = formData.status === "open" ? "Open" : "Close";
 
-  // Pagination settings
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9; // Number of items to show per page
 
-  // Calculate the items to display based on the current page
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-
-  // Handle page changes
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handlePageClick = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  // Generate the page numbers
-  const renderPageNumbers = () => {
-    const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push(
-        <button
-          key={i}
-          className={`${styles.pageButton} ${
-            currentPage === i ? styles.activePage : ""
-          }`}
-          onClick={() => handlePageClick(i)}
-        >
-          {i}
-        </button>
-      );
-    }
-    return pages;
-  };
 
   return (
     <div className={styles.mainBg}>
@@ -172,8 +177,12 @@ export default function Info() {
         </div>
 
         <div className={styles.MenuContainer}>
+          <div className={styles.Menuheader}>
+            Menu
+          </div>
           {currentItems.length > 0 ? (
             <div className={styles.content_grid}>
+              {/* backend มาเชื่อมให้ใส่ข้อมูล restaurant.(ชื่อคอลัมน์) นะ */}
               {currentItems.map((restaurant) => (
                 <MenuCard
                   key={restaurant.id}
@@ -182,6 +191,8 @@ export default function Info() {
                   name={restaurant.name}
                   type={restaurant.type}
                   price={restaurant.price}
+                  role = 'customer'
+                  // role = 'owner'
                 />
               ))}
             </div>
@@ -190,7 +201,7 @@ export default function Info() {
               <p className={styles.emptyMessage}>No menu added yet.</p>
             </div>
           )}
-
+          {/* Pagination Controls */}
           {data.length > 0 && (
             <div className={styles.pagination}>
               <button
@@ -200,7 +211,9 @@ export default function Info() {
               >
                 <BsChevronDoubleLeft className={styles.Arrow} />
               </button>
+
               {renderPageNumbers()}
+
               <button
                 className={styles.pageButton}
                 onClick={handleNextPage}
