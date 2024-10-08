@@ -48,11 +48,11 @@ export default function Info() {
   const [imageFile, setImageFile] = useState("");
   const [typerestaurant, setTyperestaurant] = useState("");
   const categoryDropdown = ["Thai", "Japanese"]; // from backend
-  
+
   const time_hr = Array.from({ length: 24 }, (_, i) =>
     String(i).padStart(2, "0")
   );
-  
+
   const time_min = ["00", "15", "30", "45"];
   const businessDays = [
     "Sunday",
@@ -65,7 +65,7 @@ export default function Info() {
   ];
 
   useEffect(() => {
-    
+
     const fetchData = async () => {
       try {
         const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
@@ -117,7 +117,7 @@ export default function Info() {
         });
         console.log("Restaurant Category:", category.data[0].TypeName);
         const type = category.data.map((item) => item.TypeName);
-        setTyperestaurant(type.join('/')); 
+        setTyperestaurant(type.join('/'));
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -443,7 +443,7 @@ export default function Info() {
                   <div className={styles.colTimeM}>
                     <h2 className={styles.normalTextM}>Close time</h2>
                     <div className={styles.textfieldSubContainerM}>
-                     <select
+                      <select
                         className={styles.ddTextfieldStyleM}
                         value={formData.closeTimeHR}
                         onChange={handleChangeCloseTimeHR}
@@ -558,11 +558,11 @@ export default function Info() {
         />
       </div>
       <div className={styles.bigContainer}>
-//       <button className={styles.editButton} onClick={handleEditClick}>
-//             Edit Profile
-//           </button>
+        {/* <button className={styles.editButton} onClick={handleEditClick}>
+          Edit Profile
+        </button> */}
         <div className={styles.rowCon1}>
-        <div className={styles.toggleContainer}>
+          <div className={styles.toggleContainer}>
             <label className={styles.switch}>
               <input
                 type="checkbox"
