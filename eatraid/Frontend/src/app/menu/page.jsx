@@ -7,10 +7,11 @@ import MenuCard from '../../../components/MenuCard';
 import { BsChevronDoubleLeft, BsCheckLg, BsChevronDoubleRight, BsPlus, BsXSquareFill, BsUpload, BsImages, BsExclamationCircle, BsCheckCircleFill, BsFillTrashFill } from "react-icons/bs";
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
-
+import { useRouter } from "next/navigation";
 
 
 export default function menu() {
+    const router = useRouter();
     const [userId, setUserId] = useState(null);
     const [data, setData] = useState([]);
     const [MenuImage, setMenuImage] = useState('');
@@ -47,14 +48,22 @@ export default function menu() {
                 const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
                     withCredentials: true,
                 });
-                // console.log(user.data[0].Id);
-                setUserId(user.data[0].Id);
+                if (user !== null) {
+                    console.log(user.data[0].Id);
+                    setUserId(user.data[0].Id);
+                } else { 
+                    router.push(`/`); 
+                }
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
         };
         fetchData();
     }, [userId]);
+
+
+
+
 
     useEffect(() => {
         const fetchMenuData = async () => {
@@ -185,7 +194,7 @@ export default function menu() {
         formDataToSend.append('TypeID', formData.type);
         formDataToSend.append('Price', formData.price);
 
-        
+
         setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาดก่อนเริ่ม
         setIsAddSuccess(false); // เริ่มจาก false เพื่อแน่ใจว่าไม่แสดงผลก่อนเวลา
 
@@ -208,8 +217,8 @@ export default function menu() {
 
 
             setIsLoading(true); // เริ่มการโหลด
-            await new Promise((resolve) => setTimeout(resolve, 2000)); 
-        
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
             setIsLoading(false); // หยุดการโหลด
             setIsAddSuccess(true); // แสดงข้อความเพิ่มเมนูสำเร็จ
 
@@ -221,7 +230,7 @@ export default function menu() {
                 setIsAlertModalOpen(false);
             }, 2000); // ซ่อนข้อความหลังจาก 2 วินาที
 
-            
+
             handleaddMenu();
             // รีเซ็ตข้อมูลฟอร์ม
             setFormData({ foodname: '', type: '', price: '' });
@@ -234,7 +243,7 @@ export default function menu() {
             setErrorMessage('Failed to add menu. Please try again.');
         }
     };
-    
+
 
     // Modal Add popup
     const renderAlertModal = () => {
