@@ -50,6 +50,7 @@
 .dastFooter {
     display: flex;
     flex-direction: column;
+    align-items: center;
     padding-top: 1vh;
     width: 100%;
     height: min-content;
@@ -61,25 +62,83 @@
     text-overflow: ellipsis; 
     width: 100%;
     display: flex;
-    flex-direction: column;
-    
+    justify-content: flex-start;
+    padding-bottom: 0.2rem;
 }
 
 .destText p{ 
     font-size: large; 
     overflow: hidden; 
     text-overflow: ellipsis; 
+    white-space: nowrap;
 }
 
 .showType{
-    font-size: small;
+    font-size: x-small;
+    color: rgb(130, 129, 129);
     padding-top: 0.2rem;
-    padding-left: 1rem;
     padding-bottom: 0.2rem;
     width: 100%;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .typeComponent{
     margin-right: 0.5rem ;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 20px;
+    background-color: #d1cece;
 }
 
+.showDistance{
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    margin-left: 0.5rem;
+    font-size: small;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    color: rgb(130, 129, 129);
+}
+
+.LocationIcon{
+    margin-right: 0.1rem;
+    font-size: small;
+}
+
+.LinkResBtn{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 0.6rem;
+}
+
+.LinkBtn{
+    width: fit-content;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    font-size: small;
+    padding-bottom: 0.1rem;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+    border: none;
+    text-decoration: none;
+    /* color: #ff9100; */
+    color:  #ff5804;
+}
+
+.LinkBtn{
+    color: #ff9100 ;
+}
+
+
+.iconMorDetail{
+    margin-left: 0.2rem;
+}

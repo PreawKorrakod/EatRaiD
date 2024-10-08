@@ -12,18 +12,80 @@ import image3 from "../../public/imgTest3.png";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
+import { MdLocationOn } from "react-icons/md";
+import Link from "next/link";
 
 const data = [
-  { id: 1, name: "food A", image: image1, type: ["noodle", "fastfood"] },
-  { id: 2, name: "food B", image: image2, type: ["noodle", "fastfood"] },
-  { id: 3, name: "food C", image: image3, type: ["noodle", "fastfood"] },
-  { id: 4, name: "food A", image: image1, type: ["noodle", "fastfood"] },
-  { id: 5, name: "food B", image: image2, type: ["noodle", "fastfood"] },
-  { id: 6, name: "food B", image: image2, type: ["noodle", "fastfood"] },
-  { id: 7, name: "food B", image: image2, type: ["noodle", "fastfood"] },
-  { id: 8, name: "food B", image: image2, type: ["noodle", "fastfood"] },
-  { id: 9, name: "food B", image: image2, type: ["noodle", "fastfood"] },
-  { id: 10, name: "food B", image: image2, type: ["noodle", "fastfood"] },
+  {
+    id: 1,
+    name: "food AEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+    image: image1,
+    type: ["noodle", "fastfood"],
+    distance: "5.6",
+  },
+  {
+    id: 2,
+    name: "food B",
+    image: image2,
+    type: ["noodle", "fastfood"],
+    distance: "0.6",
+  },
+  {
+    id: 3,
+    name: "food C",
+    image: image3,
+    type: ["noodle", "fastfood"],
+    distance: "1.6",
+  },
+  {
+    id: 4,
+    name: "food A",
+    image: image1,
+    type: ["noodle", "fastfood"],
+    distance: "5.6",
+  },
+  {
+    id: 5,
+    name: "food B",
+    image: image2,
+    type: ["noodle", "fastfood"],
+    distance: "0.5",
+  },
+  {
+    id: 6,
+    name: "food B",
+    image: image2,
+    type: ["noodle", "fastfood"],
+    distance: "1.6",
+  },
+  {
+    id: 7,
+    name: "food B",
+    image: image2,
+    type: ["noodle", "fastfood"],
+    distance: "0.6",
+  },
+  {
+    id: 8,
+    name: "food B",
+    image: image2,
+    type: ["noodle", "fastfood"],
+    distance: "1.6",
+  },
+  {
+    id: 9,
+    name: "food B",
+    image: image2,
+    type: ["noodle", "fastfood"],
+    distance: "0.6",
+  },
+  {
+    id: 10,
+    name: "food B",
+    image: image2,
+    type: ["noodle", "fastfood"],
+    distance: "0.6",
+  },
 ];
 
 export default function Home() {
@@ -63,13 +125,17 @@ export default function Home() {
           />
         </div>
         <div className={styles.Resinfo}>
-          <div className={styles.nameRes}>{item.name}</div>
+          <Link className={styles.nameRes}>{item.name}</Link>
           <div className={styles.typeRes}>
             {item.type.map((t, index) => (
               <span className={styles.typeComponents} key={index}>
                 {t}
               </span>
             ))}
+          </div>
+          <div className={styles.showDistance}>
+            <MdLocationOn className={styles.LocationIcon} />
+            {item.distance} km
           </div>
         </div>
         <div className={styles.ResSelect}>
@@ -121,19 +187,17 @@ export default function Home() {
                 responsive={responsive}
                 style={{ zIndex: "900" }}
                 autoPlay={true}
-                // centerMode={true}
-                // rewindWithAnimation={true}
-                // shouldResetAutoplay={true}
               >
                 {data.map((card) => {
                   return (
                     <div key={card.id}>
                       <HomeCard
-                      // เป็น id ร้านอาหาร ฝากส่ง id ร้านอาหารให้ด้วยคับ จะเอาไปไว้หลัง URL สำหรับเข้าถึงแต่ละ profile ของร้านอาหาร
+                        // เป็น id ร้านอาหาร ฝากส่ง id ร้านอาหารให้ด้วยคับ จะเอาไปไว้หลัง URL สำหรับเข้าถึงแต่ละ profile ของร้านอาหาร
                         id={card.id}
                         img={card.image}
                         name={card.name}
                         type={card.type}
+                        distance={card.distance}
                       />
                     </div>
                   );
