@@ -37,7 +37,7 @@ export default function SignupDetail() {
     }
   }, []);
 
-  if (!userID) return router.push("/");  // กลับหน้า Home
+  // if (!userID) return router.push("/");  // กลับหน้า Home
 
   const router = useRouter();
   const [openTimeHR, setOpenTimeHR] = useState("00");
