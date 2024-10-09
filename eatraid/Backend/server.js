@@ -583,7 +583,7 @@ app.get("/showinfo", async (req, res) => {
   const { RestaurantId } = req.query;
 
   const { data, error } = await supabase.from("Restaurant")
-    .select('id , RestaurantId , Name , Location, BusinessDay, Tel, Line, OpenTimeHr , OpenTimeMin , CloseTimeHr , CloseTimeMin , User(ProfilePic)')
+    .select('id , RestaurantId , Name , Location, BusinessDay, Tel, Line, OpenTimeHr , OpenTimeMin , CloseTimeHr , CloseTimeMin , User(ProfilePic), toggle_status')
     .eq("RestaurantId", RestaurantId);
 
   if (error) {
@@ -596,6 +596,16 @@ app.get("/showinfo", async (req, res) => {
     }));
 
     res.status(200).json(modifiedData);
+  }
+});
+
+app.put("/toggle", async (req, res) => {
+  const { RestaurantId , toggle_status } = req.body;
+  const { data, error } = await supabase.from('Restaurant').update({ toggle_status }).eq('RestaurantId', RestaurantId).select("*");
+  if (error) {
+    res.status(500).json({ error });
+  } else {
+    res.status(200).json(data);
   }
 });
 
