@@ -3,6 +3,7 @@
 import styles from "./signUpRole.module.css";
 import React, { useState } from "react";
 import Topbar from "../../../components/Topbar";
+import Navbar from "../../../components/Navbar";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { AiOutlineUser } from "react-icons/ai";
@@ -25,7 +26,7 @@ function SignUpRole() {
 
   return (
     <div className={styles.mainBg}>
-      <Topbar />
+      <Navbar />
       <div className={styles.bigContainer}>
         <h1 className={styles.title}>Sign Up</h1>
         <div className={styles.subContainer}>
