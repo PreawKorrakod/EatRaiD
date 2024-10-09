@@ -125,7 +125,7 @@ export default function Home() {
           />
         </div>
         <div className={styles.Resinfo}>
-          <Link className={styles.nameRes}>{item.name}</Link>
+          <Link href='' className={styles.nameRes}>{item.name}</Link>
           <div className={styles.typeRes}>
             {item.type.map((t, index) => (
               <span className={styles.typeComponents} key={index}>
