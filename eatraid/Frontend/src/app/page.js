@@ -279,20 +279,21 @@ export default function Home() {
                 style={{ zIndex: "900" }}
                 autoPlay={true}
               >
-                {data.map((card) => {
-                  return (
-                    <div key={card.id}>
-                      <HomeCard
-                        // เป็น id ร้านอาหาร ฝากส่ง id ร้านอาหารให้ด้วยคับ จะเอาไปไว้หลัง URL สำหรับเข้าถึงแต่ละ profile ของร้านอาหาร
-                        id={card.id}
-                        img={card.image}
-                        name={card.name}
-                        type={card.type}
-                        distance={card.distance}
-                      />
-                    </div>
-                  );
-                })}
+                {data
+                  .filter((_, index) => checked[index]) // Filter data based on checked status
+                  .map((card) => {
+                    return (
+                      <div key={card.id}>
+                        <HomeCard
+                          id={card.id}
+                          img={card.image}
+                          name={card.name}
+                          type={card.type}
+                          distance={card.distance}
+                        />
+                      </div>
+                    );
+                  })}
               </Carousel>
             </div>
             <div className={styles.RandomContainer}>
@@ -312,20 +313,25 @@ export default function Home() {
                   <div className={styles.title}>
                     <div className={styles.Lefttitle}>
                       All Restaurant{" "}
-                      <div className={styles.Showlength}>{data.length}</div>
+                      <div className={styles.Showlength}>
+                        {checked.every(Boolean)
+                          ? "All"
+                          : checked.filter(Boolean).length}{" "}
+                      </div>
                     </div>
                     <div className={styles.SelectChoice}>
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={checked.every(Boolean)} 
+                            checked={checked.every(Boolean)}
                             indeterminate={
                               !checked.every(Boolean) && checked.some(Boolean)
-                            } 
-                            onChange={handleChange1} 
+                            }
+                            onChange={handleChange1}
                             color="gray[900]"
                           />
                         }
+                        className={styles.Checkboxicon}
                       />
                       <div className={styles.SelectText}>Select All</div>
                     </div>
