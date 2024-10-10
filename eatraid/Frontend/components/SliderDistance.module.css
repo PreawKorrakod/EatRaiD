@@ -1,4 +1,19 @@
 .DistanceRange{
     width: 100%;
+    padding-right: 1rem;
+}
+
+.distancelabel{
+    color: black;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding-right: 1rem;
+}
+
+.range{
     color: #EE7214;
+    width: 90%;
+    margin-left: 1rem;
 }

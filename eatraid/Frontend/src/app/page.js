@@ -199,10 +199,7 @@ export default function Home() {
 
         {/* Distance slider */}
         <div className={styles.CategoryContainer}>
-          <div className={styles.Categoryheader}>Distance</div>
-          <div className={styles.slidecontainerRange}>
-            <SliderDistance />
-          </div>
+          <SliderDistance />
         </div>
       </div>
     );
