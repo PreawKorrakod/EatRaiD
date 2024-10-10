@@ -75,7 +75,7 @@ export default function Info() {
   useEffect(() => {   
     if (infoData) {
       if (infoData.toggle_status !== null) {
-        setOverrideStatus(infoData.toggle_status);
+        setOverrideStatus(infoData?.toggle_status);
       } else {
         setOverrideStatus(defaultIsOpen ? 'open' : 'close');
       }
@@ -397,7 +397,7 @@ export default function Info() {
                         setFormData({ ...formData, name: e.target.value })
                       }
                     />
-                    <h2 className={styles.normalTextM}>Category</h2>
+                    {/* <h2 className={styles.normalTextM}>Category</h2>
                     <select
                       className={styles.ddTextfieldStyleM}
                       value={selectedOption}
@@ -408,7 +408,7 @@ export default function Info() {
                           {category}
                         </option>
                       ))}
-                    </select>
+                    </select> */}
                   </div>
                 </div>
 
@@ -590,7 +590,7 @@ export default function Info() {
             <label className={styles.switch}>
               <input
                 type="checkbox"
-                checked={overrideStatus !== null ? overrideStatus === 'open' : displayedIsOpen}
+                checked={overrideStatus !== null ? overrideStatus === 'open': displayedIsOpen}
                 onChange={toggleOverride}
               />
               <span className={styles.slider}></span>
