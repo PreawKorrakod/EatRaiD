@@ -161,7 +161,7 @@ app.post("/verify-OTP", async (req, res) => {
           .upload(newfilename, arrayBuffer, {
             contentType: newminetype,
             upsert: true,
-          });
+          })
           .from("Profile")
           .upload(newfilename, arrayBuffer, {
             contentType: newminetype,
@@ -433,82 +433,82 @@ app.get("/allrestaurant", async (req, res) => {
 
 // ===========================profile - restaurant===========================
 
-app.put("/editprofile", upload.single("file"), async (req, res) => {
-  try {
-    const file = req.file;
-    const {
-      id,
-      RestaurantId,
-      Name,
-      Contact,
-      OpenTime,
-      CloseTime,
-      Location,
-      Latitude,
-      Longitude,
-      BusinessDay,
-    } = req.body;
-    const newminetype = "image/jpeg";
-    const newfilename = `profile_${id}_${uuid4()}.jpeg`;
-    const { data: RestaurantData, dataerror } = await supabase
-      .from("Restaurant")
-      .update({
-        Name,
-        Contact,
-        OpenTime,
-        CloseTime,
-        Location,
-        Latitude,
-        Longitude,
-        BusinessDay,
-      })
-      .eq("RestaurantId", RestaurantId)
-      .select("*");
-    if (dataerror) return res.status(500).json({ dataerror });
+// app.put("/editprofile", upload.single("file"), async (req, res) => {
+//   try {
+//     const file = req.file;
+//     const {
+//       id,
+//       RestaurantId,
+//       Name,
+//       Contact,
+//       OpenTime,
+//       CloseTime,
+//       Location,
+//       Latitude,
+//       Longitude,
+//       BusinessDay,
+//     } = req.body;
+//     const newminetype = "image/jpeg";
+//     const newfilename = `profile_${id}_${uuid4()}.jpeg`;
+//     const { data: RestaurantData, dataerror } = await supabase
+//       .from("Restaurant")
+//       .update({
+//         Name,
+//         Contact,
+//         OpenTime,
+//         CloseTime,
+//         Location,
+//         Latitude,
+//         Longitude,
+//         BusinessDay,
+//       })
+//       .eq("RestaurantId", RestaurantId)
+//       .select("*");
+//     if (dataerror) return res.status(500).json({ dataerror });
 
-    const { data: UserData, error: fetchError } = await supabase
-      .from("User")
-      .select("ProfilePic")
-      .eq("Id", RestaurantId)
-      .single();
+//     const { data: UserData, error: fetchError } = await supabase
+//       .from("User")
+//       .select("ProfilePic")
+//       .eq("Id", RestaurantId)
+//       .single();
 
-      if (fetchError) {
-        throw fetchError;
-      }
-      if (!ProfileData) {
-        throw new Error("Post not found.");
-      }
-      const imagePath = ProfileData.ProfilePic.split("/").pop();
-      await supabase.storage.from("Profile").remove([imagePath]);
+//       if (fetchError) {
+//         throw fetchError;
+//       }
+//       if (!ProfileData) {
+//         throw new Error("Post not found.");
+//       }
+//       const imagePath = ProfileData.ProfilePic.split("/").pop();
+//       await supabase.storage.from("Profile").remove([imagePath]);
 
-      const { data: updateData, error: uploadError } = await supabase.storage
-        .from("Profile")
-        .upload(newfilename, file.buffer, {
-          contentType: newminetype,
-          upsert: true,
-        });
+//       const { data: updateData, error: uploadError } = await supabase.storage
+//         .from("Profile")
+//         .upload(newfilename, file.buffer, {
+//           contentType: newminetype,
+//           upsert: true,
+//         });
 
-      if (uploadError) throw uploadError;
-      else {
-        const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
-        const { Picdata, Picdataerror } = await supabase
-          .from("User")
-          .update({ ProfilePic })
-          .eq("id", id)
-          .select("*");
-        if (Picdataerror) return res.status(500).json({ Picdataerror });
-        return res.status(200).json({ Picdata });
-      }
-    } else {
-      const ProfilePic = oldProfilePic;
-      const { data, error } = await supabase.from("User").update({ ProfilePic }).eq("Id", RestaurantId).select("*");
-      if (error) return res.status(500).json({ error });
-      return res.status(200).json({data, RestaurantData});
-    }
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
-  }
-});
+//       if (uploadError) throw uploadError;
+//       else {
+//         const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
+//         const { Picdata, Picdataerror } = await supabase
+//           .from("User")
+//           .update({ ProfilePic })
+//           .eq("id", id)
+//           .select("*");
+//         if (Picdataerror) return res.status(500).json({ Picdataerror });
+//         return res.status(200).json({ Picdata });
+//       }
+//     } else {
+//       const ProfilePic = oldProfilePic;
+//       const { data, error } = await supabase.from("User").update({ ProfilePic }).eq("Id", RestaurantId).select("*");
+//       if (error) return res.status(500).json({ error });
+//       return res.status(200).json({data, RestaurantData});
+//     }
+//   } catch (error) {
+//     res.status(500).json({ msg: error.message });
+//   }
+// });
 
 app.post("/addmenu", upload.single("file"), async (req, res) => {
   try {

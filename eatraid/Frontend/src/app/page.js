@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import Navbar from "../../components/Navbar";
 import HomeCard from "../../components/HomeCard";
@@ -14,6 +14,11 @@ import "react-multi-carousel/lib/styles.css";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import { MdLocationOn } from "react-icons/md";
 import Link from "next/link";
+import axios from "axios";
+import { NEXT_PUBLIC_BASE_API_URL } from "./config/supabaseClient";
+import { CustomCheckbox } from "../../components/CustomCheckbox";
+import SliderDistance from "../../components/SliderDistance";
+import SliderPrice from "../../components/SliderPrice";
 
 const data = [
   {
@@ -92,6 +97,23 @@ export default function Home() {
   const [isFocused, setIsFocused] = useState(false);
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
+  const [category, setCategory] = useState([]);
+  const [groupSelected, setGroupSelected] = useState([]);
+
+  useEffect(() => {
+    const fetchcategoryData = async () => {
+      try {
+        const category = await axios.get(
+          `${NEXT_PUBLIC_BASE_API_URL}/category`
+        );
+        // console.log(category.data);
+        setCategory(["All", ...category.data]);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchcategoryData();
+  }, []);
 
   const responsive = {
     superLargeDesktop: {
@@ -125,7 +147,9 @@ export default function Home() {
           />
         </div>
         <div className={styles.Resinfo}>
-          <Link href='' className={styles.nameRes}>{item.name}</Link>
+          <Link href="" className={styles.nameRes}>
+            {item.name}
+          </Link>
           <div className={styles.typeRes}>
             {item.type.map((t, index) => (
               <span className={styles.typeComponents} key={index}>
@@ -143,6 +167,45 @@ export default function Home() {
         </div>
       </div>
     ));
+  };
+
+  const filterRes = () => {
+    const handleCheckboxChange = (selectedValues) => {
+      console.log("Selected:", selectedValues.join(", "));
+      setGroupSelected(selectedValues); // อัปเดตค่าของ groupSelected
+    };
+
+    return (
+      <div className={styles.AllFilterContainer}>
+        <div className={styles.CategoryContainer}>
+          <div className={styles.Categoryheader}>Categories</div>
+          <div
+            className={styles.categoryComponents}
+            value={groupSelected}
+            onChange={handleCheckboxChange}
+          >
+            {category.map((type, index) => (
+              <CustomCheckbox key={index} value={type.Name || type}>
+                {type.Name || type}
+              </CustomCheckbox>
+            ))}
+          </div>
+        </div>
+
+        {/* Price slider */}
+        <div className={styles.CategoryContainer}>
+          <SliderPrice />
+        </div>
+
+        {/* Distance slider */}
+        <div className={styles.CategoryContainer}>
+          <div className={styles.Categoryheader}>Distance</div>
+          <div className={styles.slidecontainerRange}>
+            <SliderDistance />
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -177,7 +240,7 @@ export default function Home() {
           </form>
           <div className={styles.Filter_wrapper}>
             <div className={styles.Filter_header}>Filter Restaurant</div>
-            <div className={styles.Filter_Contaniner}></div>
+            <div className={styles.Filter_Contaniner}>{filterRes()}</div>
           </div>
         </div>
         <div className={styles.List_Containner}>

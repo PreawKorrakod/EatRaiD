@@ -15,16 +15,6 @@
   flex-direction: row;
 }
 
-.Search_Filter_wrapper{
-  width: 30%;
-  background-color: white;
-  margin-top: 1rem;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  border-radius: 10px;
-  justify-content: center;
-  align-items: center;
-}
 
 .search_wrapper{
   width: 100%;
@@ -107,15 +97,6 @@
   border-bottom-right-radius: 10px;
   color: #FFFFFF;
   cursor: pointer;
-}
-
-
-.Filter_wrapper{
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 .List_Containner{
@@ -388,3 +369,68 @@
   margin-right: 0.1rem;
   font-size: small;
 }
+
+.AllFilterContainer{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.CategoryContainer{
+  width: 100%;
+  align-items: center;
+  padding-left: 1rem;
+  font-size: 0.9rem;
+  padding-top: 0.5rem;
+}
+
+.Categoryheader{
+  width: 100%;
+  padding-bottom: 0.7rem;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.categoryComponents{
+  padding-left: 0.5rem;
+  width: 100%;
+  display: flex; 
+  flex-wrap: wrap; 
+}
+
+.Search_Filter_wrapper{
+  width: 100%;
+  background-color: white;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.Filter_wrapper{
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Filter_Contaniner{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Filter_header{
+  width: 100%;
+  padding: 0.5rem;
+  font-size: medium;
+}
+
