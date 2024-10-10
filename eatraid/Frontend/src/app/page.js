@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import Navbar from "../../components/Navbar";
 import HomeCard from "../../components/HomeCard";
@@ -20,6 +21,8 @@ import { NEXT_PUBLIC_BASE_API_URL } from "./config/supabaseClient";
 import { CustomCheckbox } from "../../components/CustomCheckbox";
 import SliderDistance from "../../components/SliderDistance";
 import SliderPrice from "../../components/SliderPrice";
+import Checkbox from "@mui/material/Checkbox";
+import { gray } from '@mui/material/colors';
 
 const data = [
   {
@@ -101,6 +104,7 @@ export default function Home() {
   const [category, setCategory] = useState([]);
   const [groupSelected, setGroupSelected] = useState([]);
 
+
   useEffect(() => {
     const fetchcategoryData = async () => {
       try {
@@ -149,7 +153,8 @@ export default function Home() {
         </div>
         <div className={styles.Resinfo}>
           <Link href="" className={styles.nameRes}>
-            {item.name}<BsBoxArrowUpRight className={styles.Linkicon} />
+            {item.name}
+            <BsBoxArrowUpRight className={styles.Linkicon} />
           </Link>
           <div className={styles.typeRes}>
             {item.type.map((t, index) => (
@@ -164,7 +169,7 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.ResSelect}>
-          <input type="Checkbox" />
+          <Checkbox defaultChecked className={styles.checkboxIcon} color= 'gray[600]'/>
         </div>
       </div>
     ));
@@ -285,12 +290,7 @@ export default function Home() {
                       <div className={styles.Showlength}>{data.length}</div>
                     </div>
                     <div className={styles.SelectChoice}>
-                      <input
-                        type="checkbox"
-                        className={styles.Checkboxinput}
-                        width={25}
-                        height={25}
-                      />
+                      <Checkbox defaultChecked className={styles.checkboxIcon} color= 'gray[600]'/>
                       <div className={styles.SelectText}>Select All</div>
                     </div>
                   </div>

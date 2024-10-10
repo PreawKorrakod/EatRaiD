@@ -328,7 +328,7 @@
 
 
 .nameRes{
-  width: 100%;
+  width: fit-content;
   text-overflow: ellipsis; 
   white-space: nowrap;
   text-decoration: none;
@@ -450,3 +450,6 @@
   font-size: medium;
 }
 
+.checkboxIcon{
+  color: black;
+}
