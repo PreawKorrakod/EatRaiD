@@ -265,7 +265,8 @@
   margin-left: 0.5rem;
   width: max-content;
   max-width: max-content;
-  background-color: #e7e7e7;
+  background-color: #EEEEEE;
+  color: #afafaf;
   padding-top: 0.1rem;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -325,10 +326,25 @@
   height: 100%;
 }
 
+
 .nameRes{
   width: 100%;
   text-overflow: ellipsis; 
   white-space: nowrap;
+  text-decoration: none;
+  color: black;
+  display: flex;
+  flex-direction: row ;
+  align-items: center;
+}
+
+.nameRes:hover{
+  text-decoration: underline;
+  color: #ff6905;
+}
+
+.Linkicon{
+  margin-left: 0.1rem;
 }
 
 .ResSelect{
@@ -343,14 +359,14 @@
 .typeComponents{
   font-size: x-small;
   margin-right: 0.5rem;
-  background-color: #dbdbdb;
+  background-color: #EEEEEE;
   width: fit-content;
   padding-top: 0.2rem;
   padding-bottom: 0.2rem;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   border-radius: 1rem;
-  color: #6e6e6ec4;
+  color: #6b7280;
 }
 
 .showDistance{
@@ -360,7 +376,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  color: rgb(130, 129, 129);
+  color: #b1b1b1;
   padding-top: 0.3rem;
   padding-left: 0.1rem;
 }

@@ -13,6 +13,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
 import { MdLocationOn } from "react-icons/md";
+import { BsBoxArrowUpRight } from "react-icons/bs";
 import Link from "next/link";
 import axios from "axios";
 import { NEXT_PUBLIC_BASE_API_URL } from "./config/supabaseClient";
@@ -148,7 +149,7 @@ export default function Home() {
         </div>
         <div className={styles.Resinfo}>
           <Link href="" className={styles.nameRes}>
-            {item.name}
+            {item.name}<BsBoxArrowUpRight className={styles.Linkicon} />
           </Link>
           <div className={styles.typeRes}>
             {item.type.map((t, index) => (
