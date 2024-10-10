@@ -22,7 +22,7 @@ import { CustomCheckbox } from "../../components/CustomCheckbox";
 import SliderDistance from "../../components/SliderDistance";
 import SliderPrice from "../../components/SliderPrice";
 import Checkbox from "@mui/material/Checkbox";
-import { gray } from '@mui/material/colors';
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 const data = [
   {
@@ -104,6 +104,23 @@ export default function Home() {
   const [category, setCategory] = useState([]);
   const [groupSelected, setGroupSelected] = useState([]);
 
+  // เก็บสถานะการเช็คบ็อกซ์ทั้งหมด
+  const [checked, setChecked] = useState(
+    new Array(data.length).fill(true) // ตั้งค่า default ให้เป็น select all
+  );
+
+  // ฟังก์ชันสำหรับ Select All
+  const handleChange1 = (event) => {
+    const isAllSelected = event.target.checked;
+    setChecked(new Array(data.length).fill(isAllSelected));
+  };
+
+  // ฟังก์ชันสำหรับเลือกเฉพาะรายการ
+  const handleChange2 = (index) => (event) => {
+    const updatedChecked = [...checked];
+    updatedChecked[index] = event.target.checked;
+    setChecked(updatedChecked);
+  };
 
   useEffect(() => {
     const fetchcategoryData = async () => {
@@ -140,7 +157,7 @@ export default function Home() {
   };
 
   const showRes = () => {
-    return data.map((item) => (
+    return data.map((item, index) => (
       <div key={item.id} className={styles.restaurantItem}>
         <div className={styles.resTmageCover}>
           <Image
@@ -169,7 +186,15 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.ResSelect}>
-          <Checkbox defaultChecked className={styles.checkboxIcon} color= 'gray[600]'/>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={checked[index]}
+                onChange={handleChange2(index)}
+                color="gray[900]"
+              />
+            }
+          />
         </div>
       </div>
     ));
@@ -290,7 +315,18 @@ export default function Home() {
                       <div className={styles.Showlength}>{data.length}</div>
                     </div>
                     <div className={styles.SelectChoice}>
-                      <Checkbox defaultChecked className={styles.checkboxIcon} color= 'gray[600]'/>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={checked.every(Boolean)} 
+                            indeterminate={
+                              !checked.every(Boolean) && checked.some(Boolean)
+                            } 
+                            onChange={handleChange1} 
+                            color="gray[900]"
+                          />
+                        }
+                      />
                       <div className={styles.SelectText}>Select All</div>
                     </div>
                   </div>
