@@ -8,6 +8,8 @@ import Navbar from "../../../components/Navbar";
 import { useRouter } from "next/navigation";
 import { AiOutlinePicture } from "react-icons/ai";
 import Image from "next/image";
+import { FaArrowLeft } from "react-icons/fa6";
+
 import axios from "axios";
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
@@ -42,10 +44,10 @@ export default function Info() {
   const [imageFile, setImageFile] = useState("");
   const [typerestaurant, setTyperestaurant] = useState("");
 
-  const categoryDropdown = ["Thai", "Japanese"]; // จาก backend
   const time_hr = Array.from({ length: 24 }, (_, i) =>
     String(i).padStart(2, "0")
   );
+
   const time_min = ["00", "15", "30", "45"];
   const businessDays = [
     "Sunday",
@@ -115,6 +117,7 @@ export default function Info() {
 
   // ดึงข้อมูลผู้ใช้เมื่อ component mount
   useEffect(() => {
+
     const fetchData = async () => {
       try {
         const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
@@ -195,6 +198,8 @@ export default function Info() {
   }, [infoData]);
 
   console.log("formData:", formData);
+
+
   if (!infoData) {
     return <div>Loading...</div>;
   }
@@ -232,6 +237,7 @@ export default function Info() {
     setSelectedOption(event.target.value);
   };
 
+
   const handleChangeOpenTimeHR = (event) => {
     setFormData({ ...formData, openTimeHR: event.target.value });
   };
@@ -263,6 +269,7 @@ export default function Info() {
       alert("Please upload a valid image file.");
     }
   };
+
 
   console.log("type:", typerestaurant);
   const handleSaveClick = async () => {
@@ -444,7 +451,6 @@ export default function Info() {
                           </option>
                         ))}
                       </select>
-
                       <select
                         className={styles.ddTextfieldStyleM}
                         value={formData.openTimeMin}
@@ -456,7 +462,11 @@ export default function Info() {
                           </option>
                         ))}
                       </select>
-
+                    </div>
+                  </div>
+                  <div className={styles.colTimeM}>
+                    <h2 className={styles.normalTextM}>Close time</h2>
+                    <div className={styles.textfieldSubContainerM}>
                       <select
                         className={styles.ddTextfieldStyleM}
                         value={formData.closeTimeHR}
@@ -468,7 +478,7 @@ export default function Info() {
                           </option>
                         ))}
                       </select>
-
+                      <h2 className={styles.normalTextM}> : </h2>
                       <select
                         className={styles.ddTextfieldStyleM}
                         value={formData.closeTimeMin}
@@ -571,8 +581,10 @@ export default function Info() {
           objectFit="cover"
         />
       </div>
-
       <div className={styles.bigContainer}>
+        {/* <button className={styles.editButton} onClick={handleEditClick}>
+          Edit Profile
+        </button> */}
         <div className={styles.rowCon1}>
           <div className={styles.toggleContainer}>
             <label className={styles.switch}>
@@ -603,6 +615,7 @@ export default function Info() {
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Business day</h2>
               <h2 className={styles.normalText2}>{openday}</h2>
+
             </div>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Open time</h2>

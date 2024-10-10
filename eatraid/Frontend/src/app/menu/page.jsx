@@ -107,10 +107,9 @@ export default function menu() {
 
 
     // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
-    const Userfromsession = userId
-    const OwnerID = data[0]?.RestaurantId
-    // console.log('User ID : ', Userfromsession)
-    // console.log('Owner ID : ', OwnerID)
+    // const Userfromsession = userId
+    // const OwnerID = data[0]?.RestaurantId
+  
 
     const handleDelete = (restaurantId) => {
         setData((prevData) => prevData.filter((restaurant) => restaurant.Id !== restaurantId));
@@ -463,8 +462,9 @@ export default function menu() {
                                     name={restaurant.NameFood}
                                     type={restaurant.Type.Name}
                                     price={restaurant.Price}
-                                    owner={OwnerID}
-                                    user={Userfromsession}
+                                    role = 'owner'
+                                    // owner={OwnerID}
+                                    // user={Userfromsession}
                                     onEdit={handleMenuUpdate}
                                     onRemove={handleDelete}
                                 />
