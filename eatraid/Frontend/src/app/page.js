@@ -104,6 +104,20 @@ export default function Home() {
   const [category, setCategory] = useState([]);
   const [groupSelected, setGroupSelected] = useState([]);
 
+  const [isRandomizing, setIsRandomizing] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
+  const handleRandomClick = () => {
+    setIsRandomizing(true);
+    setSelectedIndex(null); // Clear previous selection
+
+    setTimeout(() => {
+      const randomIndex = Math.floor(Math.random() * data.length);
+      setSelectedIndex(randomIndex);
+      setIsRandomizing(false);
+    }, 3000); // สมมุติว่าให้สุ่มเป็นเวลา 3 วินาที
+  };
+
   // เก็บสถานะการเช็คบ็อกซ์ทั้งหมด
   const [checked, setChecked] = useState(
     new Array(data.length).fill(true) // ตั้งค่า default ให้เป็น select all
@@ -276,8 +290,17 @@ export default function Home() {
             <div className={styles.slider}>
               <Carousel
                 responsive={responsive}
-                style={{ zIndex: "900" }}
-                autoPlay={true}
+                autoPlay={isRandomizing} // เริ่มหมุนเร็วถ้าอยู่ในช่วงสุ่ม
+                autoPlaySpeed={isRandomizing ? 1 : 90000000} // ปรับให้เร็วมากๆ ตอนสุ่ม
+                infinite={true}
+                centerMode={true}
+                focusOnSelect={false}
+                // หยุดที่ไอเท็มที่สุ่มได้
+                additionalTransfrom={
+                  selectedIndex !== null ? -selectedIndex * 300 : 0
+                }
+                customTransition="transform 0.5s ease" // ปรับให้การเคลื่อนที่นุ่มนวลขึ้นตอนหยุด
+                transitionDuration={isRandomizing ? 0 : 500} // หยุดทันทีเมื่อสุ่มเสร็จ
               >
                 {data
                   .filter((_, index) => checked[index]) // Filter data based on checked status
@@ -297,14 +320,16 @@ export default function Home() {
               </Carousel>
             </div>
             <div className={styles.RandomContainer}>
-              <button className={styles.Randombtn}>
-                <span>
-                  <GiPerspectiveDiceSixFacesRandom
-                    size={25}
-                    className={styles.randomicon}
-                  />
-                  Random
-                </span>
+              <button
+                onClick={handleRandomClick}
+                disabled={isRandomizing}
+                className={styles.Randombtn}
+              >
+                <GiPerspectiveDiceSixFacesRandom
+                  className={isRandomizing ? styles.spin : styles.randomicon}
+                  size={25}
+                />
+                Random
               </button>
             </div>
             <div className={styles.Res_wrapper}>
