@@ -345,7 +345,7 @@ app.get("/user", async (req, res) => {
 // ===========================home===========================
 
 app.get("/typerestaurant", async (req, res) => {
-  const {RestaurantId} = req.query;
+  const { RestaurantId } = req.query;
   let { data, error } = await supabase.from('typerestaurant').select("*").eq('RestaurantId', RestaurantId);
   if (error) {
     res.status(500).json(error);
@@ -363,7 +363,7 @@ app.put("/editprofile", upload.single("file"), async (req, res) => {
     const { id, RestaurantId, name, contactCall, contactLine, openTimeHR, openTimeMin, closeTimeHR, closeTimeMin, location, businessDay } = req.body;
     console.log(req.body);
     const newminetype = "image/jpeg";
-    const newfilename = `profile_${id}_${uuid4()}.jpeg`;
+    const newfilename = `profile_${RestaurantId}_${uuid4()}.jpeg`;
     const { data: RestaurantData, dataerror } = await supabase.from('Restaurant')
       .update({
         Name: name,
@@ -418,13 +418,13 @@ app.put("/editprofile", upload.single("file"), async (req, res) => {
       if (error) {
         res.status(500).json({ error });
       } else {
-        res.status(200).json({data, RestaurantData});
+        res.status(200).json({ data, RestaurantData });
       }
     } else {
       const ProfilePic = oldProfilePic;
       const { data, error } = await supabase.from("User").update({ ProfilePic }).eq("Id", RestaurantId).select("*");
       if (error) return res.status(500).json({ error });
-      return res.status(200).json({data, RestaurantData});
+      return res.status(200).json({ data, RestaurantData });
     }
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -600,7 +600,7 @@ app.get("/showinfo", async (req, res) => {
 });
 
 app.put("/toggle", async (req, res) => {
-  const { RestaurantId , toggle_status } = req.body;
+  const { RestaurantId, toggle_status } = req.body;
   const { data, error } = await supabase.from('Restaurant').update({ toggle_status }).eq('RestaurantId', RestaurantId).select("*");
   if (error) {
     res.status(500).json({ error });
@@ -630,6 +630,17 @@ app.get("/get-fav-list", async (req, res) => {
   }
 });
 
+app.get("/get-fav-restaurant", async (req, res) => {
+  const { RestaurantId } = req.query;
+  const { data, error } = await supabase.from('Favorite').select("*").eq('RestaurantId', RestaurantId);
+  if (error) {
+    res.status(500).json(error);
+  }
+  else {
+    res.status(200).json(data);
+  }
+});
+
 app.post("/add-to-fav", async (req, res) => {
   const { user, restaurant } = req.body;
   console.log(user, restaurant)
@@ -648,22 +659,18 @@ app.post("/add-to-fav", async (req, res) => {
 });
 
 app.delete("/delete-fav", async (req, res) => {
-  const { restaurant } = req.body;
-  if (!req.session.userId) {
-    return res.status(401).json({ msg: "User not authenticated" });
-  } else {
-    const { error } = await supabase
-      .from('Favorite')
-      .delete()
-      .eq('UserId', req.session.userId)
-      .eq('RestaurantId', restaurant);
+  const { user, restaurant } = req.body;
+  const { error } = await supabase
+    .from('Favorite')
+    .delete()
+    .eq('UserId', user)
+    .eq('RestaurantId', restaurant);
 
-    if (error) {
-      res.status(400).json(error);
-    }
-    else {
-      res.status(200).json({ 'msg': "delete user's fav restaurant successfully" });
-    }
+  if (error) {
+    res.status(400).json(error);
+  }
+  else {
+    res.status(200).json({ 'msg': "delete user's fav restaurant successfully" });
   }
 });
 
