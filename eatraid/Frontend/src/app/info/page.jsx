@@ -639,14 +639,7 @@ export default function Info() {
 
   const Modal = () => {
     if (!isModalOpen) return null;
-    const locationRef = useRef(null);
 
-    useEffect(() => {
-      // Focus the input field when the modal opens
-      if (locationRef.current) {
-        locationRef.current.focus();
-      }
-    }, [isModalOpen]);
     return (
       <div className={styles.modalOverlay}>
         <div className={styles.bigContainerM}>
