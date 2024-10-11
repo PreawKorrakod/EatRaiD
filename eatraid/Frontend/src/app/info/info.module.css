@@ -9,25 +9,26 @@
 }
 
 .bigContainer {
-    width: 80vw;
+    min-width: 75vw;
+    max-width: 80vw;
     height: 65vh;
     background-color: white;
-    /* background-color: #FFF4EB; */
-    border-radius: 15px;
-    padding: 1rem 2rem 0.7rem 2rem;
+    border: 1px solid #000;
+    border-radius: 10px;
+    padding: 1rem 2rem 0.7rem 3rem;
     margin: auto;
     /* box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.1); */
     display: flex;
     flex-direction: column;
-    margin-top: -10vh;
+    margin-top: 20vh;
 }
 
 .profileCon {
-    width: 18vw;
-    height: 33vh;
+    min-width: 18vw;
+    min-height: 33vh;
     background-color: #F4F3F1;
     border-radius: 50%;
-    margin-top: 1.25rem;
+    margin-top: -20vh;
     align-self: center;
     align-items: center;
     align-content: center;
@@ -48,7 +49,7 @@
     font-family: 'Poppins';
     font-size: 23px;
     font-weight: 600;
-    color: #527853;
+    color: #000;
     width: 11vw;
     min-width: 11vw;
     /* background-color: aqua; */
@@ -60,7 +61,7 @@
     font-family: 'Poppins';
     font-size: 23px;
     font-weight: 600;
-    color: #527853;
+    color: #000;
     width: max-content;
     min-width: fit-content;
     margin: 1px 0px 1rem 0.7rem
@@ -69,87 +70,107 @@
 /* data from back */
 .normalText2 {
     font-family: 'Poppins';
-    font-size: 23px;
+    font-size: 20px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
     width: 100%;
     margin: 1px 0px 1rem 0.7rem;
     /* background-color: #fcfaf8; */
 }
 
-/* opentime HR */
+/* opentime */
 .normalText3 {
     font-family: 'Poppins';
-    font-size: 23px;
+    font-size: 20px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
     width: 100%;
     min-width: 7vw;
     margin: 1px 0px 1rem 0.7rem;
 }
 
+/* close time */
+.normalText5 {
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    color: #000;
+    width: 100%;
+    min-width: 7vw;
+    margin: 1px 0px 1rem -5px;
+}
+
 /* category data */
 .normalText4 {
     font-family: 'Poppins';
-    font-size: 23px;
+    font-size: 18px;
     font-weight: normal;
-    background-color: #527853;
-    color: white;
+    background-color: #EDEDED;
+    color: #5A5959;
     border-radius: 2.5vh;
     width: fit-content;
     height: 5vh;
     padding: 5px 10px 5px 10px;
     /* background-color: aqua; */
-    margin: 1px 0px 0rem 0.7rem
+    margin: 1px 0px 0rem 0.5rem;
 }
 
 .editButton {
-    background-color: #527853;
+    background: linear-gradient(90deg, #891F0C 0%, #E16813 100%);
     color: #FFF4EB;
     border-radius: 0.7rem;
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
-    padding: 0.7rem 1.5rem;
+    padding: 2px 5px 2px 5px;
     cursor: pointer;
     border: none;
     outline: none;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease ;
     text-align: end;
     width: max-content;
+    height: 5vh;
     align-self: self-end;
-    margin: -80px 0px 20px 0px;
 }
 
 .editButton:hover {
-    background-color: #466A47;
+    background: linear-gradient(90deg, #701a0b 0%, #ba5711 100%);
 }
 
 .title {
     font-family: 'Poppins';
     font-size: 25px;
     font-weight: 800;
-    color: #527853;
+    color: #000;
     text-align: center;
-    margin: 30px 0px 10px 0px;
+    /* margin: 70px 0px 10px 0px; */
 }
 
 .rowCon {
     display: flex;
     flex-direction: row;
-    /* background-color: aquamarine; */
 }
 
 .rowCon1 {
     display: flex;
     flex-direction: row;
     align-self: flex-end;
+    margin-top: -13vh;
 }
 
 .rowCon2 {
     display: flex;
     flex-direction: row;
+    /* align-self: center; */
+    align-items: center;
+}
+
+/* title row container */
+.rowCon3 {
+    display: flex;
+    flex-direction: row;
     align-self: center;
+    margin: 80px 0px 20px 0px;
 }
 
 .colCon {
@@ -168,16 +189,21 @@
 
 .icon {
     font-size: 35px;
-    color: #466A47;
-    margin: 0.5px 0px 1rem 0.7rem;
+    color: #000;
+    margin: 0px 0px 1rem 0.7rem;
+}
+
+.editIcon {
+    font-size: 32px;
+    padding: 0px 5px 2px 5px;
 }
 
 .locationCon {
     height: max-content;
     font-family: 'Poppins';
-    font-size: 23px;
+    font-size: 20px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
     width: max-content;
 
     margin: 0px 0px 0.7rem 40px;
@@ -194,7 +220,7 @@
 .toggleContainer {
     display: flex;
     align-items: center;
-    margin: 10px 10px 1rem 10px;
+    margin-left: 10px;
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
@@ -253,7 +279,7 @@ input:checked + .slider:before {
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
 }
   
 
@@ -317,7 +343,7 @@ input:checked + .slider:before {
     font-family: 'Poppins';
     font-size: 18px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
     text-decoration: underline;
     border: none;
     cursor: pointer;
@@ -334,7 +360,7 @@ input:checked + .slider:before {
     font-family: 'Poppins';
     font-size: 18px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
     width: max-content;
     min-width: fit-content;
     margin: 0px 10px 0px 10px;
@@ -344,7 +370,7 @@ input:checked + .slider:before {
     font-family: 'Poppins';
     font-size: 42px;
     font-weight: 800;
-    color: #527853;
+    color: #000;
     text-align: center;
 }
 
@@ -352,7 +378,7 @@ input:checked + .slider:before {
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
     width: max-content;
     min-width: fit-content;
     margin: 0px 0px 10px 10px;
@@ -485,7 +511,7 @@ input:checked + .slider:before {
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
 }
 
 .ddTextfieldStyleM {
@@ -516,7 +542,7 @@ input:checked + .slider:before {
     top: 50%;
     transform: translateY(-50%);
     font-size: 40px;
-    color: #527853;
+    color: #000;
     pointer-events: none;
 }
 
@@ -578,7 +604,7 @@ input:checked + .slider:before {
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
     padding-left: 10px;
 }
 
@@ -597,7 +623,7 @@ input:checked + .slider:before {
 }
 
 .saveButtonM {
-    background-color: #527853;
+    background-color: #000;
     color: #FFF4EB;
     border-radius: 10px;
     font-family: 'Poppins';
@@ -616,7 +642,7 @@ input:checked + .slider:before {
 }
 
 .saveButtonM:hover {
-    background-color: #466A47;
+    background-color: #000;
 }
 
 .closeButtonM {
