@@ -254,8 +254,8 @@ export default function SignupDetail() {
 
             <div className={styles.rowContainerCenter}>
               <h2 className={styles.normalText}>Business days</h2>
-              <div className={styles.dropdown} onClick={toggleDropdown}>
-                <div className={styles.dropdownHeader}>
+              <div className={styles.dropdown} >
+                <div className={styles.dropdownHeader} onClick={toggleDropdown}>
                   {selectedBusinessDays.every(Boolean)
                     ? "Everyday"
                     : "Selected Day(s)"}
