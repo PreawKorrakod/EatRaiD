@@ -363,7 +363,7 @@ app.put("/editprofile", upload.single("file"), async (req, res) => {
     const { id, RestaurantId, name, contactCall, contactLine, openTimeHR, openTimeMin, closeTimeHR, closeTimeMin, location, businessDay } = req.body;
     console.log(req.body);
     const newminetype = "image/jpeg";
-    const newfilename = `profile_${id}_${uuid4()}.jpeg`;
+    const newfilename = `profile_${RestaurantId}_${uuid4()}.jpeg`;
     const { data: RestaurantData, dataerror } = await supabase.from('Restaurant')
       .update({
         Name: name,
