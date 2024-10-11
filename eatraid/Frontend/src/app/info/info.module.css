@@ -287,7 +287,7 @@ input:checked + .slider:before {
 
 .modalOverlay {
     position: fixed;
-    top: 0;
+    top: 3rem;
     left: 0;
     right: 0;
     bottom: 0;
@@ -297,39 +297,21 @@ input:checked + .slider:before {
     justify-content: center;
     align-items: center;
     text-align: center;
-    /* align-self: center; */
-    /* background-color: #d8000c; */
     z-index: 1000;
 }
 
-.modalContent {
-    width: 70vw;
-    height: 85vh;
-    /* background-color: #F9E8D9; */
-    background-color: white;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    text-align: center;
-    align-self: center;
-    align-items: center;
-    padding: 30px;
-    margin-top: 3rem;
-}
-
 .bigContainerM {
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    /* background-color: #FFFBF7; */
-    border-radius: 50px;
-    padding: 15px 30px 10px 30px;
-    margin: auto;
-    /* box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1); */
+    width: 70vw;
+    height: 80vh;
+    /* background-color: #673a0d; */
+    background-color: #FFF;
+    border-radius: 10px;
+    padding: 30px 30px 10px 30px;
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    align-items: center; 
+    text-align: center;
 }
 
 .bottomContainerM {
@@ -343,17 +325,17 @@ input:checked + .slider:before {
     font-family: 'Poppins';
     font-size: 18px;
     font-weight: normal;
-    color: #000;
+    color: #EE7214;
     text-decoration: underline;
     border: none;
     cursor: pointer;
     outline: none;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease transform 0.2s ease;
 }
 
 .LoginButtonM:hover {
-    color: #3b5234;
-    background-color: #e2ddd7;
+    color: #b05611;
+    transform: scale(1.02);
 }
 
 .bottomTextM {
@@ -382,6 +364,17 @@ input:checked + .slider:before {
     width: max-content;
     min-width: fit-content;
     margin: 0px 0px 10px 10px;
+    padding-right: 10px;
+}
+
+.normalTextRedM {
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    color: #D6195D;
+    width: max-content;
+    min-width: fit-content;
+    margin: 0px 0px 10px -5px;
 }
 
 .picTextM {
@@ -390,7 +383,7 @@ input:checked + .slider:before {
     font-weight: normal;
     color: black;
     opacity: 30%;
-    margin-bottom: 10px;
+    margin-right: 10px;
 }
 
 .inputContainerM {
@@ -420,11 +413,27 @@ input:checked + .slider:before {
     margin-left: 20px;
 }
 
+.rowContainerCenterM {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding-left: 10px;
+    align-items: center;
+}
+
+.rowContainerCenter2M {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    padding-left: 10px;
+    align-items: center;
+}
+
 .colContainerM {
     width: 100%;
     display: flex;
     flex-direction: column;
-    padding: 20px 10px 0px 10px;
+    padding: 10px 0px 0px 10px;
 }
 
 .colTimeM {
@@ -480,23 +489,53 @@ input:checked + .slider:before {
     height: 23vh;
     display: flex;
     flex-direction: row;
-    margin: 10px;
+    margin: 10px 10px 0px 10px;
     position: relative;
 }
 
 .textfieldStyleM {
-    height: 5vh;
+    height: 4vh;
     width: 100%;
     margin: 0px 0px 10px 10px;
-    background-color: #EEE2D8;
-    border: none;
+    background-color: #fff;
+    border-color: #000;
+    border-width: thin;
     border-radius: 5px;
-    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
     font-family: 'Poppins';
     font-size: 18px;
     font-weight: normal;
-    color: #233624;
+    color: #000;
     padding-left: 10px;
+}
+
+.textfieldStyleContactM {
+    height: 4vh;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+    color: #000;
+    padding-left: 10px;
+}
+
+.textfieldStyleContactM:focus {
+    border: none;
+    outline: none;
+}
+
+.contactBoxM {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 4vh;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin: 0px 0px 10px 10px;
+    padding-left: 5px;
+    align-items: center;
 }
 
 .textfieldStyleMiniM {
@@ -516,23 +555,21 @@ input:checked + .slider:before {
 
 .ddTextfieldStyleM {
     width: 100%;
-    height: 5vh;
+    height: 4vh;
     padding-left: 10px;
-    max-height: 10vh;
-    margin-left: 10px;
+    margin-bottom: 10px;
     font-size: 18px;
-    color: #333;
-    background-color: #EEE2D8;
-    border: 1px solid #ccc;
+    color: black;
+    background-color: #fff;
+    border: 1px solid #000;
     border-radius: 5px;
     outline: none;
     cursor: pointer;
     transition: border-color 0.3s ease;
-    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
 }
 
 .ddTextfieldStyleM:focus {
-    border-color: #7f7f7f;
+    border-color: #fff;
     height: 5vh;
 }
 
@@ -548,12 +585,12 @@ input:checked + .slider:before {
 
 .mapContainerM {
     width: 25vw;
-    height: 20vh;
+    height: 25vh;
     margin: 0px 0px 10px 20px;
     background-color: #EEE2D8;
     align-items: center;
     border-radius: 10px;
-    box-shadow: 2px 2.5px 1px rgba(143, 142, 142, 0.45);
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
 }
 
 .mapContainer2M {
@@ -562,14 +599,14 @@ input:checked + .slider:before {
     background-color: #EEE2D8;
     align-items: center;
     border-radius: 10px;
-    box-shadow: 2px 2.5px 1px rgba(143, 142, 142, 0.45);
+    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
 }
 
 .pictureContainerM {
     width: 15vw;
     height: 23vh; 
     margin-left: 10px;
-    background-color: #EEE2D8;
+    background-color: #E6E6E6;
     border-radius: 10px;
     box-shadow: 2px 2.5px 1px rgba(143, 142, 142, 0.45);
     display: flex;
@@ -582,9 +619,10 @@ input:checked + .slider:before {
 }
 
 .iconPicStyleM {
-    font-size: 80px; 
-    color: black;
+    font-size: 100px; 
+    color: #5c5b5b;
     opacity: 13%;
+    padding-top: 10px;
 }
 
 .uploadedImageM {
@@ -595,12 +633,11 @@ input:checked + .slider:before {
 
 .locationTextfieldM {
     width: 25vw;
-    height: 10vh;
+    height: 15vh;
     margin: -10px 10px 20px 20px;
-    background-color: #EEE2D8;
-    border: none;
+    background-color: #fff;
+    border: thin solid #000;
     border-radius: 5px;
-    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
@@ -608,22 +645,34 @@ input:checked + .slider:before {
     padding-left: 10px;
 }
 
+/* icon call and line */
 .iconStyleM {
-    font-size: 40px;
-    color: #3b573c;
-    margin-left: 20px;
+    font-size: 26px;
+    color: #000;
+    border-right: 1.5px solid #000;
+    padding: 0px 4px 0px 0px;
 }
 
 .iconArrowStyleM {
     font-size: 30px;
-    color: #3b573c;
+    width: 3vw;
+    height: 4vh;
+    color: #000;
     margin: 10px 0px 0px 20px;
-    background-color: transparent;
+    background-color: white;
     border: none;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.iconArrowStyleM:hover {
+    color: #313131;
+    transform: scale(1.1);
 }
 
 .saveButtonM {
-    background-color: #000;
+    background-color: #527853;
     color: #FFF4EB;
     border-radius: 10px;
     font-family: 'Poppins';
@@ -633,20 +682,21 @@ input:checked + .slider:before {
     cursor: pointer;
     border: none;
     outline: none;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease transform 0.2s ease;
     text-align: center;
     width: max-content;
     align-self: center;
-    margin: 40px 80px 10px 0px;
+    margin: 0px 80px 10px 0px;
     box-shadow: 2px 2.5px 5px rgba(143, 142, 142, 0.45);
 }
 
 .saveButtonM:hover {
-    background-color: #000;
+    background-color: #416142;
+    transform: scale(1.03);
 }
 
 .closeButtonM {
-    background-color: #EE7214;
+    background-color: #F44336;
     color: #FFF4EB;
     border-radius: 10px;
     font-family: 'Poppins';
@@ -656,16 +706,31 @@ input:checked + .slider:before {
     cursor: pointer;
     border: none;
     outline: none;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease transform 0.2s ease;
     text-align: center;
     width: max-content;
     align-self: center;
-    margin: 40px 0px 10px 0px;
+    margin: 0px 0px 10px 0px;
     box-shadow: 2px 2.5px 5px rgba(143, 142, 142, 0.45);
 }
 
 .closeButtonM:hover {
-    background-color: #b95910;
+    background-color: #d93327;
+    transform: scale(1.03);
+}
+
+.picUploadText {
+    font-family: 'Poppins';
+    color: #000;
+    text-decoration: underline;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.picUploadText:hover {
+    transform: scale(1.03);
 }
 
 .dropdownM {
@@ -677,26 +742,26 @@ input:checked + .slider:before {
 
 .dropdownHeaderM {
     width: 100%;
-    height: 5vh;
-    background-color: #EEE2D8;
+    height: 4vh;
+    background-color: #fff;
     padding: 10px;
     border-radius: 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 10px;
-    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    margin: 0px 0px 10px 0px;
     font-family: 'Poppins';
     font-size: 18px;
     font-weight: normal;
+    border: 1px solid #000;
 }
 
 .dropdownListM {
     position: absolute;
-    background-color: #EEE2D8;
-    border: 5px solid rgb(164, 159, 155);
+    background-color: #fff;
+    border: 1px solid black;
     border-radius: 5px;
-    margin: 5px 0px 0px 10px;
+    margin: 5px 0px 0px 0px;
     width: 100%;
     max-height: 30vh;
     overflow-y: auto;
@@ -710,10 +775,12 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
     padding: 10px;
+    border-bottom: 1px solid #ccc;
 }
 
 .checkboxM input {
     margin-right: 10px;
+    accent-color: black;
 }
 
 .ErrorCheckingM {
@@ -749,4 +816,24 @@ input:checked + .slider:before {
 
 .uploadTextM {
     color: #333;
+}
+
+.closeIcon {
+    position: absolute;
+    cursor: pointer; 
+    z-index: 1100; 
+    font-size: 20px;
+    align-self: self-end;
+    margin-top: -25px;
+    margin-right: -25px;
+    padding: 1px 3px 0px 3px;
+    background-color: #5f5f5f;
+    color: white;
+    border-bottom-left-radius: 50%;
+    transition: background-color 0.3s ease transform 0.2s ease;
+}
+
+.closeIcon:hover {
+   transform: scale(1.03);
+   background-color: #4a4a4a;
 }

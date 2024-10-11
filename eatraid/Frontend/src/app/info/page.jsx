@@ -1,14 +1,16 @@
-// "use client";
-// import { useState, useEffect } from "react";
-// import styles from "./info.module.css";
-// import { BsChevronDown } from "react-icons/bs";
-// import { FaLine } from "react-icons/fa6";
-// import { IoCall } from "react-icons/io5";
-// import Navbar from "../../../components/Navbar";
-// import { useRouter } from "next/navigation";
-// import { AiOutlinePicture } from "react-icons/ai";
-// import Image from "next/image";
-// import { FaArrowLeft } from "react-icons/fa6";
+"use client";
+import { useState, useEffect, useRef } from "react";
+import styles from "./info.module.css";
+import { BsChevronDown } from "react-icons/bs";
+import { FaLine } from "react-icons/fa6";
+import { IoCall } from "react-icons/io5";
+import Navbar from "../../../components/Navbar";
+import { useRouter } from "next/navigation";
+import { AiOutlinePicture } from "react-icons/ai";
+import Image from "next/image";
+import { FaArrowLeft } from "react-icons/fa6";
+import { FiEdit3 } from "react-icons/fi";
+import { RxCross2 } from "react-icons/rx";
 
 // import axios from "axios";
 // import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
@@ -346,23 +348,6 @@
 //     setSelectedBusinessDays(updatedCheckedState);
 //   };
 
-"use client";
-import { useState, useEffect } from "react";
-import styles from "./info.module.css";
-import { BsChevronDown } from "react-icons/bs";
-import { FaLine } from "react-icons/fa6";
-import { IoCall } from "react-icons/io5";
-import Navbar from "../../../components/Navbar";
-import { useRouter } from "next/navigation";
-import { AiOutlinePicture } from "react-icons/ai";
-import Image from "next/image";
-import { FaArrowLeft } from "react-icons/fa6";
-import { FiEdit3 } from "react-icons/fi";
-
-// Removed the axios import since we won't be using it
-// import axios from "axios";
-// import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
-
 export default function Info() {
   const router = useRouter();
   const [userId, setUserId] = useState(null);
@@ -440,7 +425,12 @@ export default function Info() {
     toggle_status: null,
   };
 
-  const mockCategoryData = [{ TypeName: "Noodle" }, { TypeName: "Pizza" }, { TypeName: "Rice" }, { TypeName: "Italian" }];
+  const mockCategoryData = [
+    { TypeName: "Noodle" },
+    { TypeName: "Pizza" },
+    { TypeName: "Rice" },
+    { TypeName: "Italian" },
+  ];
 
   useEffect(() => {
     // Simulating fetching user data
@@ -649,14 +639,25 @@ export default function Info() {
 
   const Modal = () => {
     if (!isModalOpen) return null;
+    const locationRef = useRef(null);
+
+    useEffect(() => {
+      // Focus the input field when the modal opens
+      if (locationRef.current) {
+        locationRef.current.focus();
+      }
+    }, [isModalOpen]);
     return (
       <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
+        <div className={styles.bigContainerM}>
+        <div className={styles.closeIcon} onClick={() => setIsModalOpen(false)}>
+          <RxCross2/>
+        </div>
           <h1 className={styles.titleM}>Edit profile</h1>
-          <div className={styles.bigContainerM}>
-            <div className={styles.inputContainerM}>
-              <div className={styles.textfieldBigContainerLM}>
-                <div className={styles.rowContainerM}>
+          <div className={styles.inputContainerM}>
+            <div className={styles.textfieldBigContainerLM}>
+              <div className={styles.rowContainerM}>
+                <div className={styles.colCon}>
                   <div className={styles.picBigContainerM}>
                     <label className={styles.pictureContainerM}>
                       <input
@@ -669,7 +670,6 @@ export default function Info() {
                       {!formData.profileImage ? (
                         <div>
                           <AiOutlinePicture className={styles.iconPicStyleM} />
-                          <h2 className={styles.picTextM}>click to upload</h2>
                         </div>
                       ) : (
                         <Image
@@ -682,147 +682,34 @@ export default function Info() {
                       )}
                     </label>
                   </div>
-                  <div className={styles.colContainerM}>
-                    <h2 className={styles.normalTextM}>Name</h2>
-                    <input
-                      name="Name"
-                      className={styles.textfieldStyleM}
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                    />
-                    {/* <h2 className={styles.normalTextM}>Category</h2>
-                    <select
-                      className={styles.ddTextfieldStyleM}
-                      value={selectedOption}
-                      onChange={handleChangeCategory}
-                    >
-                      {categoryDropdown.map((category, index) => (
-                        <option key={index} value={category}>
-                          {category}
-                        </option>
-                      ))}
-                    </select> */}
-                  </div>
-                </div>
-
-                <div className={styles.colContainer2M}>
-                  <h2 className={styles.normalTextM}>Business days</h2>
-                  <div
-                    className={styles.dropdownM}
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                  <h2
+                    className={styles.picUploadText}
+                    onClick={() =>
+                      document.querySelector(`input[type="file"]`).click()
+                    }
                   >
-                    <div className={styles.dropdownHeaderM}>
-                      {openday}
-                      <BsChevronDown />
-                    </div>
-                    {dropdownOpen && (
-                      <div className={styles.dropdownListM}>
-                        {businessDays.map((day, index) => (
-                          <div key={index} className={styles.checkboxM}>
-                            <input
-                              type="checkbox"
-                              id={day}
-                              checked={selectedBusinessDays[index]}
-                              onChange={() => handleCheckboxChange(index)}
-                            />
-                            <label htmlFor={day}>{day}</label>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                    click to upload
+                  </h2>
                 </div>
-                <div className={styles.rowContainerM}>
-                  <div className={styles.colTimeM}>
-                    <h2 className={styles.normalTextM}>Open time</h2>
-                    <div className={styles.textfieldSubContainerM}>
-                      <select
-                        className={styles.ddTextfieldStyleM}
-                        value={formData.openTimeHR}
-                        onChange={handleChangeOpenTimeHR}
-                      >
-                        {time_hr.map((hr, index) => (
-                          <option key={index} value={hr}>
-                            {hr}
-                          </option>
-                        ))}
-                      </select>
-                      <select
-                        className={styles.ddTextfieldStyleM}
-                        value={formData.openTimeMin}
-                        onChange={handleChangeOpenTimeMIN}
-                      >
-                        {time_min.map((min, index) => (
-                          <option key={index} value={min}>
-                            {min}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div className={styles.colTimeM}>
-                    <h2 className={styles.normalTextM}>Close time</h2>
-                    <div className={styles.textfieldSubContainerM}>
-                      <select
-                        className={styles.ddTextfieldStyleM}
-                        value={formData.closeTimeHR}
-                        onChange={handleChangeCloseTimeHR}
-                      >
-                        {time_hr.map((hr, index) => (
-                          <option key={index} value={hr}>
-                            {hr}
-                          </option>
-                        ))}
-                      </select>
-                      <h2 className={styles.normalTextM}> : </h2>
-                      <select
-                        className={styles.ddTextfieldStyleM}
-                        value={formData.closeTimeMin}
-                        onChange={handleChangeCloseTimeMIN}
-                      >
-                        {time_min.map((min, index) => (
-                          <option key={index} value={min}>
-                            {min}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <div className={styles.textfieldBigContainerRM}>
-                <div className={styles.textfieldSubContainerM}>
-                  <h2 className={styles.normalTextM}>Location</h2>
-                </div>
-                <textarea
-                  name="Location"
-                  className={styles.locationTextfieldM}
-                  rows={4}
-                  value={formData.location}
-                  onChange={(e) => {
-                    setFormData({ ...formData, location: e.target.value });
-                  }}
-                />
-                <div className="mapouter">
-                  <div className="gmap_canvas">
-                    <iframe
-                      src={`https://maps.google.com/maps?output=embed&q=${formData.location}`}
-                      frameBorder="0"
-                      className={styles.mapContainerM}
-                    ></iframe>
-                  </div>
-                </div>
-                <div className={styles.rowContainer2M}>
+                <div className={styles.colContainerM}>
+                  <h2 className={styles.normalTextM}>Name</h2>
+                  <input
+                    name="Name"
+                    className={styles.textfieldStyleM}
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                  />
                   <h2 className={styles.normalTextM}>Contact</h2>
-                  <div className={styles.colContactM}>
-                    <div className={styles.rowCon}>
+                  {/* <div className={styles.colContactM}> */}
+                  <div className={styles.rowContainerM}>
+                    <div className={styles.contactBoxM}>
                       <IoCall className={styles.iconStyleM} />
                       <input
                         name="Phone"
-                        className={styles.textfieldStyleM}
+                        className={styles.textfieldStyleContactM}
                         value={formData.contactCall}
                         onChange={(e) =>
                           setFormData({
@@ -832,11 +719,13 @@ export default function Info() {
                         }
                       />
                     </div>
-                    <div className={styles.rowCon}>
+                  </div>
+                  <div className={styles.rowCon}>
+                    <div className={styles.contactBoxM}>
                       <FaLine className={styles.iconStyleM} />
                       <input
                         name="Line"
-                        className={styles.textfieldStyleM}
+                        className={styles.textfieldStyleContactM}
                         value={formData.contactLine}
                         onChange={(e) =>
                           setFormData({
@@ -849,18 +738,122 @@ export default function Info() {
                   </div>
                 </div>
               </div>
+
+              <div className={styles.rowContainerCenterM}>
+                <h2 className={styles.normalTextM}>Business days</h2>
+                <div className={styles.dropdownM}>
+                  <div
+                    className={styles.dropdownHeaderM}
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                  >
+                    {openday}
+                    <BsChevronDown />
+                  </div>
+                  {dropdownOpen && (
+                    <div className={styles.dropdownListM}>
+                      {businessDays.map((day, index) => (
+                        <div key={index} className={styles.checkboxM}>
+                          <input
+                            type="checkbox"
+                            id={day}
+                            checked={selectedBusinessDays[index]}
+                            onChange={() => handleCheckboxChange(index)}
+                          />
+                          <label htmlFor={day}>{day}</label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.rowContainerCenter2M}>
+                <h2 className={styles.normalTextM}>Open time</h2>
+                <div className={styles.textfieldSubContainerM}>
+                  <input
+                    className={styles.ddTextfieldStyleM}
+                    type="number"
+                    value={formData.openTimeHR}
+                    min="0"
+                    max="23"
+                    step="01"
+                    onChange={handleChangeOpenTimeHR}
+                  />
+                  <h2 className={styles.normalTextM}> : </h2>
+                  <input
+                    className={styles.ddTextfieldStyleM}
+                    type="number"
+                    value={formData.openTimeMin}
+                    min="0"
+                    max="45"
+                    step="15"
+                    onChange={handleChangeOpenTimeMIN}
+                  />
+                </div>
+              </div>
+              <div className={styles.rowContainerCenter2M}>
+                <h2 className={styles.normalTextM}>Close time</h2>
+                <div className={styles.textfieldSubContainerM}>
+                  <input
+                    className={styles.ddTextfieldStyleM}
+                    type="number"
+                    value={formData.closeTimeHR}
+                    min="0"
+                    max="23"
+                    step="01"
+                    onChange={handleChangeCloseTimeHR}
+                  />
+                  <h2 className={styles.normalTextM}>:</h2>
+                  <input
+                    className={styles.ddTextfieldStyleM}
+                    type="number"
+                    value={formData.closeTimeMin}
+                    min="0"
+                    max="45"
+                    step="15"
+                    onChange={handleChangeCloseTimeMIN}
+                  />
+                </div>
+              </div>
             </div>
-            <div className={styles.rowCon2}>
-              <button className={styles.saveButtonM} onClick={handleSaveClick}>
-                Save
-              </button>
-              <button
-                className={styles.closeButtonM}
-                onClick={() => setIsModalOpen(false)}
-              >
-                Close
-              </button>
+
+            <div className={styles.textfieldBigContainerRM}>
+              <div className={styles.textfieldSubContainerM}>
+                <h2 className={styles.normalTextM}>Location</h2>
+              </div>
+              <textarea
+                // ref={locationRef}
+                name="Location"
+                className={styles.locationTextfieldM}
+                rows={4}
+                value={formData.location}
+                // onFocus={(e) => e.target.select()}
+                onChange={(e) => {
+                  setFormData({ ...formData, location: e.target.value });
+                }}
+              />
+              <div className="mapouter">
+                <div className="gmap_canvas">
+                  <iframe
+                    src={`https://maps.google.com/maps?output=embed&q=${formData.location}`}
+                    frameBorder="0"
+                    className={styles.mapContainerM}
+                  ></iframe>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <div className={styles.rowCon2}>
+            <button className={styles.saveButtonM} onClick={handleSaveClick}>
+              Save
+            </button>
+            <button
+              className={styles.closeButtonM}
+              onClick={() => setIsModalOpen(false)}
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
@@ -920,7 +913,7 @@ export default function Info() {
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Category</h2>
               {/* back แยกด้วยไรมาใส่ใน split */}
-              {typerestaurant.split("/").map((category, index) => ( 
+              {typerestaurant.split("/").map((category, index) => (
                 <h2 key={index} className={styles.normalText4}>
                   {category.trim()}
                 </h2>
@@ -933,12 +926,12 @@ export default function Info() {
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Time</h2>
               <div className={styles.rowCon2}>
-              <h2 className={styles.normalText3}>
-                {infoData.OpenTimeHr} : {infoData.OpenTimeMin} -
-              </h2>
-              <h2 className={styles.normalText5}>
-                {infoData.CloseTimeHr} : {infoData.CloseTimeMin}
-              </h2>
+                <h2 className={styles.normalText3}>
+                  {infoData.OpenTimeHr} : {infoData.OpenTimeMin} -
+                </h2>
+                <h2 className={styles.normalText5}>
+                  {infoData.CloseTimeHr} : {infoData.CloseTimeMin}
+                </h2>
               </div>
             </div>
             <div className={styles.rowCon}>
