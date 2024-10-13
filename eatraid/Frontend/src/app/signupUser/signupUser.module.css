@@ -9,14 +9,15 @@
 
 .container {
     position: relative;
-    width: 60vw;
-    height: 85vh;
+    width: 55vw;
+    height: 80vh;
     background-color: #FFFBF7;
-    margin-top: 4vh;
+    margin-top: 2%;
     border-radius: 2rem;
     display: flex;
     flex-direction: row;
-    box-shadow: 0px 4px 6px 0px rgba(108, 107, 106, 0.582);
+    /* box-shadow: 0px 4px 6px 0px rgba(108, 107, 106, 0.582); */
+    box-shadow: 0px 10px 4px 0px rgba(0, 0, 0, 0.137);
 }
 
 .content_wrapper{
@@ -41,7 +42,7 @@
 
 
 .From_Login_header{
-    color: #527853;
+    color: black;
     font-weight: 800;
     font-size: 40px;
     margin-top: 3rem;
@@ -52,9 +53,9 @@
     padding-top: 1.5rem;
     display: flex;
     flex-direction: column;
-    color: #527853;
+    color: black;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 2rem;
     /* margin-left: 1.5rem; */
 }
@@ -73,8 +74,8 @@
     width: 100%;
     border: none;
     border-radius: 0.2rem;
-    background-color: #EEE2D8;
-    font-size: 18px;
+    background-color: #FFFBF7;
+    font-size: 16px;
     padding-left: 0.5rem;
     padding-right: 0.2rem;
     padding-top: 0.4rem;
@@ -109,15 +110,14 @@
     padding-bottom: 0.5rem;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-    font-size: 18px;
+    font-size: 16px;
     color: #FFFBF7;
-    background-color: #527853;
+    background-color: #EE7214;
     border: none;
     border-radius: 0.5rem;
 }
 
 .Loginbtn:hover{
-    background-color: #486949;
     box-shadow: 0px 4px 4px 0px rgba(214, 204, 187, 0.352);
     cursor: pointer;
     scale: 1.1;

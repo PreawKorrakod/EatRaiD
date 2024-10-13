@@ -147,6 +147,10 @@
     cursor: pointer;
 }
 
+.Signup_link:hover{
+    color: #ca2b0f;
+}
+
 .Login_pic_wrapper{
     width: 50%;
     border-top-right-radius: 1rem;

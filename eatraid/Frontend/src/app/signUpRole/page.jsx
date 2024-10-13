@@ -14,7 +14,7 @@ function SignUpRole() {
   const router = useRouter();
 
   const handleSelection = (option) => {
-    setSelectedOption(option); 
+    setSelectedOption(option);
   };
 
   const handleContinue = () => {
@@ -31,41 +31,35 @@ function SignUpRole() {
         <h1 className={styles.title}>Sign Up</h1>
         <div className={styles.subContainer}>
           <button
-            className={`${styles.roleButton} ${
-              selectedOption === "customer" ? styles.activeButton : ""
-            }`}
+            className={`${styles.roleButton} ${selectedOption === "customer" ? styles.activeButton : ""
+              }`}
             onClick={() => handleSelection("customer")}
           >
             <AiOutlineUser
-              className={`${styles.iconStyle} ${
-                selectedOption === "customer" ? styles.activeIcon : ""
-              }`}
+              className={`${styles.iconStyle} ${selectedOption === "customer" ? styles.activeIcon : ""
+                }`}
             />
             User
           </button>
           <button
-            className={`${styles.roleButton} ${
-              selectedOption === "Restaurant" ? styles.activeButton : ""
-            }`}
+            className={`${styles.roleButton} ${selectedOption === "Restaurant" ? styles.activeButton : ""
+              }`}
             onClick={() => handleSelection("Restaurant")}
           >
             <BsShop
-              className={`${styles.iconStyle} ${
-                selectedOption === "Restaurant" ? styles.activeIcon : ""
-              }`}
+              className={`${styles.iconStyle} ${selectedOption === "Restaurant" ? styles.activeIcon : ""
+                }`}
             />
             Restaurant
           </button>
         </div>
-        <button 
+        <button
           className={styles.continueButton}
           onClick={handleContinue}
         >Continue</button>
         <div className={styles.bottomContainer}>
           <h2 className={styles.normalText}>Already have an account?</h2>
-          <Link href="/login" className={styles.LoginButton}>
-            Login
-          </Link>
+          <Link href="/login" className={styles.LoginButton}>Login</Link>
         </div>
       </div>
     </div>
