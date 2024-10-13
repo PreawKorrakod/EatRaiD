@@ -1,19 +1,20 @@
 .main{
     width: 100%;
     height: 100vh;
-    background-color: #F9E8D9;
+    background: linear-gradient(90deg,  #881E0B 0%, #EE7214 80%);
 }
 
 
 .container {
     width: 50vw;
-    height: 50%;
+    height: 55%;
     background-color: #FFFBF7;
-    margin-top: 4rem;
+    margin-top: 4%;
     border-radius: 1.5rem;
     display: flex;
     flex-direction: row;
-    box-shadow: 0px 4px 4px 0px rgba(116, 115, 113, 0.582);
+    box-shadow: 0px 10px 4px 0px rgba(0, 0, 0, 0.137);
+    /* box-shadow: 0px 4px 4px 0px rgba(116, 115, 113, 0.582); */
     position: relative;
 }
 
@@ -32,16 +33,18 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    padding-top: 1rem;
-    padding-right: 1rem;
-    padding-left: 1rem;
+    margin-top: 2rem;
+    padding-right: 2rem;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+    border-right: 2px solid rgba(138, 138, 138, 0.3);
 }
 
 
 .From_Login_header{
-    color: #527853;
+    color: black;
     font-weight: 800;
-    font-size: 40px;
+    font-size: 36px;
     margin-top: 1rem;
 }
 
@@ -50,9 +53,9 @@
     padding-top: 2.5rem;
     display: flex;
     flex-direction: column;
-    color: #527853;
+    color: black;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 2rem;
     /* margin-left: 1.5rem; */
 }
@@ -68,10 +71,10 @@
 
 .Loginblock{
     width: 100%;
-    border: none;
+    border: 1px solid black;
     border-radius: 0.2rem;
-    background-color: #EEE2D8;
-    font-size: 18px;
+    background-color: #FFFBF7;
+    font-size: 16px;
     padding-left: 0.5rem;
     padding-right: 0.2rem;
     padding-top: 0.4rem;
@@ -87,12 +90,18 @@
 
 .Loginblock:focus {
     outline: none; 
-    box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.42);
 }
 
+.From_Login_input_Email input:focus, 
+.From_Login_input_Password input:focus {
+    box-shadow: inset 0 0 5px rgba(39, 39, 39, 0.216);
+    outline: none; 
+}
+
+
 .Loginbtn_wrapper{
-    margin-top: 3rem;
-    margin-bottom: 0.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -104,17 +113,16 @@
     width: max-content;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    font-size: 18px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 16px;
     color: #FFFBF7;
-    background-color: #527853;
+    background-color: #EE7214;
     border: none;
     border-radius: 0.5rem;
 }
 
 .Loginbtn:hover{
-    background-color: #486949;
     box-shadow: 0px 4px 4px 0px rgba(214, 204, 187, 0.352);
     cursor: pointer;
     scale: 1.1;
@@ -127,36 +135,53 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-bottom: 1rem;
-    color: #486949;
+    padding-bottom: 0.5rem;
+    color: black;
     font-size: small;
 }
 
 .Signup_link{
     margin-left: 0.2rem;
     font-weight: 700;
-    color: #486949;
+    color: #EE7214;
 }
 
-.Login_Picture{
+.Login_pic_wrapper{
     width: 50%;
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem ;
-    margin-left: 0.5rem;
-    overflow: hidden; 
     display: flex; 
     justify-content: center;
     align-items: center;
 }
 
+.logoPicture {
+    background-color: black;
+    border-radius: 50%;
+    width: 75%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 10px 6px 1px 0px rgba(0, 0, 0, 0.352);
+}
+
+.logoimg {
+    object-fit: fill; /* ปรับขนาดให้พอดีในขอบเขต */
+    max-width: 600%; /* จำกัดขนาดความกว้างไม่ให้เกินขอบเขต */
+    max-height: 150%; /* จำกัดขนาดความสูงไม่ให้เกินขอบเขต */
+    margin-left: 10rem;
+}
+
 .ErrorChecking{
     color: #CD1616;
-    font-size: small;
+    font-size: 12px;
     display: flex;
     justify-content: center ;
     align-items: center;
     text-align: center;
     margin-top: 1rem;
+    margin-right: 0.2rem;
 }
 
 .Alerticon{
@@ -166,7 +191,7 @@
 .back_icon{
     width: 30px;
     height: 30px;
-    color: #527853;
+    color: black;
     font-weight: bolder;
     position: absolute;
     top: 0;
