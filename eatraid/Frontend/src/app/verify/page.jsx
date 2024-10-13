@@ -80,17 +80,17 @@ export default function Verify() {
           role: userID.role,
           profilePic: userID.file,
           user: userID.id,
-          Name: userID.Name, 
+          Name: userID.Name || "-", 
           OpenTimeHr: userID.OpenTimeHr,
           CloseTimeHr: userID.CloseTimeHr, 
           OpenTimeMin: userID.OpenTimeMin, 
           CloseTimeMin: userID.CloseTimeMin,
-          Location: userID.Location, 
+          Location: userID.Location || "-", 
           Latitude: userID.Latitude, 
           Longitude: userID.Longitude,
           BusinessDay: userID.BusinessDay, 
-          Tel: userID.Tel, 
-          Line: userID.Line
+          Tel: userID.Tel || "-", 
+          Line: userID.Line || "-"
 
         }).then(async res => {
           console.log("Navigate based on role", res)
