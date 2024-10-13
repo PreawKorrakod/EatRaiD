@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./info.module.css";
 import { BsChevronDown } from "react-icons/bs";
 import { FaLine } from "react-icons/fa6";
@@ -11,7 +11,7 @@ import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa6";
 import { FiEdit3 } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
-
+import ToggleGroup from "../../../components/toggleGroup";
 // import axios from "axios";
 // import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
@@ -381,6 +381,9 @@ export default function Info() {
     String(i).padStart(2, "0")
   );
 
+  // status ร้านให้เป็น Auto เริ่มต้น
+  const [status, setStatus] = useState("Auto");
+
   const time_min = ["00", "15", "30", "45"];
   const businessDays = [
     "Sunday",
@@ -523,6 +526,23 @@ export default function Info() {
     return <div>Loading...</div>;
   }
 
+  // Code ส่งไปค่าปุ่ม
+  const id = "store-001"; // กำหนด id ร้าน
+
+  // ข้อความ labels ที่จะใช้ใน ToggleGroup
+  const labelsText = {
+    left: { title: "Open", value: "open" },
+    center: { title: "Auto", value: "auto" },
+    right: { title: "Close", value: "close" },
+  };
+
+
+  // ฟังก์ชัน onChange ที่จะเรียกเมื่อเปลี่ยน toggle
+  const onChangetoggle = (storeId, newStatus) => {
+    console.log(`Store ${storeId} changed to: ${newStatus}`);
+    setStatus(newStatus === true ? "Open" : newStatus === false ? "Close" : "Auto")
+  };
+
   // Determine displayed status
   const displayedIsOpen =
     overrideStatus !== null ? overrideStatus === "open" : defaultIsOpen;
@@ -643,9 +663,9 @@ export default function Info() {
     return (
       <div className={styles.modalOverlay}>
         <div className={styles.bigContainerM}>
-        <div className={styles.closeIcon} onClick={() => setIsModalOpen(false)}>
-          <RxCross2/>
-        </div>
+          <div className={styles.closeIcon} onClick={() => setIsModalOpen(false)}>
+            <RxCross2 />
+          </div>
           <h1 className={styles.titleM}>Edit profile</h1>
           <div className={styles.inputContainerM}>
             <div className={styles.textfieldBigContainerLM}>
@@ -853,6 +873,7 @@ export default function Info() {
     );
   };
 
+
   // main page
   return (
     <div className={styles.mainBg}>
@@ -881,6 +902,7 @@ export default function Info() {
         <div className={styles.rowCon3}>
           <h1 className={styles.title}>{infoData.Name || "Restaurant Name"}</h1>
           <div className={styles.toggleContainer}>
+
             <label className={styles.switch}>
               <input
                 type="checkbox"
@@ -900,6 +922,8 @@ export default function Info() {
             </span>
           </div>
         </div>
+
+
 
         <div className={styles.rowCon}>
           <div className={styles.halfCon}>
@@ -955,6 +979,15 @@ export default function Info() {
               </div>
             </div>
           </div>
+
+          {/* มาใส่ toggle ตรงนี้นะ */}
+          <ToggleGroup
+            id={id}
+            status={status} // ส่งสถานะเริ่มต้นเข้าไป
+            labels={labelsText} // ส่งข้อความ labels
+            onChange={onChangetoggle} // ส่งฟังก์ชัน onChange
+          />
+
         </div>
       </div>
       {isModalOpen && <Modal />}

@@ -1,0 +1,49 @@
+.toggleContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 40%;
+    height: max-content;
+    border-radius: 10rem;
+    background-color: #EE7214;
+    position: relative;
+    padding: 1rem;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.173);
+}
+  
+.toggleSwitch {
+    height: 80%;
+    width: 80px;
+    background-color: white;
+    border-radius: 10rem;
+    position: absolute;
+    transition: left 0.3s ease;
+}
+  
+/* ตำแหน่งของปุ่ม */
+.open {
+    left: 5px;
+}
+  
+.auto {
+    left: 85px;
+}
+  
+.close {
+    left: 165px;
+}
+  
+.toggleLabel {
+    color: white;
+    cursor: pointer;
+    z-index: 1;
+    font-weight: 500;
+}
+  
+.blackFont {
+    color: black;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    align-items: center;
+}
+  
