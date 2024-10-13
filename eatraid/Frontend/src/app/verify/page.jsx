@@ -83,10 +83,10 @@ export default function Verify() {
           // Navigate based on role
 
           if (userID.role === "customer") {
-            router.push("/"); // Redirect to home page
+            router.push("/login"); // Redirect to home page
           } else if (userID.role === "owner") {
             sessionStorage.removeItem('userData');
-            router.push("/info");
+            router.push("/login");
           }
         }).catch(error => {
           console.error('Error during verify OTP:', error);
