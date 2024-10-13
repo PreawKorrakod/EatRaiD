@@ -145,16 +145,20 @@ export default function SignupDetail() {
     // console.log("Selected business days:", selectedBusinessDays);
     // console.log("Location:", location);
     // console.log('image',Imagefile)
-    const displayOpenTime = `${openTimeHR}:${openTimeMIN}`;
-    const displayCloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
+    // const displayOpenTime = `${openTimeHR}:${openTimeMIN}`;
+    // const displayCloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
     
     const id = userID.id;
     const role = 'owner';
     const email = userID.email;
     const file = profileImage;
     const Name = NameOwner || "-";
-    const OpenTime = displayOpenTime === "00:00" ? "-" : displayOpenTime;
-    const CloseTime = displayCloseTime === "00:00" ? "-" : displayCloseTime; 
+    // const OpenTime = displayOpenTime === "00:00" ? "-" : displayOpenTime;
+    // const CloseTime = displayCloseTime === "00:00" ? "-" : displayCloseTime; 
+    const OpenTimeHr = openTimeHR;
+    const CloseTimeHr = closeTimeHR;
+    const OpenTimeMin = openTimeMIN;
+    const CloseTimeMin = closeTimeMIN;
     const Location = location || "-"; 
     const Latitude = 0; 
     const Longitude = 0; 
@@ -163,7 +167,7 @@ export default function SignupDetail() {
     const Line = LineContact || "-";
     sessionStorage.removeItem('userID');
     const newUserID = {  email, role, id, file,
-      Name, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay, Tel, Line };
+      Name, OpenTimeHr,CloseTimeHr, OpenTimeMin, CloseTimeMin, Location, Latitude, Longitude, BusinessDay, Tel, Line };
     console.log("signup successful navigate to verify", newUserID);
     sessionStorage.setItem('userID', JSON.stringify(newUserID)); 
     router.push('/verify');

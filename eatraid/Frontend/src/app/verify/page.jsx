@@ -69,8 +69,10 @@ export default function Verify() {
           profilePic: userID.file,
           user: userID.id,
           Name: userID.Name, 
-          OpenTime: userID.OpenTime, 
-          CloseTime: userID.CloseTime, 
+          OpenTimeHr: userID.OpenTimeHr,
+          CloseTimeHr: userID.CloseTimeHr, 
+          OpenTimeMin: userID.OpenTimeMin, 
+          CloseTimeMin: userID.CloseTimeMin,
           Location: userID.Location, 
           Latitude: userID.Latitude, 
           Longitude: userID.Longitude,
@@ -82,12 +84,12 @@ export default function Verify() {
           console.log("Navigate based on role", res)
           // Navigate based on role
 
-          if (userID.role === "customer") {
-            router.push("/"); // Redirect to home page
-          } else if (userID.role === "owner") {
-            sessionStorage.removeItem('userData');
-            router.push("/info");
-          }
+          // if (userID.role === "customer") {
+          //   router.push("/"); // Redirect to home page
+          // } else if (userID.role === "owner") {
+          //   sessionStorage.removeItem('userData');
+          //   router.push("/info");
+          // }
         }).catch(error => {
           console.error('Error during verify OTP:', error);
           if (error.status == 400){
