@@ -1,46 +1,19 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './menu.module.css';
 import Navbar from '../../../components/Navbar';
 import Image from 'next/image';
-import image1 from '../../../public/imgTest4.png';
-import image2 from '../../../public/imgTest5.png';
-import image3 from '../../../public/imgTest6.png';
 import MenuCard from '../../../components/MenuCard';
 import { BsChevronDoubleLeft, BsCheckLg, BsChevronDoubleRight, BsPlus, BsXSquareFill, BsUpload, BsImages, BsExclamationCircle, BsCheckCircleFill, BsFillTrashFill } from "react-icons/bs";
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+import { useRouter } from "next/navigation";
 
-// ข้อมูลปลอม
-const categoryDropdown = ["fastfood", "dessert", "noodle", "Cooked to order", "beverages", "Japanese", "Western", "Chinese",
-    "Local food", "Quick meal", "healthy"]
-// ข้อมูลปลอม
-// backend ตอนดึงข้อมูลให้ดึงเข้ามาใส่ในตัวแปร data data ตอนนี้เป็นแค่ข้อมูลจำลอง 
-const data = [
-    { id: 1, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 2, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 3, name: 'food C', image: image3, type: 'Western', price: '50' },
-    { id: 4, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 5, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 6, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 7, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 8, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 9, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 10, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 11, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 12, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 13, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 14, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 15, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 16, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 17, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 18, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 19, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 20, name: 'food B', image: image2, type: 'noodle', price: '50' },
-    { id: 21, name: 'food A', image: image1, type: 'noodle', price: '50' },
-    { id: 22, name: 'food B', image: image2, type: 'noodle', price: '50' }
-];
 
 export default function menu() {
-
+    const router = useRouter();
+    const [userId, setUserId] = useState(null);
+    const [data, setData] = useState([]);
     const [MenuImage, setMenuImage] = useState('');
     const [Imagefile, setImagefile] = useState('');
     const [error, setError] = useState('');
@@ -49,18 +22,106 @@ export default function menu() {
     const [isLoading, setIsLoading] = useState(false); // State สำหรับสถานะการรอ
     const [isAddSuccess, setIsAddSuccess] = useState(false); // State สำหรับการเพิ่มสำเร็จ
     const [formData, setFormData] = useState({ foodname: '', type: '', price: '' });
-    const categoryDropdownWithDefault = ["Select type", ...categoryDropdown];
     const [errorMessage, setErrorMessage] = useState('');
+    const [category, setCategory] = useState('');
+    const [isUpdated, setIsUpdated] = useState(false); // เพิ่ม state นี้
+    const [isAdd, setIsAdd] = useState(false); // เพิ่ม state นี้
+
+
+    useEffect(() => {
+        const fetchcategoryData = async () => {
+            try {
+                const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
+                // console.log(category.data);
+                setCategory(category.data);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchcategoryData();
+    }, []);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
+                    withCredentials: true,
+                });
+                if (user !== null) {
+                    console.log(user.data[0].Id);
+                    setUserId(user.data[0].Id);
+                } else { 
+                    router.push(`/`); 
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchData();
+    }, [userId]);
+
+
+
+
+
+    useEffect(() => {
+        const fetchMenuData = async () => {
+            if (!userId) return; // Wait until userId is set before fetching the menu data
+            try {
+                // Fetch menu data using the userId
+                const menu = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/showmenu`, {
+                    params: { RestaurantId: userId },
+                    withCredentials: true,
+                });
+                // console.log(menu.data);
+                setData(menu.data);
+
+                return () => {
+                    setIsUpdated(false);
+                    setIsAdd(false);
+                };
+
+            } catch (error) {
+                console.error('Error fetching menu data:', error);
+                // setError('Failed to fetch menu data.');
+                alert('Failed to fetch menu data.');
+            }
+        };
+        fetchMenuData();
+    }, [userId, isAdd, isUpdated]); // เพิ่ม isUpdated ใน dependencies นี้
+
+    const handleaddMenu = () => {
+        setIsAdd(prev => !prev);
+    };
+
+    const handleMenuUpdate = (id, name, price, type, img) => {
+        setData(prevData =>
+            prevData.map(item =>
+                item.Id === id ? { ...item, NameFood: name, Price: price, Type: type, MenuPic: img } : item
+            )
+        );
+        setIsUpdated(prev => !prev);
+    };
+
+
 
     // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
-    const Userfromsession = 'ABCD'
-    const OwnerID = 'ABCD'
+    // const Userfromsession = userId
+    // const OwnerID = data[0]?.RestaurantId
+  
+
+    const handleDelete = (restaurantId) => {
+        setData((prevData) => prevData.filter((restaurant) => restaurant.Id !== restaurantId));
+    };
+
+
 
 
     // จำลองการดึงค่า User ออกมาจาก Session เพื่อนำมาเช็คว่าควรมีปุ่ม edit ไหม ว่าตรงกับ OwnerID หรือเปล่า
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
     const handleFileChange = (e) => {
-        const file = e.target.files[0]; // รับค่ารูปภาพเที่เข้ามาใหม่
+        const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -68,14 +129,16 @@ export default function menu() {
             };
             reader.readAsDataURL(file);
             setImagefile(file);
-            // ใช้ตัวแปร file คือ ตัวแปรเก็บค่ารูป อันนี้คือต้องดึงเข้าไปเก็บที่ back
+            setErrorImg(''); // เคลียร์ error รูปภาพเมื่ออัปโหลดรูปใหม่
         }
-    }
+    };
+
 
 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        setError(''); // เคลียร์ error เมื่อมีการแก้ไขข้อมูล
     };
 
 
@@ -105,31 +168,78 @@ export default function menu() {
     // Backend เชื่อม Addmenu ตรงนี้
     // ในการรับข้อมูลให้ใช้ formData.foodname formData.type formData.price ได้เลย
     const handleConfirm = async (e) => {
-        e.preventDefault();
-        if (!Imagefile) { // เป็นการเช็คว่ามีไฟล์รูปภาพหรือเปล่า
+        if (e && typeof e.preventDefault === 'function') {
+            e.preventDefault();
+        }
+
+        // ตรวจสอบว่ามีไฟล์รูปภาพหรือไม่
+        if (!Imagefile) {
             setErrorImg('Please upload an image.');
             return;
         }
 
-        if (error) return; // ไม่ให้ดำเนินการถ้ามี error
+        // ตรวจสอบข้อมูลอื่นๆ
+        if (!formData.foodname || !formData.type || !formData.price) {
+            setError('Please fill in all the fields.');
+            return;
+        }
 
-        setIsLoading(true); // ตั้งค่าสถานะกำลังโหลด
-        setError(''); // ล้าง error ก่อนเริ่มส่งข้อมูล
+        setIsLoading(true); // เริ่มการโหลด
+
+        // สร้าง FormData สำหรับการอัปโหลดข้อมูลและไฟล์
+        const formDataToSend = new FormData();
+        formDataToSend.append('file', Imagefile); // ฟิลด์นี้ต้องตรงกับที่เซิร์ฟเวอร์คาดหวัง
+        formDataToSend.append('RestaurantId', userId);
+        formDataToSend.append('NameFood', formData.foodname);
+        formDataToSend.append('TypeID', formData.type);
+        formDataToSend.append('Price', formData.price);
+
+
+        setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาดก่อนเริ่ม
+        setIsAddSuccess(false); // เริ่มจาก false เพื่อแน่ใจว่าไม่แสดงผลก่อนเวลา
 
         try {
-            // จำลองการส่งข้อมูลไปยัง backend
-            await new Promise((resolve) => setTimeout(resolve, 2000)); // รอ 2 วินาทีเพื่อจำลองการโหลด
+            const addmenu = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/addmenu`, formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                withCredentials: true,
+            });
 
-            setIsAddSuccess(true); // ตั้งค่าสถานะสำเร็จ
-            setIsLoading(false); // หยุดโหลด
+            // อัปเดต data หลังเพิ่มเมนูสำเร็จ
+            setData(prevData => [...prevData, {
+                Id: addmenu.data.data[0].Id,
+                NameFood: formData.foodname,
+                Price: formData.price,
+                Type: formData.type,
+                MenuPic: addmenu.data.data[0].MenuPic
+            }]);
+
+
+            setIsLoading(true); // เริ่มการโหลด
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            setIsLoading(false); // หยุดการโหลด
+            setIsAddSuccess(true); // แสดงข้อความเพิ่มเมนูสำเร็จ
+
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
             setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
-            console.log('Add menu name : ', formData.foodname)
-            console.log('Add menu type : ', formData.type)
-            console.log('Add menu price : ', formData.price)
-            setIsAlertModalOpen(false)
+            setTimeout(() => {
+                setIsAddSuccess(false); // ซ่อนข้อความ "Add success" หลังจากเวลาผ่านไป
+                setIsAlertModalOpen(false);
+            }, 2000); // ซ่อนข้อความหลังจาก 2 วินาที
+
+
+            handleaddMenu();
+            // รีเซ็ตข้อมูลฟอร์ม
+            setFormData({ foodname: '', type: '', price: '' });
+            setMenuImage('');
+            setImagefile(null);
+
 
         } catch (err) {
-            setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
+            setIsLoading(false); // หยุดการโหลดถ้ามีข้อผิดพลาด
             setErrorMessage('Failed to add menu. Please try again.');
         }
     };
@@ -139,19 +249,21 @@ export default function menu() {
     const renderAlertModal = () => {
         return (
             <div id="logoutModal" className={styles.modal}>
-                <form className={styles.modal_content} onSubmit={(e) => handleConfirm(e, id)}>
+                <form className={styles.modal_content} onSubmit={handleConfirm}>
 
                     <BsXSquareFill className={styles.close} onClick={() => setIsAlertModalOpen(false)} />
                     <h2 className={styles.headerTextModal}>Add Menu</h2>
                     {isLoading ? (
-                        <p className={styles.wait}>Please wait...</p> // แสดงข้อความ "Please wait" เมื่ออยู่ระหว่างการโหลด
-                    ) : isAddSuccess ? (
-                        <div className={styles.successContainer}>
-                            <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />Successfully edited!</p>
+                        <div>
+                            <p className={styles.wait}>Please wait...</p>
                         </div>
                     ) : errorMessage ? (
                         <div className={styles.successContainer}>
                             <p className={styles.errorText}><BsExclamationCircle className={styles.iconExc2} />{errorMessage}</p>
+                        </div>
+                    ) : isAddSuccess ? (
+                        <div className={styles.successContainer}>
+                            <p className={styles.SuccessfulText}><BsCheckCircleFill className={styles.CheckSuccess} />New Menu Added!</p>
                         </div>
                     ) : (
                         // ส่วนของการ input ข้อมูลใหม่ของ User ที่ต้องการ edit 
@@ -209,9 +321,10 @@ export default function menu() {
                                         onChange={handleChange}
                                         required
                                     >
-                                        {categoryDropdownWithDefault.map((category, index) => (
-                                            <option key={index} value={category === "Select type" ? "" : category} disabled={category === "Select type"}>
-                                                {category}
+                                        <option value="" disabled>Select Type</option>
+                                        {category && category.map((items, index) => (
+                                            <option key={index} value={items.Id}>
+                                                {items.Name}
                                             </option>
                                         ))}
                                     </select>
@@ -251,7 +364,7 @@ export default function menu() {
                                 <button
                                     type="submit"
                                     className={styles.Confirmbtn}
-                                    disabled={isLoading || error || errorImg} // ปิดปุ่มระหว่างการโหลดหรือตอนที่มี error
+                                    disabled={isLoading || error || errorImg} // ปิดปุ่มเฉพาะเมื่อมีการโหลด หรือยังมี error อยู่
                                     onClick={(e) => handleConfirm(e)} // เรียกใช้ฟังก์ชัน Confirm เมื่อกดปุ่ม
                                 >
                                     {isLoading ? "Adding..." : "Add"}
@@ -343,14 +456,17 @@ export default function menu() {
                             {/* backend มาเชื่อมให้ใส่ข้อมูล restaurant.(ชื่อคอลัมน์) นะ */}
                             {currentItems.map((restaurant) => (
                                 <MenuCard
-                                    key={restaurant.id}
-                                    id={restaurant.id}
-                                    img={restaurant.image}
-                                    name={restaurant.name}
-                                    type={restaurant.type}
-                                    price={restaurant.price}
-                                    owner={OwnerID}
-                                    user={Userfromsession}
+                                    key={restaurant.Id}
+                                    id={restaurant.Id}
+                                    img={restaurant.MenuPic ? restaurant.MenuPic : null}
+                                    name={restaurant.NameFood}
+                                    type={restaurant.Type.Name}
+                                    price={restaurant.Price}
+                                    role = 'owner'
+                                    // owner={OwnerID}
+                                    // user={Userfromsession}
+                                    onEdit={handleMenuUpdate}
+                                    onRemove={handleDelete}
                                 />
                             ))}
                         </div>

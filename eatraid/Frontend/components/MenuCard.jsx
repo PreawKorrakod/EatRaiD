@@ -1,21 +1,20 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './MenuCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BsPencilSquare, BsXSquareFill, BsFillTrashFill, BsCheckLg, BsUpload, BsImages, BsExclamationCircle, BsCheckCircleFill } from "react-icons/bs";
-
+import axios from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
 
 
 
 const MenuCard = (props) => {
 
     // เป็นค่า props ที่ดึงมา  // User เป็นตัวแปร User สร้างมาเก็บค่าของ User/owner ที่กำลัง  เพื่อเอามาเทียบว่าเท่ากับ owner ไหม ถ้าไม่ตรงจะไม่ขึ้นปุ่ม edit
-    const { id, img, name, type, price, owner, user } = props;
+    // const { id, img, name, type, price, owner, user, onEdit } = props;
+    const { id, img, name, type, price, owner, role, onEdit } = props;
 
-    // ตัวแปร caiegoryDropdown // ตอนดึง type ให้ดึงมาใส่ตัวแปร categoryDropdown
-    const categoryDropdown = ["fastfood", "dessert", "noodle", "Cooked to order", "beverages", "Japanese", "Western", "Chinese",
-        "Local food", "Quick meal", "healthy"]
 
     const [selectedMenu, setSelectedMenu] = useState({ name, type, price, img });// เก็บค่าข้อมูลเดิมก่อนที่จะทำการ Edit ใหม่
 
@@ -31,55 +30,85 @@ const MenuCard = (props) => {
     const [Imagefile, setImagefile] = useState('');
     const [error, setError] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    
+    const [category, setCategory] = useState('');
 
-    // เมื่อทำการกดปุ่ม edit บน Card เป็นการดึงค่าเดิมออกมาใส่ใน popup modal ที่ทำการแก้ไข 
+
+    useEffect(() => {
+        const fetchcategoryData = async () => {
+            try {
+                const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
+                console.log(category.data);
+                setCategory(category);
+
+                // ค้นหา id ของ category ที่ตรงกับ typeName (type) และตั้งเป็นค่าเริ่มต้นของ editType
+                const matchedCategory = category.data.find(item => item.Name === type);
+                if (matchedCategory) {
+                    setEditType(matchedCategory.Id); // ตั้งค่า editType เป็น id ที่ตรงกับ typeName
+                }
+            } catch (error) {
+                console.error('Error fetching category data:', error);
+            }
+        };
+        fetchcategoryData();
+    }, [type]);
+
+
+
     const handleEditClick = () => {
-        // เป็นตัวแปรที่รับมาจาก props ไม่ต้องแก้อะไร เป็นค่าเดิม
         setSelectedMenu({ name, type, price, img });
         setIsAlertModalOpen(true);
     };
 
     // ฟังก์ชันสำหรับการจัดการรูปภาพ ทำการแสดงภาพเดิม แล้วเมื่อการการ Upload ไฟล์รูปภาพใหม่ก็จะแสดงรูปอันใหม่
     const handleFileChange = (e) => {
-        const file = e.target.files[0]; // รับค่ารูปภาพที่เข้ามาใหม่
+        const file = e.target.files[0];
         if (file) {
+            setImagefile(file);
             const reader = new FileReader();
             reader.onloadend = () => {
                 setMenuImage(reader.result);
             };
             reader.readAsDataURL(file);
-            setImagefile(file);
-            // ใช้ตัวแปร Imagefile/file คือ ตัวแปรเก็บค่ารูป อันนี้คือต้องดึงเข้าไปเก็บที่ back
+            console.log("Selected Image File:", file);
         }
     };
 
 
-    // ฟังก์ชันลบ  backend ตรงนี้นะ
+
     const handleRemove = async (cardId) => {
-        setIsLoading(true); // เริ่มโหลด เป็นการตั้งสถานะโหลดของ frontend 
+        setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
+        setIsSuccess(false); // ตั้งเป็น false ก่อนที่จะทำการลบ
+        setIsLoading(true); // เริ่มการโหลด
+
+    
         try {
-            await
-                // เวลา 2 วินาทีจำลองการลบ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
-                new Promise((resolve) =>
-                    setTimeout(resolve, 2000));
-            console.log(`ลบภาพที่ id ${cardId}`);
+            // ลบข้อมูล
+            await axios.delete(`${NEXT_PUBLIC_BASE_API_URL}/deletemenu`, {
+                data: { id: cardId },
+                withCredentials: true
+            });
 
-            // อันนี้จำเป็นต้องวางไว้หลังจากลบข้อมูล โค้ดของ Backend ถ้าเกิดลบสำเร็จ
-            setIsLoading(false); // หยุดโหลด
-            setIsSuccess(true); // ลบสำเร็จ
-            setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
+            // แสดงข้อความสำเร็จ
+            setIsLoading(false);
+            setIsSuccess(true);
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            console.log("Delete successful"); // ตรวจสอบการลบสำเร็จ
+
+    
+            // แสดงข้อความสำเร็จเป็นระยะเวลา (ปรับค่าที่นี่)
             setTimeout(() => {
-                setIsAlertModalOpen(false);
-                setIsSuccess(false); // รีเซ็ตสถานะการลบสำเร็จ
-            }, 2000); // ซ่อน modal หลังจากแสดงข้อความสำเร็จ 2 วินาที
+                setIsSuccess(false); // รีเซ็ตสถานะสำเร็จ
+            }, 5000); // แสดงนาน 5 วินาที
 
+            // อัปเดตสถานะ
+            props.onRemove(cardId); // เรียกฟังก์ชันที่จัดการการลบใน parent component
+    
         } catch (error) {
-            setIsLoading(false); // หยุดโหลดถ้าเกิดข้อผิดพลาด
-            setErrorMessage('Error occurred while removing');
+            setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
+            setErrorMessage('Error occurred while deleting'); // ตั้งค่าข้อความข้อผิดพลาด
+            console.error(error);
         }
     };
-
 
     // ฟังก์ชัน edit ตรงนี้นะ
     const handleConfirm = async (event, cardId) => {
@@ -87,34 +116,53 @@ const MenuCard = (props) => {
             event.preventDefault();
         }
 
-        setSelectedMenu({ name: editName, price: editPrice, type: editType });
-        console.log("Name:", editName);
-        console.log("Price:", editPrice);
-        console.log("Type:", editType);
-
         setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // จำลองการรอ 2 วินาที
+
+        const formData = new FormData();
+        formData.append('file', Imagefile); // 'file' ต้องตรงกับที่ Backend คาดหวัง
+        formData.append('id', cardId);
+        formData.append('name', editName);
+        formData.append('price', editPrice);
+        formData.append('type', editType);
+
+
         try {
+            const res = await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editmenu`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                withCredentials: true,
+            });
+            console.log(res.data);
 
-            // เวลา 2 วินาทีจำลองการแก้ไข เมื่อ user กรอกเนื้อหาที่ต้องการแก้ไขครบแล้วกดปุ่มต้องแสดงการรอเวลา+ทำการ edit สำเร็จ สามารถเขียนโค้ด Backend ข้อมูลตรงนี้ได้
-            await new Promise((resolve) => setTimeout(resolve, 2000)); // จำลองการรอ 2 วินาที
+            setSelectedMenu({ name: editName, price: editPrice, type: editType, img: res.data[0].MenuPic });
+
+            console.log("Name:", editName);
+            console.log("Price:", editPrice);
+            console.log("Type:", editType);
+            console.log("Image:", Imagefile);
+
+            onEdit({ id: cardId, name: editName, price: editPrice, type: editType, img: res.data[0].MenuPic });
 
 
-            // อันนี้จำเป็นต้องวางไว้หลังจากลบข้อมูล โค้ดของ Backend ถ้าเกิดลบสำเร็จ
+            // setIsLoading(true); // เริ่มโหลดเมื่อกดปุ่ม Confirm
+
+            // await new Promise((resolve) => setTimeout(resolve, 2000)); // จำลองการรอ 2 วินาที
+
             setIsLoading(false); // หยุดโหลด
             setIsEditSuccess(true); // แก้ไขสำเร็จ
-            setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
             setTimeout(() => {
                 console.log(`แก้ไขเมนูที่ id: ${cardId}`);
                 setIsAlertModalOpen(false);
                 setIsEditSuccess(false); // รีเซ็ตสถานะสำเร็จ
-            }, 2000); // ซ่อน modal หลังจากแสดงข้อความสำเร็จ 2 วินาที
+            }, 3000); // ซ่อน modal หลังจากแสดงข้อความสำเร็จ 2 วินาที
         } catch (error) {
             setIsLoading(false); // หยุดโหลดถ้ามีข้อผิดพลาด
             setErrorMessage('Error occurred while editing'); // ตั้งค่าข้อความข้อผิดพลาด
+            console.error(error);
         }
     };
-
-
 
     // เป็นฟังก์ชันตรวจสอบ input ของ User ตรงส่วน Price ของ frontend ไม่มีอะไรต้องดึง
     const handleInput = (event) => {
@@ -135,7 +183,7 @@ const MenuCard = (props) => {
         // กรองเฉพาะตัวเลข และลบเลข 0 นำหน้า (ยกเว้น 0 ตัวเดียว)
         event.target.value = value.replace(/[^0-9]/g, '');
     };
-    
+
 
 
 
@@ -217,10 +265,10 @@ const MenuCard = (props) => {
                                             onChange={(e) => setEditType(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled>Select Type</option>
-                                            {categoryDropdown.map((category, index) => (
-                                                <option key={index} value={category}>
-                                                    {category}
+                                            <option value="" disabled> Select Type </option>
+                                            {category.data && category.data.map((items, index) => (
+                                                <option key={index} value={items.Id}>
+                                                    {items.Name}
                                                 </option>
                                             ))}
                                         </select>
@@ -285,7 +333,14 @@ const MenuCard = (props) => {
                 <div className={styles.main_content}>
                     <div className={styles.singleDest}>
                         <div className={styles.dastImage}>
-                            <Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover} />
+                            {MenuImage ?
+                                (<Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover}
+                                    width={500}
+                                    height={950}
+                                />) : (
+                                    <div className={styles.MenuPicContainer}><BsImages className={styles.Imageicon} />No Picture</div>
+                                )
+                            }
                         </div>
                         <div className={styles.dastSide}>
                             <div className={styles.textinfo}>
@@ -301,7 +356,7 @@ const MenuCard = (props) => {
                             </div>
                             <div className={styles.menu_buttom}>
                                 {/* check ว่ามีปุ่ม edit ไหม */}
-                                {user === owner ? <button
+                                { role === 'owner' ? <button
                                     className={styles.Editfood}
                                     onClick={() => handleEditClick()} >
                                     <BsPencilSquare className={styles.Editicon} />
