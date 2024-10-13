@@ -56,7 +56,7 @@ export default function Login() {
             }
         } catch (error) {
             console.log(error);
-            setError('Your email or password is incorrect. Try again.');
+            setError(error.response.data.message);
         }
     };
 

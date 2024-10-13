@@ -213,15 +213,32 @@ app.post("/resend-OTP", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
+  let { data: User, error: userError } = await supabase
+  .from('User')
+  .select("*")
+  .eq('Email', email)
+
+  if (User.length == 0) {
+    return res
+      .status(401)
+      .json({ message: "Can't find this email. Try again." });
+  } else if (userError) {
+    console.log(userError)
+    return res
+      .status(401)
+      .json({ message: "Error while login. Try again.", error: error.message });
+  }
+
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
     password: password,
   });
 
   if (error) {
+    console.log(error)
     return res
       .status(401)
-      .json({ message: "Login failed", error: error.message });
+      .json({ message: "Your email or password is incorrect. Try again.", error: error.message });
   }
 
   const user = data.user;
