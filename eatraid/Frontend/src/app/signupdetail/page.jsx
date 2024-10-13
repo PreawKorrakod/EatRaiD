@@ -58,6 +58,42 @@ export default function SignupDetail() {
   const [numberPhone, setNumberPhone] = useState(""); //เก็บเบอร์ที่ตัวแปร numberPhone
   const [LineContact, setLineContact] = useState(""); // เก็บไลน์ที่ตัวแปร numberPhone
 
+  const convertImageToBase64 = async (imageUrl) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const reader = new FileReader();
+  
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        setProfileImage(base64data)
+      };
+  
+      reader.readAsDataURL(blob);
+    } catch (error) {
+      console.error("Error converting image to Base64:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (userID?.role) {
+      if (userID.file) {
+        convertImageToBase64(userID.file);
+      }
+      setOpenTimeHR(userID.OpenTimeHr)
+      setOpenTimeMIN(userID.OpenTimeMin)
+      setCloseTimeHR(userID.CloseTimeHr)
+      setCloseTimeMIN(userID.CloseTimeMin)
+      const businessDaysArray = userID.BusinessDay.split(',').map(day => day.trim());
+      const updatedSelectedBusinessDays = businessDaysArray.map(day => day === 'true');
+      setSelectedBusinessDays(updatedSelectedBusinessDays);
+      setLocation(userID.Location)
+      setNameOwner(userID.Name)
+      setNumberPhone(userID.Tel)
+      setLineContact(userID.Line)
+    }
+  }, [userID]);
+
   const handleChangeOpenTimeHR = (event) => {
     setOpenTimeHR(event.target.value);
   };
@@ -119,7 +155,7 @@ export default function SignupDetail() {
     }
   };
 
-  const handleConfirmClick = () => {
+  const handleConfirmClick = async () => {
     const error = validateInputs();
     if (error) {
       setErrorMessage(error);
@@ -130,38 +166,48 @@ export default function SignupDetail() {
     // console.log("Selected business days:", selectedBusinessDays);
     // console.log("Location:", location);
     // console.log('image',Imagefile)
-    const displayOpenTime = `${openTimeHR}:${openTimeMIN}`;
-    const displayCloseTime = `${closeTimeHR}:${closeTimeMIN}`;
+    // const displayOpenTime = `${openTimeHR}:${openTimeMIN}`;
+    // const displayCloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
 
+    // แปลงรูปภาพ
+    let newfile = null
+    if (Imagefile) {
+      const formData = new FormData();
+      formData.append("file", Imagefile); // selectedFile คือไฟล์ที่เลือกจาก input
+      formData.append("user", userID.id);
+
+      try {
+        const res = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/user-profile`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+
+        })  
+        newfile = res.data.profile;
+      } catch (error) {
+        console.log(error);
+      }
+    }
     const id = userID.id;
     const role = "owner";
     const email = userID.email;
-    const file = profileImage;
-    const Name = NameOwner || "-";
-    const OpenTime = displayOpenTime === "00:00" ? "-" : displayOpenTime;
-    const CloseTime = displayCloseTime === "00:00" ? "-" : displayCloseTime;
-    const Location = location || "-";
-    const Latitude = 0;
-    const Longitude = 0;
-    const BusinessDay = selectedBusinessDays.join(",");
-    const Tel = numberPhone || "-";
-    const Line = LineContact || "-";
-    sessionStorage.removeItem("userID");
-    const newUserID = {
-      email,
-      role,
-      id,
-      file,
-      Name,
-      OpenTime,
-      CloseTime,
-      Location,
-      Latitude,
-      Longitude,
-      BusinessDay,
-      Tel,
-      Line,
-    };
+    const Name = NameOwner;
+    const file = newfile || userID?.file || null;
+    // const OpenTime = displayOpenTime === "00:00" ? "-" : displayOpenTime;
+    // const CloseTime = displayCloseTime === "00:00" ? "-" : displayCloseTime; 
+    const OpenTimeHr = openTimeHR;
+    const CloseTimeHr = closeTimeHR;
+    const OpenTimeMin = openTimeMIN;
+    const CloseTimeMin = closeTimeMIN;
+    const Location = location; 
+    const Latitude = 0; 
+    const Longitude = 0; 
+    const BusinessDay = selectedBusinessDays.join(',');
+    const Tel = numberPhone;
+    const Line = LineContact;
+    sessionStorage.removeItem('userID');
+    const newUserID = {  email, role, id, file,
+      Name, OpenTimeHr,CloseTimeHr, OpenTimeMin, CloseTimeMin, Location, Latitude, Longitude, BusinessDay, Tel, Line };
     console.log("signup successful navigate to verify", newUserID);
     sessionStorage.setItem("userID", JSON.stringify(newUserID));
     router.push("/verify");
