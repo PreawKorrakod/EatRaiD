@@ -132,30 +132,52 @@ export default function SignupDetail() {
     // console.log('image',Imagefile)
     // const displayOpenTime = `${openTimeHR}:${openTimeMIN}`;
     // const displayCloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
-    
-    const id = userID.id;
-    const role = "owner";
-    const email = userID.email;
-    const file = profileImage;
-    const Name = NameOwner || "-";
-    // const OpenTime = displayOpenTime === "00:00" ? "-" : displayOpenTime;
-    // const CloseTime = displayCloseTime === "00:00" ? "-" : displayCloseTime; 
-    const OpenTimeHr = openTimeHR;
-    const CloseTimeHr = closeTimeHR;
-    const OpenTimeMin = openTimeMIN;
-    const CloseTimeMin = closeTimeMIN;
-    const Location = location || "-"; 
-    const Latitude = 0; 
-    const Longitude = 0; 
-    const BusinessDay = selectedBusinessDays.join(',');
-    const Tel = numberPhone || "-";
-    const Line = LineContact || "-";
-    sessionStorage.removeItem('userID');
-    const newUserID = {  email, role, id, file,
-      Name, OpenTimeHr,CloseTimeHr, OpenTimeMin, CloseTimeMin, Location, Latitude, Longitude, BusinessDay, Tel, Line };
-    console.log("signup successful navigate to verify", newUserID);
-    sessionStorage.setItem("userID", JSON.stringify(newUserID));
-    router.push("/verify");
+
+    // แปลงรูปภาพ
+    if (Imagefile) {
+      const formData = new FormData();
+      formData.append("file", Imagefile); // selectedFile คือไฟล์ที่เลือกจาก input
+      formData.append("user", userID.id);
+      console.log(userID.id)
+
+      try {
+        axios.post(`${NEXT_PUBLIC_BASE_API_URL}/user-profile`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+
+        }).then(async res => {
+          console.log(res.data.profile)
+          const id = userID.id;
+          const role = "owner";
+          const email = userID.email;
+          const file = res.data.profile;
+          const Name = NameOwner || "-";
+          // const OpenTime = displayOpenTime === "00:00" ? "-" : displayOpenTime;
+          // const CloseTime = displayCloseTime === "00:00" ? "-" : displayCloseTime; 
+          const OpenTimeHr = openTimeHR;
+          const CloseTimeHr = closeTimeHR;
+          const OpenTimeMin = openTimeMIN;
+          const CloseTimeMin = closeTimeMIN;
+          const Location = location || "-"; 
+          const Latitude = 0; 
+          const Longitude = 0; 
+          const BusinessDay = selectedBusinessDays.join(',');
+          const Tel = numberPhone || "-";
+          const Line = LineContact || "-";
+          sessionStorage.removeItem('userID');
+          const newUserID = {  email, role, id, file,
+            Name, OpenTimeHr,CloseTimeHr, OpenTimeMin, CloseTimeMin, Location, Latitude, Longitude, BusinessDay, Tel, Line };
+          console.log("signup successful navigate to verify", newUserID);
+          sessionStorage.setItem("userID", JSON.stringify(newUserID));
+          router.push("/verify");
+        }).catch(error => {
+          console.error('Error during saving restaurant detail:', error);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (

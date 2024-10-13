@@ -61,6 +61,18 @@ export default function Verify() {
       // Implement verification logic here
       console.log("Verifying OTP:", otp.join(""));
 
+      if (
+          userID.OpenTimeHr === '00' &&
+          userID.CloseTimeHr === '00' &&
+          userID.OpenTimeMin === '00' &&
+          userID.CloseTimeMin === '00'
+      ) {
+          userID.OpenTimeHr = '-';
+          userID.CloseTimeHr = '-';
+          userID.OpenTimeMin = '-';
+          userID.CloseTimeMin = '-';
+      }
+
       try {
         axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
           email: userID.email,
@@ -84,12 +96,12 @@ export default function Verify() {
           console.log("Navigate based on role", res)
           // Navigate based on role
 
-          // if (userID.role === "customer") {
-          //   router.push("/"); // Redirect to home page
-          // } else if (userID.role === "owner") {
-          //   sessionStorage.removeItem('userData');
-          //   router.push("/info");
-          // }
+          if (userID.role === "customer") {
+            router.push("/login"); // Redirect to home page
+          } else if (userID.role === "owner") {
+            sessionStorage.removeItem('userData');
+            router.push("/login");
+          }
         }).catch(error => {
           console.error('Error during verify OTP:', error);
           if (error.status == 400){

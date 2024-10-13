@@ -83,12 +83,45 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.post("/user-profile", upload.single("file"), async (req, res) => {
+  const file = req.file;
+  const {user} = req.body;
+
+  const newminetype = "image/jpeg";
+  const newfilename = `profile_${user}_${uuid4()}.jpeg`;
+  if (file) {
+    const { data: files, error } = await supabase.storage.from("Profile").list();
+
+    if (error) {
+      console.error(error);
+    } else {
+      const fileToDelete = files.find(file => file.name.startsWith(`profile_${user}`));
+      
+      if (fileToDelete) {
+        await supabase.storage.from("Profile").remove([fileToDelete.name]);
+      }
+    }
+
+    const { data: updateData, error: uploadError } = await supabase.storage
+      .from("Profile")
+      .upload(newfilename, file.buffer, {
+        contentType: newminetype,
+        upsert: true,
+      });
+
+    if (uploadError) throw uploadError;
+    const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
+    res.status(200).json({ profile: ProfilePic });
+  } else {
+    res.status(400).json();
+  }
+})
+
 app.post("/verify-OTP", async (req, res) => {
   const { email, OTP, role, user, profilePic
     , Name,  OpenTimeHr, CloseTimeHr, OpenTimeMin, CloseTimeMin, Location, Latitude, Longitude, BusinessDay, Tel, Line } = req.body;
-  // const file = req.file;
-  // const [OpenTimeHr, OpenTimeMin] = OpenTime.split(":").map(Number);
-  // const [CloseTimeHr, CloseTimeMin,] = CloseTime.split(":").map(Number);
+    // console.log(email, OTP, role, user, profilePic
+    //   , Name,  OpenTimeHr, CloseTimeHr, OpenTimeMin, CloseTimeMin, Location, Latitude, Longitude, BusinessDay, Tel, Line)
 
   const { data: { session }, error } = await supabase.auth.verifyOtp({
     email: email,
@@ -107,49 +140,7 @@ app.post("/verify-OTP", async (req, res) => {
         res.status(200).json({ message: "insert custommer data to table user successfully", data: data })
       }
     } else if (role == 'owner') {
-      const ProfilePic = null
-      if (profilePic) {
-        const newminetype = "image/jpeg";
-        const newfilename = `profile_${user}_${uuid4()}.jpeg`;
-        const arr = profilePic.split(',');
-        const mime = arr[0].match(/:(.*?);/)[1]; // หา MIME type
-        const b64Data = arr[1]; // ข้อมูล Base64
-        const byteCharacters = atob(b64Data); // ถอด Base64
-        const byteNumbers = new Uint8Array(byteCharacters.length);
-    
-        // เปลี่ยนข้อมูลที่ได้เป็น Uint8Array
-        for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-    
-        // สร้าง Blob จาก Uint8Array
-        const blob = new Blob([byteNumbers], { type: mime });
-    
-        // สร้าง URL สำหรับ Blob
-        const fileURL = URL.createObjectURL(blob);
-    
-        // สร้าง File object
-        const file = new File([blob], newfilename, { type: mime });
-      // }
-
-      // if (file) {
-        const arrayBuffer = await file.arrayBuffer(); // แปลงเป็น ArrayBuffer
-        const { data: updateData, error: uploadError } = await supabase.storage
-          .from("Profile")
-          .upload(newfilename, arrayBuffer, {
-            contentType: newminetype,
-            upsert: true,
-          });
-        if (uploadError) {
-          console.error(uploadError); // แสดง error เพื่อวิเคราะห์ปัญหา
-          throw uploadError;
-        } else {
-          ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
-        }
-      // } else {
-      //   res.status(400).json({ message: 'No profile picture' });
-      }
-      const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: ProfilePic, Email: email }]).select("*");
+      const { data, error } = await supabase.from('User').insert([{ Id: user, Role: role, ProfilePic: profilePic, Email: email }]).select("*");
       if (error) {
         res.status(500).json({error, message: "Error while insert user data"});
       }
@@ -198,93 +189,6 @@ app.post("/resend-OTP", async (req, res) => {
     res.status(200).json({ message: 'Resend OTP successfully' });
   }
 });
-
-// app.post("/add-restaurant-info", async (req, res) => {
-//   const { role, user
-//     , Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay
-//   } = req.body;
-
-//   const { data, error } = await supabase.from('Restaurant').insert([{
-//     RestaurantId: user, Name: Name,
-//     Contact: Contact, OpenTime: OpenTime, CloseTime: CloseTime,
-//     Location: Location, Latitude: Latitude, Longitude: Longitude,
-//     BusinessDay: BusinessDay
-//   }]).select("*")
-//   if (error) {
-//     const { error: delete_error } = await supabase
-//       .from('User')
-//       .delete()
-//       .eq('Id', user);
-//     if (delete_error) {
-//       res.status(500).json({
-//         "error to delete data": delete_error,
-//         "error to insert reataurant data data": error
-//       });
-//     } else {
-//       res.status(400).json({ message: "error in inserting data so delete error data", error: error })
-//     }
-//   }
-//   else {
-//     res.status(200).json({ message: "insert restaurant data to table user successfully", data: data })
-//   }
-// });
-
-// app.put("/editprofile", upload.single("file"), async (req, res) => {
-//   try {
-//     const file = req.file;
-//     const { id, RestaurantId, Name, Contact, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay } = req.body;
-//     const newminetype = "image/jpeg";
-//     const newfilename = `profile_${id}_${uuid4()}.jpeg`;
-//     const { data: RestaurantData, dataerror } = await supabase.from('Restaurant')
-//       .update({
-//         Name,
-//         Contact,
-//         OpenTime,
-//         CloseTime,
-//         Location,
-//         Latitude,
-//         Longitude,
-//         BusinessDay
-//       })
-//       .eq('RestaurantId', RestaurantId)
-//       .select("*")
-//     if (dataerror) return res.status(500).json({ dataerror });
-//     if (file) {
-//       const { data: ProfileData, error: fetchError } = await supabase
-//         .from("User")
-//         .select("ProfilePic")
-//         .eq("id", id)
-//         .single();
-
-//       if (fetchError) {
-//         throw fetchError;
-//       }
-//       if (!ProfileData) {
-//         throw new Error("Post not found.");
-//       }
-//       const imagePath = ProfileData.ProfilePic.split('/').pop();
-//       await supabase.storage.from("Profile").remove([imagePath]);
-//       const { data: updateData, error: uploadError } = await supabase.storage
-//         .from("Profile")
-//         .upload(newfilename, file.buffer, {
-//           contentType: newminetype,
-//           upsert: true,
-//         });
-//       if (uploadError) throw uploadError;
-//       else {
-//         const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
-//         const { Picdata, Picdataerror } = await supabase.from("User").update({ ProfilePic }).eq("id", id).select("*");
-//         if (Picdataerror) return res.status(500).json({ Picdataerror });
-//         return res.status(200).json({ Picdata });
-//       }
-//     } else {
-//       return res.status(200).json({ RestaurantData, Picdata });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ msg: error.message });
-//   }
-// });
-
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
