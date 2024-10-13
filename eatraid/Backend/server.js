@@ -85,7 +85,6 @@ app.post("/verify-OTP",  async (req, res) => {
   const { email, OTP, role, user, profilePic
     , Name,  OpenTimeHr, CloseTimeHr, OpenTimeMin, CloseTimeMin, Location, Latitude, Longitude, BusinessDay, Tel, Line } = req.body;
   // const file = req.file;
-  const mime = arr[0].match(/:(.*?);/)[1]; // หา MIME type
   // const [OpenTimeHr, OpenTimeMin] = OpenTime.split(":").map(Number);
   // const [CloseTimeHr, CloseTimeMin,] = CloseTime.split(":").map(Number);
 
