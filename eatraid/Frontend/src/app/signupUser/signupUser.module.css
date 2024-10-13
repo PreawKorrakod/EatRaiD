@@ -2,7 +2,8 @@
     width: 100%;
     height: auto;
     min-height: 100vmin;
-    background-color: #F9E8D9;
+    /* background-color: #F9E8D9; */
+    background: linear-gradient(90deg,  #881E0B 0%, #EE7214 80%);
 }
 
 

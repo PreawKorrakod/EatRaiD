@@ -1,7 +1,7 @@
 "use client";
 import styles from "./signupUser.module.css";
 import image1 from "../../../public/DecPic1.png";
-import Topbar from "../../../components/Topbar";
+import Navbar from "../../../components/Navbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -88,7 +88,7 @@ export default function SignupUser() {
 
     return (
         <div className={styles.main}>
-            <Topbar />
+            <Navbar></Navbar>
             <div className={styles.content_wrapper}>
                 <div className={styles.container}>
                     <Link href={`/signUpRole`}>
