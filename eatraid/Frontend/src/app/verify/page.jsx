@@ -99,14 +99,12 @@ export default function Verify() {
           if (userID.role === "customer") {
             router.push("/login"); // Redirect to home page
           } else if (userID.role === "owner") {
-            sessionStorage.removeItem('userData');
+            sessionStorage.removeItem('userID');
             router.push("/login");
           }
         }).catch(error => {
           console.error('Error during verify OTP:', error);
-          if (error.status == 400){
-            setError(error.response.data.message);
-          }
+            setError("Wrong OTP. Try again.");
         });
       } catch (error) {
         console.log(error);
