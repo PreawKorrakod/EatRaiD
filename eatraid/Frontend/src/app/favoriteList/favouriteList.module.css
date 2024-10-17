@@ -1,7 +1,6 @@
 .main{
     width: 100%;
-    height: auto;
-    min-height: 100vmin;
+    height: 100vh;
     background-color: #F9E8D9;
 }
 

@@ -10,6 +10,7 @@ import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from "../../app/config/supabaseClient";
 import Image from 'next/image';
+import Footer from '../../../components/footer';
 
 
 // ข้อมูลปลอม
@@ -131,6 +132,7 @@ export default function FavoriteList() {
                     )}
                 </div>
             </div>
+            <Footer></Footer>
         </div>
     );
 }

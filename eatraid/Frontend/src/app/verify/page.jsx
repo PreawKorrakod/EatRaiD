@@ -57,41 +57,51 @@ export default function Verify() {
       // Implement verification logic here
       console.log("Verifying OTP:", otp.join(""));
 
-      try {
-        axios
-          .post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
-            email: userID.email,
-            OTP: otp.join(""),
-            role: userID.role,
-            profilePic: userID.file,
-            user: userID.id,
-            Name: userID.Name,
-            OpenTime: userID.OpenTime,
-            CloseTime: userID.CloseTime,
-            Location: userID.Location,
-            Latitude: userID.Latitude,
-            Longitude: userID.Longitude,
-            BusinessDay: userID.BusinessDay,
-            Tel: userID.Tel,
-            Line: userID.Line,
-          })
-          .then(async (res) => {
-            console.log("Navigate based on role", res);
-            // Navigate based on role
+      if (
+          userID.OpenTimeHr === '00' &&
+          userID.CloseTimeHr === '00' &&
+          userID.OpenTimeMin === '00' &&
+          userID.CloseTimeMin === '00'
+      ) {
+          userID.OpenTimeHr = '-';
+          userID.CloseTimeHr = '-';
+          userID.OpenTimeMin = '-';
+          userID.CloseTimeMin = '-';
+      }
 
-            if (userID.role === "customer") {
-              router.push("/"); // Redirect to home page
-            } else if (userID.role === "owner") {
-              sessionStorage.removeItem("userData");
-              router.push("/info");
-            }
-          })
-          .catch((error) => {
-            console.error("Error during verify OTP:", error);
-            if (error.status == 400) {
-              setError(error.response.data.message);
-            }
-          });
+      try {
+        axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
+          email: userID.email,
+          OTP: otp.join(""),
+          role: userID.role,
+          profilePic: userID.file,
+          user: userID.id,
+          Name: userID.Name || "-", 
+          OpenTimeHr: userID.OpenTimeHr,
+          CloseTimeHr: userID.CloseTimeHr, 
+          OpenTimeMin: userID.OpenTimeMin, 
+          CloseTimeMin: userID.CloseTimeMin,
+          Location: userID.Location || "-", 
+          Latitude: userID.Latitude, 
+          Longitude: userID.Longitude,
+          BusinessDay: userID.BusinessDay, 
+          Tel: userID.Tel || "-", 
+          Line: userID.Line || "-"
+
+        }).then(async res => {
+          console.log("Navigate based on role", res)
+          // Navigate based on role
+
+          if (userID.role === "customer") {
+            router.push("/login"); // Redirect to home page
+          } else if (userID.role === "owner") {
+            sessionStorage.removeItem('userID');
+            router.push("/login");
+          }
+        }).catch(error => {
+          console.error('Error during verify OTP:', error);
+            setError("Wrong OTP. Try again.");
+        });
       } catch (error) {
         console.log(error);
       }

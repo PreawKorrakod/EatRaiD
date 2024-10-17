@@ -1,8 +1,8 @@
 'use client';
 import axios from 'axios';
 import styles from './login.module.css';
-import image1 from '../../../public/DecPic1.png';
-import Topbar from '../../../components/Topbar';
+import image1 from '../../../public/LOGO.png';
+import Navbar from '../../../components/Navbar';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useContext, useState } from 'react';
@@ -41,22 +41,22 @@ export default function Login() {
             });
 
             const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
-                withCredentials: true, 
+                withCredentials: true,
             });
-    
+
             const user = response.data[0];
             const role = user.Role
             console.log("Info:", user);
             console.log("role:", role);
 
-            if (role === 'owner'){
+            if (role === 'owner') {
                 router.push(`${NEXT_PUBLIC_BASE_WEB_URL}/info`);
-            }else{
+            } else {
                 router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
-            }   
+            }
         } catch (error) {
             console.log(error);
-            setError('Your email or password is incorrect. Try again.');
+            setError(error.response.data.message);
         }
     };
 
@@ -68,7 +68,7 @@ export default function Login() {
 
     return (
         <div className={styles.main}>
-            <Topbar></Topbar>
+            <Navbar></Navbar>
             <div className={styles.content_wrapper}>
                 <div className={styles.container}>
                     <Link href={`/`}>
@@ -124,11 +124,14 @@ export default function Login() {
                             </Link>
                         </div>
                     </div>
-                    <div className={styles.Login_Picture}>
-                        <Image src={image1}
-                            width={500}
-                            height={500}
-                            objectFit="cover" />
+                    <div className={styles.Login_pic_wrapper}>
+                        <div className={styles.logoPicture}>
+                            <Image src={image1}
+                                width={800}
+                                height={500}
+                                className={styles.logoimg} 
+                                alt="Logo"/>
+                        </div>
                     </div>
                 </div>
             </div>

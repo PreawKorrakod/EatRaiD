@@ -10,7 +10,6 @@ import { AiOutlinePicture } from "react-icons/ai";
 import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa6";
 
-
 import axios from "axios";
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
@@ -18,7 +17,10 @@ export default function Info() {
   const router = useRouter();
   const [userId, setUserId] = useState(null);
   const [infoData, setInfoData] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [defaultIsOpen, setDefaultIsOpen] = useState(false); // สถานะเปิดปิดตามเวลาปกติ
+  
+  // เพิ่มสถานะสำหรับ override สถานะร้านค้า
+  const [overrideStatus, setOverrideStatus] = useState(null); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -35,19 +37,12 @@ export default function Info() {
   });
 
   const [selectedOption, setSelectedOption] = useState("");
-
-  // const [openTimeHR, setOpenTimeHR] = useState(formData.openTimeHR);
-  // const [openTimeMIN, setOpenTimeMIN] = useState(formData.openTimeMin);
-  // const [closeTimeHR, setCloseTimeHR] = useState(formData.closeTimeHR);
-  // const [closeTimeMIN, setCloseTimeMIN] = useState(formData.closeTimeMin);
   const [selectedBusinessDays, setSelectedBusinessDays] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [location, setLocation] = useState(formData.location);
   const [errorMessage, setErrorMessage] = useState("");
   const [profileImage, setProfileImage] = useState("");
   const [imageFile, setImageFile] = useState("");
   const [typerestaurant, setTyperestaurant] = useState("");
-  const categoryDropdown = ["Thai", "Japanese"]; // from backend
 
   const time_hr = Array.from({ length: 24 }, (_, i) =>
     String(i).padStart(2, "0")
@@ -64,6 +59,63 @@ export default function Info() {
     "Saturday",
   ];
 
+  const getCurrentDateTime = () => {
+    return new Date();
+  };
+
+  const getTodayTime = (hour, minute) => {
+    const now = new Date();
+    now.setHours(parseInt(hour, 10));
+    now.setMinutes(parseInt(minute, 10));
+    now.setSeconds(0);
+    now.setMilliseconds(0);
+    return now;
+  };
+
+  useEffect(() => {   
+    if (infoData) {
+      if (infoData.toggle_status !== null) {
+        setOverrideStatus(infoData?.toggle_status);
+      } else {
+        setOverrideStatus(defaultIsOpen ? 'open' : 'close');
+      }
+    }
+  }, [infoData, defaultIsOpen]);
+
+
+  useEffect(() => {
+    if (!infoData) return;
+
+    const checkIsOpen = () => {
+      const now = getCurrentDateTime();
+      const currentDay = now.getDay();
+      const isTodayOpen = selectedBusinessDays[currentDay];
+      if (!isTodayOpen) {
+        setDefaultIsOpen(false);
+        return;
+      }
+
+      const openTime = getTodayTime(formData.openTimeHR, formData.openTimeMin);
+      const closeTime = getTodayTime(formData.closeTimeHR, formData.closeTimeMin);
+
+      if (closeTime <= openTime) {
+        closeTime.setDate(closeTime.getDate() + 1);
+      }
+
+      if (now >= openTime && now <= closeTime) {
+        setDefaultIsOpen(true);
+      } else {
+        setDefaultIsOpen(false);
+      }
+    };
+
+    checkIsOpen();
+    const interval = setInterval(checkIsOpen, 60000);
+    return () => clearInterval(interval);
+  }, [infoData, selectedBusinessDays, formData]);
+
+
+  // ดึงข้อมูลผู้ใช้เมื่อ component mount
   useEffect(() => {
 
     const fetchData = async () => {
@@ -71,7 +123,7 @@ export default function Info() {
         const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
           withCredentials: true,
         });
-        if (user !== null) {
+        if (user !== null && user.data.length > 0) {
           console.log(user.data[0].Id);
           setUserId(user.data[0].Id);
         } else {
@@ -82,16 +134,18 @@ export default function Info() {
       }
     };
     fetchData();
-  }, [userId]);
+  }, [router]);
 
+  // ดึงข้อมูลร้านเมื่อ userId ถูกตั้งค่า
   useEffect(() => {
     const fetchInfo = async () => {
+      if (!userId) return;
       try {
         const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/showinfo`, {
           params: { RestaurantId: userId },
           withCredentials: true,
         });
-        if (response.data) {
+        if (response.data && response.data.length > 0) {
           console.log("Restaurant info:", response.data[0]);
           const selectedDays = response.data[0].BusinessDay.split(',').map(day => day === 'true');
           setSelectedBusinessDays(selectedDays);
@@ -104,27 +158,26 @@ export default function Info() {
     fetchInfo();
   }, [userId]);
 
-
-  console.log("infoData:", infoData?.RestaurantId);
-
-
+  // ดึงประเภทร้านเมื่อ infoData ถูกตั้งค่า
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCategory = async () => {
+      if (!infoData?.RestaurantId) return;
       try {
         const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/typerestaurant`, {
-          params: { RestaurantId: infoData?.RestaurantId },
+          params: { RestaurantId: infoData.RestaurantId },
           withCredentials: true,
         });
         console.log("Restaurant Category:", category.data[0].TypeName);
         const type = category.data.map((item) => item.TypeName);
         setTyperestaurant(type.join('/'));
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error fetching restaurant category:', error);
       }
     };
-    fetchData();
+    fetchCategory();
   }, [infoData?.RestaurantId]);
 
+  // ตั้งค่า formData เมื่อ infoData เปลี่ยนแปลง
   useEffect(() => {
     if (infoData) {
       console.log("infoData:", infoData.id);
@@ -132,7 +185,6 @@ export default function Info() {
         Id: infoData.id,
         name: infoData.Name,
         category: infoData.category,
-        // businessDay: openday,
         openTimeHR: infoData.OpenTimeHr,
         openTimeMin: infoData.OpenTimeMin,
         closeTimeHR: infoData.CloseTimeHr,
@@ -142,12 +194,6 @@ export default function Info() {
         location: infoData.Location,
         profileImage: infoData.ProfilePic,
       });
-      // setSelectedOption(infoData.category);
-      // setOpenTimeHR(infoData.OpenTimeHR);
-      // setOpenTimeMIN(infoData.OpenTimeMin);
-      // setCloseTimeHR(infoData.CloseTimeHR);
-      // setCloseTimeMIN(infoData.CloseTimeMin);
-      // setLocation(infoData.Location);
     }
   }, [infoData]);
 
@@ -158,6 +204,27 @@ export default function Info() {
     return <div>Loading...</div>;
   }
 
+  // กำหนดสถานะที่จะแสดง
+  const displayedIsOpen = overrideStatus !== null ? (overrideStatus === 'open') : defaultIsOpen;
+
+  // ฟังก์ชันจัดการการคลิก toggle
+  const toggleOverride = async () => {
+    const newStatus = overrideStatus === null ? (defaultIsOpen ? 'close' : 'open') : null;
+    setOverrideStatus(newStatus);
+    console.log('override', newStatus);
+    
+    try {
+      await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/toggle`, {
+        RestaurantId: userId,
+        toggle_status: newStatus, 
+      });
+    } catch (error) {
+      console.error("Error updating override status:", error);
+      setErrorMessage("Failed to update status. Please try again.");
+    }
+  };
+  
+
   const handleEditClick = () => {
     setIsModalOpen(true);
   };
@@ -166,38 +233,10 @@ export default function Info() {
     setIsModalOpen(false);
   };
 
-  const toggleOpenStatus = () => {
-    setIsOpen((prev) => !prev);
-  };
-
-  const toggleDropdown = () => {
-    setDropdownOpen((prev) => !prev);
-  };
-
   const handleChangeCategory = (event) => {
     setSelectedOption(event.target.value);
   };
 
-
-  // const handleChangeOpenTimeHR = (event) => {
-  //   setOpenTimeHR(event.target.value);
-  // };
-
-  // const handleChangeOpenTimeMIN = (event) => {
-  //   setOpenTimeMIN(event.target.value);
-  // };
-
-  // const handleChangeCloseTimeHR = (event) => {
-  //   const newCloseTimeHR = event.target.value;
-  //   if (parseInt(newCloseTimeHR) < parseInt(openTimeHR)) {
-  //     setOpenTimeHR(newCloseTimeHR);
-  //   }
-  //   setCloseTimeHR(newCloseTimeHR);
-  // };
-
-  // const handleChangeCloseTimeMIN = (event) => {
-  //   setCloseTimeMIN(event.target.value);
-  // };
 
   const handleChangeOpenTimeHR = (event) => {
     setFormData({ ...formData, openTimeHR: event.target.value });
@@ -209,7 +248,6 @@ export default function Info() {
 
   const handleChangeCloseTimeHR = (event) => {
     const newCloseTimeHR = event.target.value;
-    // Optional: Add validation logic if needed
     setFormData({ ...formData, closeTimeHR: newCloseTimeHR });
   };
 
@@ -217,23 +255,9 @@ export default function Info() {
     setFormData({ ...formData, closeTimeMin: event.target.value });
   };
 
-  // const handleFileChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file && file.type.startsWith("image/")) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setProfileImage(reader.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //     setImageFile(file);
-  //   } else {
-  //     alert("Please upload a valid image file.");
-  //   }
-  // };
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file || file.type.startsWith("image/")) {
+    if (file && file.type.startsWith("image/")) {
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -293,6 +317,7 @@ export default function Info() {
       });
       if (res.status === 200) {
         handleCloseModal();
+        // setOverrideStatus(null); 
       }
 
     } catch (error) {
@@ -326,7 +351,6 @@ export default function Info() {
     );
     setSelectedBusinessDays(updatedCheckedState);
   };
-
 
   const Modal = () => {
     if (!isModalOpen) return null;
@@ -373,7 +397,7 @@ export default function Info() {
                         setFormData({ ...formData, name: e.target.value })
                       }
                     />
-                    <h2 className={styles.normalTextM}>Category</h2>
+                    {/* <h2 className={styles.normalTextM}>Category</h2>
                     <select
                       className={styles.ddTextfieldStyleM}
                       value={selectedOption}
@@ -384,13 +408,13 @@ export default function Info() {
                           {category}
                         </option>
                       ))}
-                    </select>
+                    </select> */}
                   </div>
                 </div>
 
                 <div className={styles.colContainer2M}>
                   <h2 className={styles.normalTextM}>Business days</h2>
-                  <div className={styles.dropdownM} onClick={toggleDropdown}>
+                  <div className={styles.dropdownM} onClick={() => setDropdownOpen(!dropdownOpen)}>
                     <div className={styles.dropdownHeaderM}>
                       {openday}
                       <BsChevronDown />
@@ -487,7 +511,7 @@ export default function Info() {
                 <div className="mapouter">
                   <div className="gmap_canvas">
                     <iframe
-                      src={`https://maps.google.com/maps?output=embed&q=${infoData.location}`}
+                      src={`https://maps.google.com/maps?output=embed&q=${formData.location}`}
                       frameBorder="0"
                       className={styles.mapContainerM}
                     ></iframe>
@@ -496,7 +520,7 @@ export default function Info() {
                 <div className={styles.rowContainer2M}>
                   <h2 className={styles.normalTextM}>Contact</h2>
                   <div className={styles.colContactM}>
-                    <div className={styles.rowContainerM}>
+                    <div className={styles.rowCon}>
                       <IoCall className={styles.iconStyleM} />
                       <input
                         name="Phone"
@@ -510,7 +534,7 @@ export default function Info() {
                         }
                       />
                     </div>
-                    <div className={styles.rowContainerM}>
+                    <div className={styles.rowCon}>
                       <FaLine className={styles.iconStyleM} />
                       <input
                         name="Line"
@@ -542,8 +566,8 @@ export default function Info() {
           </div>
         </div>
       </div>
-    );
-  };
+      );
+    };
 
   return (
     <div className={styles.mainBg}>
@@ -551,7 +575,7 @@ export default function Info() {
       <div className={styles.profileCon}>
         <Image
           className={styles.uploadedImage}
-          src={infoData.ProfilePic}
+          src={infoData.ProfilePic || "/default-profile.png"} // รูป fallback
           alt="Uploaded"
           layout="fill"
           objectFit="cover"
@@ -566,21 +590,22 @@ export default function Info() {
             <label className={styles.switch}>
               <input
                 type="checkbox"
-                checked={isOpen}
-                onChange={toggleOpenStatus}
+                checked={overrideStatus !== null ? overrideStatus === 'open': displayedIsOpen}
+                onChange={toggleOverride}
               />
               <span className={styles.slider}></span>
             </label>
             <span className={styles.statusText}>
-              {isOpen ? "Open" : "Close"}
+              {overrideStatus === 'open' && "Open"}
+              {overrideStatus === 'close' && "Close"}
+              {overrideStatus === null && (displayedIsOpen ? "Open" : "Close")}
             </span>
           </div>
           <button className={styles.editButton} onClick={handleEditClick}>
             Edit Profile
           </button>
         </div>
-        <h1 className={styles.title}>{infoData.Name}</h1>
-
+        <h1 className={styles.title}>{infoData.Name || "Restaurant Name"}</h1>
         <div className={styles.rowCon}>
           <div className={styles.halfCon}>
             <div className={styles.rowCon}>
