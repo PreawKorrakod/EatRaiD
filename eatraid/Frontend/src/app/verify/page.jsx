@@ -27,7 +27,7 @@ export default function Verify() {
       console.log("Data:", parsedUserID, parsedUserID.file);
     } else {
       sessionStorage.removeItem("userID");
-      // router.push("/"); // Redirect to home if no user ID
+      router.push("/"); // Redirect to home if no user ID
     }
   }, [router]);
 
