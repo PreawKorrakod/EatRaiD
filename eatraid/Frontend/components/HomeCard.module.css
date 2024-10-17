@@ -1,36 +1,39 @@
-.card {
-    margin: 10px 10px;
-    padding: 0.80vw;
-    background-color: white;
-}
-
 .main_content{
-    display: flex;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    justify-content: center;
 }
 
 
-.singleDest{
+.singleDest {
+    display: flex;
+    flex-direction: column; /* ทำให้เนื้อหาตรงกลางเรียงเป็นแนวตั้ง */
+    height: 100%; /* ใช้ความสูงทั้งหมด */
     overflow: hidden;
-    min-height: 35vh; 
-    max-height: 35vh; 
+    min-height: 30vh; 
+    max-height: 30vh; 
     width: 100%;
-    max-width: 100%;
-    min-width: 100%;
+    max-width: 20vw;
     border-radius: 1rem;
-    padding-right: 0.6rem;
-    padding-left: 0.6rem;
-    padding-top: 0.6rem;
+    padding: 0.6rem;
     box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.45);
     background-color: white;
+    transition: transform 0.3s ease; /* เพิ่ม transition สำหรับการ hover */
 }
 
-.singleDest:hover{
+.singleDest:hover {
     box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.74);
-    scale: 1.05;
-    transition: .3s ease;
+    transform: scale(1.05); /* ใช้ transform แทน scale */
 }
+
+.dastFooter {
+    flex-grow: 1; /* ทำให้ footer ขยายเพื่อเติมพื้นที่ */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 0.5rem;
+    width: 100%;
+}
+
 
 .dastImage{
     width: 100%;
@@ -42,39 +45,30 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    justify-content: center;
+    align-items: center;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
 }
 
 
-.dastFooter {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 0.5rem;
-    width: 100%;
-    height: 42%;
-}
-
 .destText {
     color: black;
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    width: 100%;
     display: flex;
+    width: 100%;
     justify-content: flex-start;
     padding-bottom: 0.2rem;
 }
 
 .destText p{ 
-    font-size: large; 
     overflow: hidden; 
     text-overflow: ellipsis; 
     white-space: nowrap;
+    font-size: 1rem;
 }
 
 .showType{
-    font-size: x-small;
+    font-size: xx-small;
     color: rgb(130, 129, 129);
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;

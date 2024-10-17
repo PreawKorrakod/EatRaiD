@@ -13,6 +13,7 @@ import image3 from "../../public/imgTest3.png";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
+import { BsChevronDoubleLeft, BsCheckLg, BsChevronDoubleRight, BsPlus, BsXSquareFill, BsUpload, BsImages, BsExclamationCircle, BsCheckCircleFill, BsFillTrashFill } from "react-icons/bs";
 import { MdLocationOn } from "react-icons/md";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import Link from "next/link";
@@ -27,7 +28,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 const data = [
   {
     id: 1,
-    name: "food AEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+    name: "food A",
     image: image1,
     type: ["noodle", "fastfood"],
     distance: "5.6",
@@ -99,49 +100,69 @@ const data = [
 
 export default function Home() {
   const [isFocused, setIsFocused] = useState(false);
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
   const [category, setCategory] = useState([]);
   const [groupSelected, setGroupSelected] = useState([]);
 
+  // Pagination settings
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
 
+  // Calculate the items to display based on the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(data.length / itemsPerPage);
 
-  // ฟังก์ชันสำหรับ Select All
-  const handleChangeAll = (event) => {
-    const isAllSelected = event.target.checked;
-    setChecked(new Array(data.length).fill(isAllSelected));
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={`${styles.pageButton} ${currentPage === i ? styles.activePage : ''}`}
+          onClick={() => handlePageClick(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+    return pages;
   };
 
   useEffect(() => {
     const fetchcategoryData = async () => {
       try {
-        const category = await axios.get(
-          `${NEXT_PUBLIC_BASE_API_URL}/category`
-        );
-        // console.log(category.data);
-        setCategory(["All", ...category.data]);
+        const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
+        setCategory(["All", ...response.data]);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching category data:", error);
       }
     };
     fetchcategoryData();
   }, []);
 
   const filterRes = () => {
-    const handleCheckboxChange = (selectedValues) => {
-      console.log("Selected:", selectedValues.join(", "));
-      setGroupSelected(selectedValues); // อัปเดตค่าของ groupSelected
-    };
-
     return (
       <div className={styles.AllFilterContainer}>
         <div className={styles.CategoryContainer}>
           <div className={styles.Categoryheader}>Categories</div>
-          <div
-            className={styles.categoryComponents}
-            value={groupSelected}
-            onChange={handleCheckboxChange}
-          >
+          <div className={styles.categoryComponents}>
             {category.map((type, index) => (
               <CustomCheckbox key={index} value={type.Name || type}>
                 {type.Name || type}
@@ -150,12 +171,10 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Price slider */}
         <div className={styles.CategoryContainer}>
           <SliderPrice />
         </div>
 
-        {/* Distance slider */}
         <div className={styles.CategoryContainer}>
           <SliderDistance />
         </div>
@@ -165,64 +184,60 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <Navbar></Navbar>
+      <Navbar />
       <div className={styles.Container}>
         <div className={styles.Search_Filter_wrapper}>
           <form className={styles.search_wrapper}>
-            <div
-              className={`${styles.SearchBox} ${
-                isFocused ? styles.active : ""
-              }`}
-            >
-              <div className={styles.Search_inside}>
-                <IoSearch
-                  size={25}
-                  className={styles.icon_Search}
-                  type="submit"
-                />
-              </div>
+            <div className={`${styles.SearchBox} ${isFocused ? styles.active : ""}`}>
+              <IoSearch size={25} className={styles.icon_Search} />
               <input
                 type="text"
                 placeholder="Search..."
                 className={styles.inputSearch}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
               />
             </div>
-            <button type="submit" className={styles.SearchBox_btn}>
-              Search
-            </button>
+            <button type="submit" className={styles.SearchBox_btn}>Search</button>
           </form>
           <div className={styles.Filter_wrapper}>
             <div className={styles.Filter_header}>Filter Restaurant</div>
             <div className={styles.Filter_Contaniner}>{filterRes()}</div>
           </div>
         </div>
+
         <div className={styles.List_Containner}>
           <div className={styles.random_wrapper}>
             <div className={styles.RandomContainer}>
-              <div className={styles.titleText}>
-                Not sure what to eat? Click this button for a random!
-              </div>
-              <button
-                className={styles.Randombtn}
-              >
-                <GiPerspectiveDiceSixFacesRandom
-                  className={styles.randomicon}
-                  size={25}
-                />
-                <span>
-                  Random
-                </span>
+              <div className={styles.titleText}>Not sure what to eat? Click this button for a random!</div>
+              <button className={styles.Randombtn}>
+                <GiPerspectiveDiceSixFacesRandom className={styles.randomicon} size={25} />
+                <span>Random</span>
               </button>
             </div>
-            <div className={styles.ShowResForRandom}>
 
+            <div className={styles.ShowResForRandom}>
+              {currentItems.map((card) => (
+                <div key={card.id}>
+                  <HomeCard {...card} />
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination Controls */}
+            <div className={styles.pagination}>
+              <button className={styles.pageButton} onClick={handlePreviousPage} disabled={currentPage === 1}>
+                <BsChevronDoubleLeft />
+              </button>
+              {renderPageNumbers()}
+              <button className={styles.pageButton} onClick={handleNextPage} disabled={currentPage === totalPages}>
+                <BsChevronDoubleRight />
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 }
