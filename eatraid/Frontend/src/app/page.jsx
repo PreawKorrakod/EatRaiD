@@ -31,104 +31,117 @@ const data = [
     name: "Food A",
     image: image1,
     type: ["noodle", "Fast food"],
-    distance: "5.6",
+    location: "kmutnb",
     price: { min: 30, max: 90 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 2,
     name: "Food B",
     image: image2,
     type: ["Local food", "Fast food"],
-    distance: "0.6",
+    location: "kmutnb",
     price: { min: 100, max: 150 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 3,
     name: "Food C",
     image: image3,
     type: ["noodle", "Fast food"],
-    distance: "1.6",
+    location: "kmutnb",
     price: { min: 100, max: 250 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 4,
     name: "Food D",
     image: image1,
     type: ["noodle", "Fast food"],
-    distance: "5.6",
+    location: "kmutnb",
     price: { min: 80, max: 150 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 5,
     name: "Food E",
     image: image2,
     type: ["Local food", "Fast food"],
-    distance: "0.5",
+    location: "kmutnb",
     price: { min: 20, max: 60 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 6,
     name: "Food F",
     image: image2,
     type: ["Local food", "Fast food"],
-    distance: "1.6",
+    location: "kmutnb",
     price: { min: 150, max: 300 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 7,
     name: "Food G",
     image: image2,
     type: ["Local food", "Fast food"],
-    distance: "0.6",
+    location: "kmutnb",
     price: { min: 220, max: 250 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 8,
     name: "Food H",
     image: image2,
     type: ["Local food", "Fast food"],
-    distance: "1.6",
+    location: "kmutnb",
     price: { min: 50, max: 80 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 9,
     name: "Food I",
     image: image2,
     type: ["Local food", "Fast food"],
-    distance: "0.6",
+    location: "kmutnb",
     price: { min: 10, max: 30 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 10,
     name: "Food J",
     image: image2,
     type: ["Local food", "Fast food"],
-    distance: "0.6",
+    location: "kmutnb",
     price: { min: 300, max: 300 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 11,
     name: "Food K",
     image: image2,
     type: ["Local food", "Dessert"],
-    distance: "0.6",
+    location: "kmutnb",
     price: { min: 100, max: 150 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 12,
     name: "Food L",
     image: image2,
     type: ["Local food", "Dessert"],
-    distance: "0.6",
+    location: "kmutnb",
     price: { min: 120, max: 120 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
   {
     id: 13,
     name: "Food M",
     image: image2,
     type: ["Local food", "Dessert"],
-    distance: "0.6",
+    location: "kmutnb",
     price: { min: 90, max: 110 },
+    coordinates: { latitude: 13.7500, longitude: 100.5500 },
   },
 ];
 
@@ -139,6 +152,42 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredResults, setFilteredResults] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 300]);
+
+  // State for user's location
+  const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
+
+  useEffect(() => {
+    // Get user's location
+    const getUserLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation({ latitude, longitude });
+          },
+          (error) => {
+            console.error('Error getting location', error);
+          }
+        );
+      } else {
+        console.log("Geolocation is not supported by this browser.");
+      }
+    };
+
+    getUserLocation();
+  }, []);
+
+  const getDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // รัศมีของโลกในกิโลเมตร
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // ระยะทางในกิโลเมตร
+  };
+  
 
   useEffect(() => {
     const fetchcategoryData = async () => {
@@ -197,87 +246,85 @@ export default function Home() {
     return pages;
   };
 
-
-  
   const filterRes = () => {
     return (
-        <div className={styles.AllFilterContainer}>
-            <div className={styles.CategoryContainer}>
-                <div className={styles.Categoryheader}>Categories</div>
-                <div className={styles.categoryComponents}>
-                    {category.map((type, index) => (
-                        <CustomCheckbox
-                            key={index}
-                            value={type.Name || type}
-                            isSelected={groupSelected.includes(type.Name || type)} // Check if this category is selected
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                if (value === "All") {
-                                    // If "All" is selected, reset all other selections
-                                    setGroupSelected(["All"]);
-                                } else {
-                                    // If another category is selected, remove "All" from selection
-                                    setGroupSelected((prevSelected) => {
-                                        if (prevSelected.includes("All")) {
-                                            return [...prevSelected.filter((item) => item !== "All"), value];
-                                        }
-                                        return prevSelected.includes(value)
-                                            ? prevSelected.filter((item) => item !== value)
-                                            : [...prevSelected, value]; // Add the new category if not already selected
-                                    });
-                                }
-                            }}
-                        >
-                            {type.Name || type}
-                        </CustomCheckbox>
-                    ))}
-                </div>
-            </div>
-            <div className={styles.CategoryContainer}>
-                <SliderPrice value={priceRange} onChange={setPriceRange} />
-            </div>
-            <div className={styles.CategoryContainer}>
-                <SliderDistance />
-            </div>
+      <div className={styles.AllFilterContainer}>
+        <div className={styles.CategoryContainer}>
+          <div className={styles.Categoryheader}>Categories</div>
+          <div className={styles.categoryComponents}>
+            {category.map((type, index) => (
+              <CustomCheckbox
+                key={index}
+                value={type.Name || type}
+                isSelected={groupSelected.includes(type.Name || type)} // Check if this category is selected
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "All") {
+                    // If "All" is selected, reset all other selections
+                    setGroupSelected(["All"]);
+                  } else {
+                    // If another category is selected, remove "All" from selection
+                    setGroupSelected((prevSelected) => {
+                      if (prevSelected.includes("All")) {
+                        return [...prevSelected.filter((item) => item !== "All"), value];
+                      }
+                      return prevSelected.includes(value)
+                        ? prevSelected.filter((item) => item !== value)
+                        : [...prevSelected, value]; // Add the new category if not already selected
+                    });
+                  }
+                }}
+              >
+                {type.Name || type}
+              </CustomCheckbox>
+            ))}
+          </div>
         </div>
+        <div className={styles.CategoryContainer}>
+          <SliderPrice value={priceRange} onChange={setPriceRange} />
+        </div>
+        <div className={styles.CategoryContainer}>
+          <SliderDistance />
+        </div>
+      </div>
     );
-};
-
-  
-useEffect(() => {
-  const filterData = () => {
-    let filtered = [...data];
-
-    // Filter by selected categories
-    if (groupSelected.includes("All")) {
-      filtered = [...data];
-    } else if (groupSelected.length > 0) {
-      filtered = filtered.filter((item) =>
-        groupSelected.some((selectedCategory) =>
-          item.type.includes(selectedCategory)
-        )
-      );
-    }
-
-    // Filter by search term (case insensitive and partial matches)
-    if (searchTerm.length > 0) {
-      const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter((item) =>
-        item.name.toLowerCase().includes(searchLower)
-      );
-    }
-
-    // Filter by price range
-    filtered = filtered.filter((item) => {
-      const { min, max } = item.price;
-      return min >= priceRange[0] && max <= priceRange[1];
-    });
-
-    setFilteredResults(filtered);
   };
 
-  filterData();
-}, [searchTerm, groupSelected, data, priceRange]);
+
+  useEffect(() => {
+    const filterData = () => {
+      let filtered = [...data];
+
+      // Filter by selected categories
+      if (groupSelected.includes("All")) {
+        filtered = [...data];
+      } else if (groupSelected.length > 0) {
+        filtered = filtered.filter((item) =>
+          groupSelected.some((selectedCategory) =>
+            item.type.includes(selectedCategory)
+          )
+        );
+      }
+
+      // Filter by search term (case insensitive and partial matches)
+      if (searchTerm.length > 0) {
+        const searchLower = searchTerm.toLowerCase();
+        filtered = filtered.filter((item) =>
+          item.name.toLowerCase().includes(searchLower)
+        );
+      }
+
+      // Filter by price range
+      filtered = filtered.filter((item) => {
+        const { min, max } = item.price;
+        return min >= priceRange[0] && max <= priceRange[1];
+      });
+
+      setFilteredResults(filtered);
+    };
+
+    filterData();
+  }, [searchTerm, groupSelected, data, priceRange]);
 
 
   return (
@@ -325,7 +372,7 @@ useEffect(() => {
                       img={card.image}
                       name={card.name}
                       type={card.type}
-                      distance={card.distance}
+                      distance={card.distance.toFixed(2)}
                     />
                   </div>
                 ))
