@@ -13,9 +13,9 @@ export const CustomCheckbox = (props) => {
         getInputProps,
     } = useCheckbox({
         ...props
-    })
+    });
 
-    // กำหนด className ตามสถานะของ checkbox
+    // Define className based on checkbox state
     const baseClass = `${styles.checkboxBase} ${isSelected ? styles.checkboxSelected : ''} ${isFocusVisible ? styles.checkboxFocusVisible : ''}`;
     const contentClass = `${styles.checkboxContent} ${isSelected ? styles.checkboxSelectedContent : ''}`;
 
@@ -37,4 +37,4 @@ export const CustomCheckbox = (props) => {
             </Chip>
         </label>
     );
-}
+};

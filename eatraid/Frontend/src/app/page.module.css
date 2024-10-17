@@ -481,3 +481,36 @@
     transform: rotate(360deg);
   }
 }
+
+.pagination{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.pageButton{
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  cursor: pointer;
+  border: none;
+  margin: 0.1rem;
+  border-radius: 1rem;
+  background-color: #e7e7e7;
+}
+
+.pageButton:hover{
+  background-color: #cdcdcd;
+}
+
+.activePage{
+  background-color: #ff5804;
+  color: #fdfdfd;
+}
+
+.activePage:hover{
+  background-color: #ef5001ed;
+}

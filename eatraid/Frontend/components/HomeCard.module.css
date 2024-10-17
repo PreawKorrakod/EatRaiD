@@ -84,7 +84,7 @@
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     border-radius: 20px;
-    background-color: #d1cece;
+    background-color: #e5e7eb;
 }
 
 .showDistance{
@@ -97,7 +97,7 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    color: rgb(130, 129, 129);
+    color: #939393;
 }
 
 .LocationIcon{

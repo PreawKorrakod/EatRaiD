@@ -28,90 +28,142 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 const data = [
   {
     id: 1,
-    name: "food A",
+    name: "Food A",
     image: image1,
-    type: ["noodle", "fastfood"],
+    type: ["noodle", "Fast food"],
     distance: "5.6",
+    price: { min: 30, max: 90 },
   },
   {
     id: 2,
-    name: "food B",
+    name: "Food B",
     image: image2,
-    type: ["noodle", "fastfood"],
+    type: ["Local food", "Fast food"],
     distance: "0.6",
+    price: { min: 100, max: 150 },
   },
   {
     id: 3,
-    name: "food C",
+    name: "Food C",
     image: image3,
-    type: ["noodle", "fastfood"],
+    type: ["noodle", "Fast food"],
     distance: "1.6",
+    price: { min: 100, max: 250 },
   },
   {
     id: 4,
-    name: "food A",
+    name: "Food D",
     image: image1,
-    type: ["noodle", "fastfood"],
+    type: ["noodle", "Fast food"],
     distance: "5.6",
+    price: { min: 80, max: 150 },
   },
   {
     id: 5,
-    name: "food B",
+    name: "Food E",
     image: image2,
-    type: ["noodle", "fastfood"],
+    type: ["Local food", "Fast food"],
     distance: "0.5",
+    price: { min: 20, max: 60 },
   },
   {
     id: 6,
-    name: "food B",
+    name: "Food F",
     image: image2,
-    type: ["noodle", "fastfood"],
+    type: ["Local food", "Fast food"],
     distance: "1.6",
+    price: { min: 150, max: 300 },
   },
   {
     id: 7,
-    name: "food B",
+    name: "Food G",
     image: image2,
-    type: ["noodle", "fastfood"],
+    type: ["Local food", "Fast food"],
     distance: "0.6",
+    price: { min: 220, max: 250 },
   },
   {
     id: 8,
-    name: "food B",
+    name: "Food H",
     image: image2,
-    type: ["noodle", "fastfood"],
+    type: ["Local food", "Fast food"],
     distance: "1.6",
+    price: { min: 50, max: 80 },
   },
   {
     id: 9,
-    name: "food B",
+    name: "Food I",
     image: image2,
-    type: ["noodle", "fastfood"],
+    type: ["Local food", "Fast food"],
     distance: "0.6",
+    price: { min: 10, max: 30 },
   },
   {
     id: 10,
-    name: "food B",
+    name: "Food J",
     image: image2,
-    type: ["noodle", "fastfood"],
+    type: ["Local food", "Fast food"],
     distance: "0.6",
+    price: { min: 300, max: 300 },
+  },
+  {
+    id: 11,
+    name: "Food K",
+    image: image2,
+    type: ["Local food", "Dessert"],
+    distance: "0.6",
+    price: { min: 100, max: 150 },
+  },
+  {
+    id: 12,
+    name: "Food L",
+    image: image2,
+    type: ["Local food", "Dessert"],
+    distance: "0.6",
+    price: { min: 120, max: 120 },
+  },
+  {
+    id: 13,
+    name: "Food M",
+    image: image2,
+    type: ["Local food", "Dessert"],
+    distance: "0.6",
+    price: { min: 90, max: 110 },
   },
 ];
 
 export default function Home() {
   const [isFocused, setIsFocused] = useState(false);
   const [category, setCategory] = useState([]);
-  const [groupSelected, setGroupSelected] = useState([]);
+  const [groupSelected, setGroupSelected] = useState(["All"]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredResults, setFilteredResults] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 300]);
+
+  useEffect(() => {
+    const fetchcategoryData = async () => {
+      try {
+        const category = await axios.get(
+          `${NEXT_PUBLIC_BASE_API_URL}/category`
+        );
+        // console.log(category.data);
+        setCategory(["All", ...category.data]);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchcategoryData();
+  }, []);
 
   // Pagination settings
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const itemsPerPage = 12;
 
   // Calculate the items to display based on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const currentItems = filteredResults.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -145,42 +197,88 @@ export default function Home() {
     return pages;
   };
 
-  useEffect(() => {
-    const fetchcategoryData = async () => {
-      try {
-        const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
-        setCategory(["All", ...response.data]);
-      } catch (error) {
-        console.error("Error fetching category data:", error);
-      }
-    };
-    fetchcategoryData();
-  }, []);
 
+  
   const filterRes = () => {
     return (
-      <div className={styles.AllFilterContainer}>
-        <div className={styles.CategoryContainer}>
-          <div className={styles.Categoryheader}>Categories</div>
-          <div className={styles.categoryComponents}>
-            {category.map((type, index) => (
-              <CustomCheckbox key={index} value={type.Name || type}>
-                {type.Name || type}
-              </CustomCheckbox>
-            ))}
-          </div>
+        <div className={styles.AllFilterContainer}>
+            <div className={styles.CategoryContainer}>
+                <div className={styles.Categoryheader}>Categories</div>
+                <div className={styles.categoryComponents}>
+                    {category.map((type, index) => (
+                        <CustomCheckbox
+                            key={index}
+                            value={type.Name || type}
+                            isSelected={groupSelected.includes(type.Name || type)} // Check if this category is selected
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === "All") {
+                                    // If "All" is selected, reset all other selections
+                                    setGroupSelected(["All"]);
+                                } else {
+                                    // If another category is selected, remove "All" from selection
+                                    setGroupSelected((prevSelected) => {
+                                        if (prevSelected.includes("All")) {
+                                            return [...prevSelected.filter((item) => item !== "All"), value];
+                                        }
+                                        return prevSelected.includes(value)
+                                            ? prevSelected.filter((item) => item !== value)
+                                            : [...prevSelected, value]; // Add the new category if not already selected
+                                    });
+                                }
+                            }}
+                        >
+                            {type.Name || type}
+                        </CustomCheckbox>
+                    ))}
+                </div>
+            </div>
+            <div className={styles.CategoryContainer}>
+                <SliderPrice value={priceRange} onChange={setPriceRange} />
+            </div>
+            <div className={styles.CategoryContainer}>
+                <SliderDistance />
+            </div>
         </div>
-
-        <div className={styles.CategoryContainer}>
-          <SliderPrice />
-        </div>
-
-        <div className={styles.CategoryContainer}>
-          <SliderDistance />
-        </div>
-      </div>
     );
+};
+
+  
+useEffect(() => {
+  const filterData = () => {
+    let filtered = [...data];
+
+    // Filter by selected categories
+    if (groupSelected.includes("All")) {
+      filtered = [...data];
+    } else if (groupSelected.length > 0) {
+      filtered = filtered.filter((item) =>
+        groupSelected.some((selectedCategory) =>
+          item.type.includes(selectedCategory)
+        )
+      );
+    }
+
+    // Filter by search term (case insensitive and partial matches)
+    if (searchTerm.length > 0) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter((item) =>
+        item.name.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Filter by price range
+    filtered = filtered.filter((item) => {
+      const { min, max } = item.price;
+      return min >= priceRange[0] && max <= priceRange[1];
+    });
+
+    setFilteredResults(filtered);
   };
+
+  filterData();
+}, [searchTerm, groupSelected, data, priceRange]);
+
 
   return (
     <div className={styles.page}>
@@ -196,6 +294,8 @@ export default function Home() {
                 className={styles.inputSearch}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <button type="submit" className={styles.SearchBox_btn}>Search</button>
@@ -217,12 +317,24 @@ export default function Home() {
             </div>
 
             <div className={styles.ShowResForRandom}>
-              {currentItems.map((card) => (
-                <div key={card.id}>
-                  <HomeCard {...card} />
-                </div>
-              ))}
+              {currentItems.length > 0 ? (
+                currentItems.map((card) => (
+                  <div key={card.id}>
+                    <HomeCard
+                      id={card.id}
+                      img={card.image}
+                      name={card.name}
+                      type={card.type}
+                      distance={card.distance}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className={styles.noResultsMessage}>ไม่พบผลลัพธ์</div>
+              )}
             </div>
+
+
 
             {/* Pagination Controls */}
             <div className={styles.pagination}>
