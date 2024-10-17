@@ -33,7 +33,7 @@ const data = [
     type: ["noodle", "Fast food"],
     location: "kmutnb",
     price: { min: 30, max: 90 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7503, longitude: 100.5503 },
   },
   {
     id: 2,
@@ -42,7 +42,7 @@ const data = [
     type: ["Local food", "Fast food"],
     location: "kmutnb",
     price: { min: 100, max: 150 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 0, longitude: 0 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 3,
@@ -51,7 +51,7 @@ const data = [
     type: ["noodle", "Fast food"],
     location: "kmutnb",
     price: { min: 100, max: 250 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 10, longitude: 0 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 4,
@@ -60,7 +60,7 @@ const data = [
     type: ["noodle", "Fast food"],
     location: "kmutnb",
     price: { min: 80, max: 150 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7503, longitude: 100.5503 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 5,
@@ -69,7 +69,7 @@ const data = [
     type: ["Local food", "Fast food"],
     location: "kmutnb",
     price: { min: 20, max: 60 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7504, longitude: 100.5504 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 6,
@@ -78,7 +78,7 @@ const data = [
     type: ["Local food", "Fast food"],
     location: "kmutnb",
     price: { min: 150, max: 300 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7505, longitude: 100.5505 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 7,
@@ -87,7 +87,7 @@ const data = [
     type: ["Local food", "Fast food"],
     location: "kmutnb",
     price: { min: 220, max: 250 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7506, longitude: 100.5506 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 8,
@@ -96,7 +96,7 @@ const data = [
     type: ["Local food", "Fast food"],
     location: "kmutnb",
     price: { min: 50, max: 80 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7507, longitude: 100.5507 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 9,
@@ -105,7 +105,7 @@ const data = [
     type: ["Local food", "Fast food"],
     location: "kmutnb",
     price: { min: 10, max: 30 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7508, longitude: 100.5508 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 10,
@@ -114,7 +114,7 @@ const data = [
     type: ["Local food", "Fast food"],
     location: "kmutnb",
     price: { min: 300, max: 300 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7509, longitude: 100.5509 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 11,
@@ -123,7 +123,7 @@ const data = [
     type: ["Local food", "Dessert"],
     location: "kmutnb",
     price: { min: 100, max: 150 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7510, longitude: 100.5510 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 12,
@@ -132,7 +132,7 @@ const data = [
     type: ["Local food", "Dessert"],
     location: "kmutnb",
     price: { min: 120, max: 120 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7511, longitude: 100.5511 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 13,
@@ -141,9 +141,10 @@ const data = [
     type: ["Local food", "Dessert"],
     location: "kmutnb",
     price: { min: 90, max: 110 },
-    coordinates: { latitude: 13.7500, longitude: 100.5500 },
+    coordinates: { latitude: 13.7512, longitude: 100.5512 }, // ค่าที่ใกล้เคียง
   },
 ];
+
 
 export default function Home() {
   const [isFocused, setIsFocused] = useState(false);
@@ -152,42 +153,40 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredResults, setFilteredResults] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 300]);
+  const [distanceValue, setDistanceValue] = useState(1000); // ระยะทางเริ่มต้น
+  const [userLocation, setUserLocation] = useState({ latitude: 0, longitude: 0 });
+  const [locationFetched, setLocationFetched] = useState(false);
 
-  // State for user's location
-  const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
 
-  useEffect(() => {
-    // Get user's location
-    const getUserLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setUserLocation({ latitude, longitude });
-          },
-          (error) => {
-            console.error('Error getting location', error);
-          }
-        );
-      } else {
-        console.log("Geolocation is not supported by this browser.");
-      }
-    };
-
-    getUserLocation();
-  }, []);
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ latitude, longitude });
+          console.log('Location : ', latitude,longitude)
+          setLocationFetched(true); // ระบุว่าตำแหน่งได้รับแล้ว
+        },
+        (error) => {
+          console.error('Error getting location', error);
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
 
   const getDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // รัศมีของโลกในกิโลเมตร
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // ระยะทางในกิโลเมตร
+    return R * c * 1000; // ระยะทางในเมตร
   };
-  
+
 
   useEffect(() => {
     const fetchcategoryData = async () => {
@@ -284,47 +283,57 @@ export default function Home() {
           <SliderPrice value={priceRange} onChange={setPriceRange} />
         </div>
         <div className={styles.CategoryContainer}>
-          <SliderDistance />
+          <SliderDistance
+            distanceValue={distanceValue}
+            setDistanceValue={(newDistance) => {
+              setDistanceValue(newDistance);
+              if (!locationFetched) {
+                getUserLocation(); // ขอ location เมื่อเริ่มเลื่อน slider
+              }
+            }}
+          />
         </div>
       </div>
     );
   };
 
-
   useEffect(() => {
     const filterData = () => {
       let filtered = [...data];
 
-      // Filter by selected categories
-      if (groupSelected.includes("All")) {
-        filtered = [...data];
-      } else if (groupSelected.length > 0) {
-        filtered = filtered.filter((item) =>
-          groupSelected.some((selectedCategory) =>
-            item.type.includes(selectedCategory)
-          )
+      if (!groupSelected.includes("All")) {
+        filtered = filtered.filter(item =>
+          groupSelected.some(category => item.type.includes(category))
         );
       }
 
-      // Filter by search term (case insensitive and partial matches)
       if (searchTerm.length > 0) {
-        const searchLower = searchTerm.toLowerCase();
-        filtered = filtered.filter((item) =>
-          item.name.toLowerCase().includes(searchLower)
+        filtered = filtered.filter(item =>
+          item.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
 
-      // Filter by price range
-      filtered = filtered.filter((item) => {
-        const { min, max } = item.price;
-        return min >= priceRange[0] && max <= priceRange[1];
-      });
+      filtered = filtered.filter(item =>
+        item.price.min >= priceRange[0] && item.price.max <= priceRange[1]
+      );
+
+      if (locationFetched) {
+        filtered = filtered.filter(item => {
+          const distance = getDistance(
+            userLocation.latitude,
+            userLocation.longitude,
+            item.coordinates.latitude,
+            item.coordinates.longitude
+          );
+          return distance <= distanceValue;
+        });
+      }
 
       setFilteredResults(filtered);
     };
 
     filterData();
-  }, [searchTerm, groupSelected, data, priceRange]);
+  }, [searchTerm, groupSelected, priceRange, distanceValue, userLocation, locationFetched]);
 
 
   return (
@@ -372,12 +381,14 @@ export default function Home() {
                       img={card.image}
                       name={card.name}
                       type={card.type}
-                      distance={card.distance.toFixed(2)}
+                      distance={locationFetched
+                        ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
+                        : "N/A"}
                     />
                   </div>
                 ))
               ) : (
-                <div className={styles.noResultsMessage}>ไม่พบผลลัพธ์</div>
+                <div className={styles.noResultsMessage}>No results found.</div>
               )}
             </div>
 

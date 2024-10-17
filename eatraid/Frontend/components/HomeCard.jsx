@@ -27,9 +27,11 @@ const HomeCard = (props) => {
                             <span key={index} className={styles.typeComponent}>{t}</span>
                         ))}
                     </div>
-                    <div className={styles.showDistance}>
-                        <MdLocationOn className={styles.LocationIcon} />{distance} km
-                    </div>
+                    {distance === "N/A" ? '' : (
+                        <div className={styles.showDistance}>
+                            <MdLocationOn className={styles.LocationIcon} />{distance} km
+                        </div>
+                    )}
                 </div>
 
                 <div className={styles.LinkResBtn}>

@@ -4,34 +4,31 @@ import Slider from '@mui/material/Slider';
 import styles from './SliderDistance.module.css';
 
 function valuetext(value) {
-    // แปลงค่าเป็นเมตรหรือกิโลเมตร
     return value >= 1000 ? `${(value / 1000).toFixed(1)} km` : `${value} m`;
 }
 
-export default function SliderDistance() {
-    const [distance, setDistance] = React.useState(100); // กำหนดค่าเริ่มต้นที่ 100 เมตร
-
+export default function SliderDistance({ distanceValue, setDistanceValue }) {
     const handleChange = (event, newValue) => {
-        setDistance(newValue);
+        setDistanceValue(newValue);
     };
 
     return (
         <Box className={styles.DistanceRange}>
             <div className={styles.distancelabel}>
                 <div className={styles.DistanceHeader}>Distance</div>
-                <div className={styles.distanceText}>{valuetext(distance)}</div>
+                <div className={styles.distanceText}>{valuetext(distanceValue)}</div>
             </div>
             <Slider
                 size='big'
                 aria-label="Distance"
-                value={distance}
+                value={distanceValue}
                 onChange={handleChange}
                 getAriaValueText={valuetext}
                 valueLabelDisplay="auto"
-                step={100}
+                step={100}  // step ระยะ 100 เมตร
                 marks
                 min={100}
-                max={1000}
+                max={1000}  // ค่า max เปลี่ยนเป็น 1000 เมตร (1 กิโลเมตร)
                 color='secondary'
                 className={styles.range}
             />

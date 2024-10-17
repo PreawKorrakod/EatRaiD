@@ -134,7 +134,7 @@
 
 .ShowResForRandom{
   width: 100%;
-  height: 100vh;
+  height: max-content;
   padding-right: 1.5rem;
   padding-left: 1.5rem;
   padding-top: 0.5rem;
@@ -513,4 +513,11 @@
 
 .activePage:hover{
   background-color: #ef5001ed;
+}
+
+.noResultsMessage{
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: xx-large
 }
