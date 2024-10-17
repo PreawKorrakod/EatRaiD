@@ -536,11 +536,12 @@ export default function Info() {
     right: { title: "Close", value: "close" },
   };
 
-
   // ฟังก์ชัน onChange ที่จะเรียกเมื่อเปลี่ยน toggle
   const onChangetoggle = (storeId, newStatus) => {
     console.log(`Store ${storeId} changed to: ${newStatus}`);
-    setStatus(newStatus === true ? "Open" : newStatus === false ? "Close" : "Auto")
+    setStatus(
+      newStatus === true ? "Open" : newStatus === false ? "Close" : "Auto"
+    );
   };
 
   // Determine displayed status
@@ -663,7 +664,10 @@ export default function Info() {
     return (
       <div className={styles.modalOverlay}>
         <div className={styles.bigContainerM}>
-          <div className={styles.closeIcon} onClick={() => setIsModalOpen(false)}>
+          <div
+            className={styles.closeIcon}
+            onClick={() => setIsModalOpen(false)}
+          >
             <RxCross2 />
           </div>
           <h1 className={styles.titleM}>Edit profile</h1>
@@ -873,7 +877,6 @@ export default function Info() {
     );
   };
 
-
   // main page
   return (
     <div className={styles.mainBg}>
@@ -901,29 +904,13 @@ export default function Info() {
         </div>
         <div className={styles.rowCon3}>
           <h1 className={styles.title}>{infoData.Name || "Restaurant Name"}</h1>
-          <div className={styles.toggleContainer}>
-
-            <label className={styles.switch}>
-              <input
-                type="checkbox"
-                checked={
-                  overrideStatus !== null
-                    ? overrideStatus === "open"
-                    : displayedIsOpen
-                }
-                onChange={toggleOverride}
-              />
-              <span className={styles.slider}></span>
-            </label>
-            <span className={styles.statusText}>
-              {overrideStatus === "open" && "Open"}
-              {overrideStatus === "close" && "Close"}
-              {overrideStatus === null && (displayedIsOpen ? "Open" : "Close")}
-            </span>
-          </div>
         </div>
-
-
+        <ToggleGroup
+          id={id}
+          status={status} // ส่งสถานะเริ่มต้นเข้าไป
+          labels={labelsText} // ส่งข้อความ labels
+          onChange={onChangetoggle} // ส่งฟังก์ชัน onChange
+        />
 
         <div className={styles.rowCon}>
           <div className={styles.halfCon}>
@@ -981,13 +968,6 @@ export default function Info() {
           </div>
 
           {/* มาใส่ toggle ตรงนี้นะ */}
-          <ToggleGroup
-            id={id}
-            status={status} // ส่งสถานะเริ่มต้นเข้าไป
-            labels={labelsText} // ส่งข้อความ labels
-            onChange={onChangetoggle} // ส่งฟังก์ชัน onChange
-          />
-
         </div>
       </div>
       {isModalOpen && <Modal />}

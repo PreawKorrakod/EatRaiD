@@ -1,49 +1,63 @@
 .toggleContainer {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; 
     align-items: center;
-    width: 40%;
+    width: 25%;
     height: max-content;
     border-radius: 10rem;
-    background-color: #EE7214;
-    position: relative;
-    padding: 1rem;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.173);
-}
-  
-.toggleSwitch {
-    height: 80%;
-    width: 80px;
     background-color: white;
+    position: relative;
+    padding: 0.4rem 0rem 0.4rem 0.2rem;
+    /* box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.173); */
+    align-self: center;
+    margin-bottom: 10px;
+    border: solid 1px black;
+}
+
+.toggleSwitch {
+    height: 90%;
+    width: 33%; 
+    background-color: rgb(60, 60, 60);
     border-radius: 10rem;
     position: absolute;
-    transition: left 0.3s ease;
+    transition: left 0.4s ease ;
 }
-  
-/* ตำแหน่งของปุ่ม */
+
 .open {
-    left: 5px;
+    left: 4px;
+    background-color: #446846;
+    margin-left: -2px;
 }
-  
+
 .auto {
-    left: 85px;
+    left: calc(50% - 16%); 
 }
-  
+
 .close {
-    left: 165px;
+    left: calc(100% - 4px - 32%); 
+    background-color: #c4261b;
 }
-  
+
+.labelContainer {
+    display: flex;
+    justify-content: space-between; 
+    width: 100%; 
+}
+
 .toggleLabel {
-    color: white;
+    color: black;
     cursor: pointer;
     z-index: 1;
     font-weight: 500;
-}
-  
-.blackFont {
-    color: black;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    flex: 1; 
     align-items: center;
+    text-align: center; 
+    font-size: 12;
 }
-  
+
+.blackFont {
+    color: white;
+    align-items: center;
+    text-align: center; 
+    font-size: 12;
+}
