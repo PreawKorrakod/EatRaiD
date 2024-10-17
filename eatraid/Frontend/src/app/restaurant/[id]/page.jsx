@@ -227,6 +227,8 @@ export default function restaurant({ params }) {
     fetchInfo();
   }, [params.id]);
 
+  console.log("infoData", infoData);
+
 
 
   useEffect(() => {

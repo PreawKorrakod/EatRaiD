@@ -624,7 +624,7 @@ app.get("/showinfo", async (req, res) => {
   const { RestaurantId } = req.query;
 
   const { data, error } = await supabase.from("Restaurant")
-    .select('id , RestaurantId , Name , Location, BusinessDay, Tel, Line, OpenTimeHr , OpenTimeMin , CloseTimeHr , CloseTimeMin , User(ProfilePic)')
+    .select('id , RestaurantId , Name , Location, BusinessDay, Tel, Line, OpenTimeHr , OpenTimeMin , CloseTimeHr , CloseTimeMin , User(ProfilePic),toggle_status')
     .eq("RestaurantId", RestaurantId);
 
   if (error) {
