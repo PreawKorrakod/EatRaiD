@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styles from "./toggleGroup.module.css"; // นำเข้าไฟล์ CSS
 
 const ToggleGroup = ({ id, status, labels, onChange }) => {
-  const [position, setPositoggleContainertion] = useState(status.toLowerCase()); // ใช้ status ที่รับมาเป็นค่าเริ่มต้น
+  const [position, setPosition] = useState(status.toLowerCase()); // ใช้ status ที่รับมาเป็นค่าเริ่มต้น
   // back ใช้ตัวแปร id และ backencvalue ในการ check status ได้เลย
 
   useEffect(() => {
