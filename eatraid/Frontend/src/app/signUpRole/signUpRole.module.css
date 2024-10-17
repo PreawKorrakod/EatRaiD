@@ -1,13 +1,13 @@
 .mainBg {
     width: 100vw;
     height: 100vh;
-    background-color: #F9E8D9;
+    background: linear-gradient(90deg, #891F0C 0%, #E16813 100%);
 }
 
 .bigContainer {
-    width: 65vw;
-    height: 65vh;
-    background-color: #FFFBF7;
+    width: 60vw;
+    height: 67vh;
+    background-color: #FFF;
     border-radius: 50px;
     padding: 30px;
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
@@ -38,8 +38,8 @@
 .title {
     font-family: 'Poppins';
     font-size: 42px;
-    font-weight: 800;
-    color: #527853;
+    font-weight: 900;
+    color: #000;
     padding-top: 20px;
 }
 
@@ -47,7 +47,7 @@
     font-family: 'Poppins';
     font-size: 16px;
     font-weight: normal;
-    color: #527853;
+    color: black;
     width: max-content;
 }
 
@@ -55,7 +55,7 @@
     font-family: 'Poppins';
     font-size: 16px;
     font-weight: bold;
-    color: #527853;
+    color: #EE7214;
     text-decoration: underline;
     margin-left: 5px;
     border: none;
@@ -65,13 +65,13 @@
 }
 
 .LoginButton:hover {
-    color: #3b5234;
+    color: #b05611;
 }
 
 
 .iconStyle {
     font-size: 80px;
-    color: #527853;
+    color: #000;
     margin-bottom: 10px;
 }
 
@@ -84,8 +84,8 @@
 .roleButton {
     width: 20vw;
     height: 20vh;
-    background-color: #EEEEE7;
-    color: #527853;
+    background-color: #ECE9E9;
+    color: #000;
     border-radius: 10px;
     font-family: 'Poppins';
     font-size: 20px;
@@ -104,13 +104,13 @@
 }
 
 .roleButton:focus {
-    background-color: #466A47;
-    color: #F9E8D9;
+    background: linear-gradient(90deg, #891F0C 0%, #E16813 100%);
+    color: #fff;
     box-shadow: 0 0 5px 5px rgba(141, 140, 140, 0.835);
 }
 
 .continueButton {
-    background-color: #527853;
+    background: linear-gradient(90deg, #891F0C 0%, #E16813 100%);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -128,14 +128,14 @@
 }
 
 .continueButton:hover:not(:disabled) {
-    background-color: #3b5234;
+    background: linear-gradient(90deg, #891F0C 0%, #E16813 100%);
 }
 
 .activeButton {
-    background-color: #527853;
-    color: #ffffff;
+    background: linear-gradient(90deg, #891F0C 0%, #E16813 100%);
+    color: #fff;
 }
 
 .activeIcon {
-    color: #f9e8d9;
+    color: #fff;
 }
