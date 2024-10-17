@@ -170,50 +170,7 @@ export default function Home() {
     },
   };
 
-  const showRes = () => {
-    return data.map((item, index) => (
-      <div key={item.id} className={styles.restaurantItem}>
-        <div className={styles.resTmageCover}>
-          <Image
-            src={item.image.src}
-            alt={item.name}
-            className={styles.resImage}
-            width={300}
-            height={300}
-          />
-        </div>
-        <div className={styles.Resinfo}>
-          <Link href="" className={styles.nameRes}>
-            {item.name}
-            <BsBoxArrowUpRight className={styles.Linkicon} />
-          </Link>
-          <div className={styles.typeRes}>
-            {item.type.map((t, index) => (
-              <span className={styles.typeComponents} key={index}>
-                {t}
-              </span>
-            ))}
-          </div>
-          <div className={styles.showDistance}>
-            <MdLocationOn className={styles.LocationIcon} />
-            {item.distance} km
-          </div>
-        </div>
-        <div className={styles.ResSelect}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={checked[index]}
-                onChange={handleChange2(index)}
-                color="gray[900]"
-              />
-            }
-          />
-        </div>
-      </div>
-    ));
-  };
-
+  
   const filterRes = () => {
     const handleCheckboxChange = (selectedValues) => {
       console.log("Selected:", selectedValues.join(", "));
@@ -288,36 +245,7 @@ export default function Home() {
         <div className={styles.List_Containner}>
           <div className={styles.random_wrapper}>
             <div className={styles.slider}>
-              <Carousel
-                responsive={responsive}
-                autoPlay={isRandomizing} // เริ่มหมุนเร็วถ้าอยู่ในช่วงสุ่ม
-                autoPlaySpeed={isRandomizing ? 1 : 90000000} // ปรับให้เร็วมากๆ ตอนสุ่ม
-                infinite={true}
-                centerMode={true}
-                focusOnSelect={false}
-                // หยุดที่ไอเท็มที่สุ่มได้
-                additionalTransfrom={
-                  selectedIndex !== null ? -selectedIndex * 300 : 0
-                }
-                customTransition="transform 0.5s ease" // ปรับให้การเคลื่อนที่นุ่มนวลขึ้นตอนหยุด
-                transitionDuration={isRandomizing ? 0 : 500} // หยุดทันทีเมื่อสุ่มเสร็จ
-              >
-                {data
-                  .filter((_, index) => checked[index]) // Filter data based on checked status
-                  .map((card) => {
-                    return (
-                      <div key={card.id}>
-                        <HomeCard
-                          id={card.id}
-                          img={card.image}
-                          name={card.name}
-                          type={card.type}
-                          distance={card.distance}
-                        />
-                      </div>
-                    );
-                  })}
-              </Carousel>
+             
             </div>
             <div className={styles.RandomContainer}>
               <button
@@ -326,7 +254,7 @@ export default function Home() {
                 className={styles.Randombtn}
               >
                 <GiPerspectiveDiceSixFacesRandom
-                  className={isRandomizing ? styles.spin : styles.randomicon}
+                  className={styles.randomicon}
                   size={25}
                 />
                 Random
