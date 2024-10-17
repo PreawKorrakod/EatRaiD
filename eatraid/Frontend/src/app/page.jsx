@@ -104,36 +104,12 @@ export default function Home() {
   const [category, setCategory] = useState([]);
   const [groupSelected, setGroupSelected] = useState([]);
 
-  const [isRandomizing, setIsRandomizing] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(null);
 
-  const handleRandomClick = () => {
-    setIsRandomizing(true);
-    setSelectedIndex(null); // Clear previous selection
-
-    setTimeout(() => {
-      const randomIndex = Math.floor(Math.random() * data.length);
-      setSelectedIndex(randomIndex);
-      setIsRandomizing(false);
-    }, 3000); // สมมุติว่าให้สุ่มเป็นเวลา 3 วินาที
-  };
-
-  // เก็บสถานะการเช็คบ็อกซ์ทั้งหมด
-  const [checked, setChecked] = useState(
-    new Array(data.length).fill(true) // ตั้งค่า default ให้เป็น select all
-  );
 
   // ฟังก์ชันสำหรับ Select All
-  const handleChange1 = (event) => {
+  const handleChangeAll = (event) => {
     const isAllSelected = event.target.checked;
     setChecked(new Array(data.length).fill(isAllSelected));
-  };
-
-  // ฟังก์ชันสำหรับเลือกเฉพาะรายการ
-  const handleChange2 = (index) => (event) => {
-    const updatedChecked = [...checked];
-    updatedChecked[index] = event.target.checked;
-    setChecked(updatedChecked);
   };
 
   useEffect(() => {
@@ -151,26 +127,6 @@ export default function Home() {
     fetchcategoryData();
   }, []);
 
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 3,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  };
-
-  
   const filterRes = () => {
     const handleCheckboxChange = (selectedValues) => {
       console.log("Selected:", selectedValues.join(", "));
@@ -244,57 +200,24 @@ export default function Home() {
         </div>
         <div className={styles.List_Containner}>
           <div className={styles.random_wrapper}>
-            <div className={styles.slider}>
-             
-            </div>
             <div className={styles.RandomContainer}>
+              <div className={styles.titleText}>
+                Not sure what to eat? Click this button for a random!
+              </div>
               <button
-                onClick={handleRandomClick}
-                disabled={isRandomizing}
                 className={styles.Randombtn}
               >
                 <GiPerspectiveDiceSixFacesRandom
                   className={styles.randomicon}
                   size={25}
                 />
-                Random
+                <span>
+                  Random
+                </span>
               </button>
             </div>
-            <div className={styles.Res_wrapper}>
-              <div className={styles.AllmenuContaniner}>
-                <div className={styles.Allmenu_header}>
-                  <div className={styles.title}>
-                    <div className={styles.Lefttitle}>
-                      All Restaurant{" "}
-                      <div className={styles.Showlength}>
-                        {checked.every(Boolean)
-                          ? "All"
-                          : checked.filter(Boolean).length}{" "}
-                      </div>
-                    </div>
-                    <div className={styles.SelectChoice}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={checked.every(Boolean)}
-                            indeterminate={
-                              !checked.every(Boolean) && checked.some(Boolean)
-                            }
-                            onChange={handleChange1}
-                            color="gray[900]"
-                          />
-                        }
-                        className={styles.Checkboxicon}
-                      />
-                      <div className={styles.SelectText}>Select All</div>
-                    </div>
-                  </div>
-                  <div className={styles.subtitle}>
-                    Uncheck to remove from random
-                  </div>
-                </div>
-                <div className={styles.listRes}>{showRes()}</div>
-              </div>
+            <div className={styles.ShowResForRandom}>
+
             </div>
           </div>
         </div>

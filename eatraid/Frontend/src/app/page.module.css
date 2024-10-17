@@ -8,7 +8,7 @@
 .Container{
   width: 100%;
   height: auto;
-  padding-left: 5vw;
+  padding-left: 4vw;
   padding-right: 5vw;
   padding-bottom: 5vh;
   display: flex; 
@@ -118,9 +118,9 @@
   /* background-color: #BD4A10; */
 }
 
-.slider {
-  margin: auto;
-  text-align: center;
+.titleText{
+  margin-right: 0.5rem;
+  font-size: small;
 }
 
 .RandomContainer{
@@ -130,17 +130,22 @@
   align-items: center;
   justify-content: center;
   padding-bottom: 0.5rem;
+  padding-top: 1rem;
+}
+
+.ShowResForRandom{
+  
 }
 
 .Randombtn {
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   width: max-content;
   border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
+  border-radius: 1rem;
+  font-size: smaller;
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -418,7 +423,7 @@
 }
 
 .Search_Filter_wrapper{
-  width: 100%;
+  width: 30%;
   background-color: white;
   margin-top: 1rem;
   padding: 0.5rem;
