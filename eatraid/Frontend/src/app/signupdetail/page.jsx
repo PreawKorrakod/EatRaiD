@@ -33,7 +33,7 @@ export default function SignupDetail() {
       setuserID(JSON.parse(storeduserID));
       console.log(JSON.parse(storeduserID));
     } else {
-      router.push("/");  // Redirect to home if no user ID
+      // router.push("/");  // Redirect to home if no user ID
     }
   }, []);
 
