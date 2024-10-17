@@ -8,11 +8,10 @@ import Image from 'next/image';
 import { useContext, useState } from 'react';
 import { BsExclamationCircle, BsArrowLeft } from "react-icons/bs";
 import { redirect, useRouter } from "next/navigation";
-
 import { NEXT_PUBLIC_BASE_API_URL, NEXT_PUBLIC_BASE_WEB_URL } from '../../../src/app/config/supabaseClient.js';
 import session from '../../../session';
 import { json } from 'react-router-dom';
-// import { General, supabase } from '../../../session';
+
 
 
 export default function Login() {
