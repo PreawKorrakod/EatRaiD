@@ -326,11 +326,20 @@ export default function restaurant({ params }) {
 
   const isLikedByUser = fav.some(({ UserId }) => UserId === userId);
 
+  let toggle_status; 
+
+  if (infoData?.toggle_status === null) {
+    toggle_status = displayedIsOpen ? "open" : "close"; 
+  } else {
+    toggle_status = infoData.toggle_status; 
+  }
+
   const statusClass =
-    infoData?.toggle_status === "open"
+    toggle_status === "close"
+      ? styles.statusClosed
+      : toggle_status === "open"
       ? styles.statusOpen
-      : styles.statusClosed;
-  const statusText = infoData?.toggle_status === "open" ? "Open" : "Close";
+      : console.log("fail");
 
   return (
     <div className={styles.mainBg}>
@@ -359,7 +368,7 @@ export default function restaurant({ params }) {
           <div className={styles.rowCon3}>
             <h1 className={styles.title}>{infoData.Name}</h1>
             <GoDotFill className={`${styles.iconDot} ${statusClass}`} />
-            <span className={`${styles.statusText} ${statusClass}`}>
+            <span className={statusClass}>
               {infoData?.toggle_status === "open" && "Open"}
               {infoData?.toggle_status === "close" && "Close"}
               {infoData?.toggle_status === null &&
