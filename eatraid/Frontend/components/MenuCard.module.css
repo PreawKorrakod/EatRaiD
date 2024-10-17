@@ -37,14 +37,12 @@
 }
 
 
-
-
 .dastImage{
     width: 45%;
     height: 100%;
     overflow: hidden;
     background-color: #F9E8D9 ;
-    border-radius: 10px;
+    border-radius: 10px; 
 }
 
 .Imagecover{

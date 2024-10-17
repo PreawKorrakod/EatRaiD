@@ -8,8 +8,8 @@ import { BsExclamationCircle } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import axios from 'axios';
-import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+import axios from "axios";
+import { NEXT_PUBLIC_BASE_API_URL } from "../../../src/app/config/supabaseClient.js";
 
 export default function Verify() {
   const [userID, setUserID] = useState(null);
@@ -19,21 +19,17 @@ export default function Verify() {
   const [error, setError] = useState("");
   const [profileImage, setProfileImage] = useState(null);
 
-
   useEffect(() => {
-    const storedUserID = sessionStorage.getItem('userID');
+    const storedUserID = sessionStorage.getItem("userID");
     if (storedUserID) {
       const parsedUserID = JSON.parse(storedUserID);
       setUserID(parsedUserID); // Store in state
       console.log("Data:", parsedUserID, parsedUserID.file);
-
     } else {
-      sessionStorage.removeItem('userID');
+      sessionStorage.removeItem("userID");
       router.push("/"); // Redirect to home if no user ID
     }
   }, [router]);
-
-
 
   const handleInputChange = (e, index) => {
     const value = e.target.value;
@@ -61,6 +57,18 @@ export default function Verify() {
       // Implement verification logic here
       console.log("Verifying OTP:", otp.join(""));
 
+      if (
+          userID.OpenTimeHr === '00' &&
+          userID.CloseTimeHr === '00' &&
+          userID.OpenTimeMin === '00' &&
+          userID.CloseTimeMin === '00'
+      ) {
+          userID.OpenTimeHr = '-';
+          userID.CloseTimeHr = '-';
+          userID.OpenTimeMin = '-';
+          userID.CloseTimeMin = '-';
+      }
+
       try {
         axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
           email: userID.email,
@@ -68,31 +76,31 @@ export default function Verify() {
           role: userID.role,
           profilePic: userID.file,
           user: userID.id,
-          Name: userID.Name, 
-          OpenTime: userID.OpenTime, 
-          CloseTime: userID.CloseTime, 
-          Location: userID.Location, 
+          Name: userID.Name || "-", 
+          OpenTimeHr: userID.OpenTimeHr,
+          CloseTimeHr: userID.CloseTimeHr, 
+          OpenTimeMin: userID.OpenTimeMin, 
+          CloseTimeMin: userID.CloseTimeMin,
+          Location: userID.Location || "-", 
           Latitude: userID.Latitude, 
           Longitude: userID.Longitude,
           BusinessDay: userID.BusinessDay, 
-          Tel: userID.Tel, 
-          Line: userID.Line
+          Tel: userID.Tel || "-", 
+          Line: userID.Line || "-"
 
         }).then(async res => {
           console.log("Navigate based on role", res)
           // Navigate based on role
 
           if (userID.role === "customer") {
-            router.push("/"); // Redirect to home page
+            router.push("/login"); // Redirect to home page
           } else if (userID.role === "owner") {
-            sessionStorage.removeItem('userData');
-            router.push("/info");
+            sessionStorage.removeItem('userID');
+            router.push("/login");
           }
         }).catch(error => {
           console.error('Error during verify OTP:', error);
-          if (error.status == 400){
-            setError(error.response.data.message);
-          }
+            setError("Wrong OTP. Try again.");
         });
       } catch (error) {
         console.log(error);
@@ -104,15 +112,17 @@ export default function Verify() {
 
   const handleResend = () => {
     try {
-      axios.post(`${NEXT_PUBLIC_BASE_API_URL}/resend-OTP`, {
-        email: userID.email,
-
-      }).then(async res => {
-        console.log('resend OTP successfully')
-      }).catch(error => {
-        console.error('Error during resend OTP:', error);
-        setError("Can't resend OTP. Try again.");
-      });
+      axios
+        .post(`${NEXT_PUBLIC_BASE_API_URL}/resend-OTP`, {
+          email: userID.email,
+        })
+        .then(async (res) => {
+          console.log("resend OTP successfully");
+        })
+        .catch((error) => {
+          console.error("Error during resend OTP:", error);
+          setError("Can't resend OTP. Try again.");
+        });
     } catch (error) {
       console.log(error);
     }
@@ -131,11 +141,15 @@ export default function Verify() {
               <FaArrowLeft />
             </button>
           </div>
-          <MdMarkEmailUnread className={styles.iconStyle} />
+          <div className={styles.iconCon}>
+            <MdMarkEmailUnread className={styles.iconStyle} />
+          </div>
           <h1 className={styles.title}>Please check your email</h1>
           <h2 className={styles.normalText}>
             We've sent a code to{" "}
-            <span className={styles.emailText}>{userID ? userID.email : 'loading...'}</span>
+            <span className={styles.emailText}>
+              {userID ? userID.email : "loading..."}
+            </span>
           </h2>
           <div className={styles.otpBox}>
             {[...Array(6)].map((_, index) => (
