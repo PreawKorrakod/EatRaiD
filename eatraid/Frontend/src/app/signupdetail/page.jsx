@@ -213,6 +213,25 @@ export default function SignupDetail() {
     router.push("/verify");
   };
 
+  const openday = [];
+
+  const beforeshow_open = [];
+  const beforeshow_close = [];
+  selectedBusinessDays.forEach((day, index) => {
+    if (day) {
+      beforeshow_open.push(businessDays[index]);
+    } else {
+      beforeshow_close.push(businessDays[index]);
+    }
+  });
+  if (beforeshow_open.length === 7) {
+    openday.push('Everyday');
+  } else if (beforeshow_open.length < 4) {
+    openday.push(beforeshow_open.join(', '));
+  } else if (beforeshow_open.length >= 4) {
+    openday.push("Everyday except " + beforeshow_close.join(', '));
+  }
+
   return (
     <div className={styles.mainBg}>
       <Topbar />
@@ -302,11 +321,15 @@ export default function SignupDetail() {
               <h2 className={styles.normalText}>Business days</h2>
               <div className={styles.dropdown} >
                 <div className={styles.dropdownHeader} onClick={toggleDropdown}>
+                  {openday}
+                  <BsChevronDown />
+                </div>
+                {/* <div className={styles.dropdownHeader} onClick={toggleDropdown}>
                   {selectedBusinessDays.every(Boolean)
                     ? "Everyday"
                     : "Selected Day(s)"}
                   <BsChevronDown />
-                </div>
+                </div> */}
                 {dropdownOpen && (
                   <div className={styles.dropdownList}>
                     {businessDays.map((day, index) => (
