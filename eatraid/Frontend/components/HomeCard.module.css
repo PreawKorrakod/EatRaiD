@@ -136,3 +136,9 @@
 .iconMorDetail{
     margin-left: 0.2rem;
 }
+.moreText{
+    align-items: center;
+    width: fit-content;
+    justify-content: center;
+    display: flex;
+}

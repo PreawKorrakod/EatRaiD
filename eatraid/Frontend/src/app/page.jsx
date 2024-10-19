@@ -84,7 +84,7 @@ const data = [
     id: 7,
     name: "Food G",
     image: image2,
-    type: ["Local food", "Fast food"],
+    type: ["Local food", "Fast food", "healthy"],
     location: "kmutnb",
     price: { min: 220, max: 250 },
     coordinates: { latitude: 13.7506, longitude: 100.5506 }, // ค่าที่ใกล้เคียง
