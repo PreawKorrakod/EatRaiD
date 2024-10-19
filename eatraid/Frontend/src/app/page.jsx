@@ -156,6 +156,53 @@ export default function Home() {
   const [distanceValue, setDistanceValue] = useState(1000); // ระยะทางเริ่มต้น
   const [userLocation, setUserLocation] = useState({ latitude: 0, longitude: 0 });
   const [locationFetched, setLocationFetched] = useState(false);
+  const [randomResult, setRandomResult] = useState(null);
+  const [isRandomizing, setIsRandomizing] = useState(false);
+  const [isShuffling, setIsShuffling] = useState(false);
+  const [shuffledCards, setShuffledCards] = useState([]); // เก็บรายการที่ถูกสลับ
+  const [shufflingCards, setShufflingCards] = useState([]); // เก็บการ์ดที่แสดงในขณะสุ่ม
+
+
+  const handleRandomize = () => {
+    if (filteredResults.length === 0) return; // ตรวจสอบว่ามีผลลัพธ์หรือไม่
+    setIsShuffling(true);
+    setIsRandomizing(true);
+
+    const shuffleCards = [...filteredResults];
+    setShufflingCards(shuffleCards); // ตั้งค่า shufflingCards ให้มีการ์ดทั้งหมด
+
+    // ฟังก์ชันสุ่มสลับตำแหน่งแบบ Fisher-Yates
+    for (let i = shuffleCards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffleCards[i], shuffleCards[j]] = [shuffleCards[j], shuffleCards[i]];
+    }
+
+    setShuffledCards(shuffleCards); // ตั้งค่ารายการที่สลับ
+    let shuffleInterval = setInterval(() => {
+      // สลับการ์ดไปเรื่อยๆ
+      setShufflingCards(prevCards => {
+        const newCards = [...prevCards];
+
+        // สลับตำแหน่งใน newCards
+        for (let i = newCards.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [newCards[i], newCards[j]] = [newCards[j], newCards[i]];
+        }
+
+        return newCards;
+      });
+    }, 200); // เปลี่ยนแปลงทุก 200ms (สามารถปรับได้)
+
+    // หยุดการสลับและแสดงผลลัพธ์สุ่มหลังจาก 2 วินาที
+    setTimeout(() => {
+      clearInterval(shuffleInterval);
+      const randomCard = shuffleCards[Math.floor(Math.random() * shuffleCards.length)];
+      setRandomResult(randomCard);
+      setIsShuffling(false);
+      setIsRandomizing(false);
+    }, 2000); // เวลาสุ่มที่ต้องการ
+  };
+
 
 
   const getUserLocation = () => {
@@ -164,7 +211,7 @@ export default function Home() {
         (position) => {
           const { latitude, longitude } = position.coords;
           setUserLocation({ latitude, longitude });
-          console.log('Location : ', latitude,longitude)
+          console.log('Location : ', latitude, longitude)
           setLocationFetched(true); // ระบุว่าตำแหน่งได้รับแล้ว
         },
         (error) => {
@@ -366,15 +413,57 @@ export default function Home() {
           <div className={styles.random_wrapper}>
             <div className={styles.RandomContainer}>
               <div className={styles.titleText}>Not sure what to eat? Click this button for a random!</div>
-              <button className={styles.Randombtn}>
+              <button className={styles.Randombtn} onClick={handleRandomize} disabled={isRandomizing}>
                 <GiPerspectiveDiceSixFacesRandom className={styles.randomicon} size={25} />
-                <span>Random</span>
+                <span>{isRandomizing ? 'Randomizing...' : 'Random'}</span>
               </button>
             </div>
 
             <div className={styles.ShowResForRandom}>
-              {currentItems.length > 0 ? (
-                currentItems.map((card) => (
+              {isRandomizing ? (
+                <div>
+                  {shufflingCards.length > 0 ? (
+                    shufflingCards.map((card) => (
+                      <HomeCard
+                        key={card.id}
+                        id={card.id}
+                        img={card.image}
+                        name={card.name}
+                        type={card.type}
+                        distance={locationFetched
+                          ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
+                          : "N/A"}
+                      />
+                    ))
+                  ) : (
+                    filteredResults.map((card) => (
+                      <HomeCard
+                        key={card.id}
+                        id={card.id}
+                        img={card.image}
+                        name={card.name}
+                        type={card.type}
+                        distance={locationFetched
+                          ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
+                          : "N/A"}
+                      />
+                    ))
+                  )}
+                </div>
+              ) : randomResult ? (
+                <div>
+                  <HomeCard
+                    id={randomResult.id}
+                    img={randomResult.image}
+                    name={randomResult.name}
+                    type={randomResult.type}
+                    distance={locationFetched
+                      ? getDistance(userLocation.latitude, userLocation.longitude, randomResult.coordinates.latitude, randomResult.coordinates.longitude).toFixed(2)
+                      : "N/A"}
+                  />
+                </div>
+              ) : filteredResults.length > 0 ? (
+                filteredResults.map((card) => (
                   <div key={card.id}>
                     <HomeCard
                       id={card.id}
