@@ -421,47 +421,45 @@ export default function Home() {
 
             <div className={styles.ShowResForRandom}>
               {isRandomizing ? (
-                <div>
-                  {shufflingCards.length > 0 ? (
-                    shufflingCards.map((card) => (
-                      <HomeCard
-                        key={card.id}
-                        id={card.id}
-                        img={card.image}
-                        name={card.name}
-                        type={card.type}
-                        distance={locationFetched
-                          ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
-                          : "N/A"}
-                      />
-                    ))
-                  ) : (
-                    filteredResults.map((card) => (
-                      <HomeCard
-                        key={card.id}
-                        id={card.id}
-                        img={card.image}
-                        name={card.name}
-                        type={card.type}
-                        distance={locationFetched
-                          ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
-                          : "N/A"}
-                      />
-                    ))
-                  )}
-                </div>
+                shufflingCards.length > 0 ? (
+                  shufflingCards.map((card) => (
+                    <HomeCard
+                      key={card.id}
+                      id={card.id}
+                      img={card.image}
+                      name={card.name}
+                      type={card.type}
+                      distance={locationFetched
+                        ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
+                        : "N/A"}
+                    />
+                  ))
+                ) : (
+                  filteredResults.map((card) => (
+                    <HomeCard
+                      key={card.id}
+                      id={card.id}
+                      img={card.image}
+                      name={card.name}
+                      type={card.type}
+                      distance={locationFetched
+                        ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
+                        : "N/A"}
+                    />
+                  ))
+                )
               ) : randomResult ? (
-                <div>
-                  <HomeCard
-                    id={randomResult.id}
-                    img={randomResult.image}
-                    name={randomResult.name}
-                    type={randomResult.type}
-                    distance={locationFetched
-                      ? getDistance(userLocation.latitude, userLocation.longitude, randomResult.coordinates.latitude, randomResult.coordinates.longitude).toFixed(2)
-                      : "N/A"}
-                  />
-                </div>
+
+                <HomeCard
+                  id={randomResult.id}
+                  img={randomResult.image}
+                  name={randomResult.name}
+                  type={randomResult.type}
+                  distance={locationFetched
+                    ? getDistance(userLocation.latitude, userLocation.longitude, randomResult.coordinates.latitude, randomResult.coordinates.longitude).toFixed(2)
+                    : "N/A"}
+                />
+
               ) : filteredResults.length > 0 ? (
                 filteredResults.map((card) => (
                   <div key={card.id}>
