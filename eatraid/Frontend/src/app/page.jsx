@@ -460,19 +460,18 @@ export default function Home() {
                     : "N/A"}
                 />
 
-              ) : filteredResults.length > 0 ? (
-                filteredResults.map((card) => (
-                  <div key={card.id}>
-                    <HomeCard
-                      id={card.id}
-                      img={card.image}
-                      name={card.name}
-                      type={card.type}
-                      distance={locationFetched
-                        ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
-                        : "N/A"}
-                    />
-                  </div>
+              ) : currentItems.length > 0 ? (
+                currentItems.map((card) => (
+                  <HomeCard
+                    key={card.id}
+                    id={card.id}
+                    img={card.image}
+                    name={card.name}
+                    type={card.type}
+                    distance={locationFetched
+                      ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
+                      : "N/A"}
+                  />
                 ))
               ) : (
                 <div className={styles.noResultsMessage}>No results found.</div>
