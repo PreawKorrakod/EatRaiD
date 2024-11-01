@@ -1,7 +1,7 @@
 "use client";
 import styles from "./signupUser.module.css";
-import image1 from "../../../public/DecPic1.png";
-import Topbar from "../../../components/Topbar";
+import image1 from '../../../public/LOGO.png';
+import Navbar from "../../../components/Navbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -88,7 +88,7 @@ export default function SignupUser() {
 
     return (
         <div className={styles.main}>
-            <Topbar />
+            <Navbar></Navbar>
             <div className={styles.content_wrapper}>
                 <div className={styles.container}>
                     <Link href={`/signUpRole`}>
@@ -187,8 +187,14 @@ export default function SignupUser() {
                             <Link href={`/login`} className={styles.Signup_link}>Log in</Link>
                         </div>
                     </div>
-                    <div className={styles.Login_Picture}>
-                        <Image src={image1} alt="Sign-up illustration" className={styles.imageSide} />
+                    <div className={styles.Login_pic_wrapper}>
+                        <div className={styles.logoPicture}>
+                            <Image src={image1}
+                                width={800}
+                                height={500}
+                                className={styles.logoimg} 
+                                alt="Logo"/>
+                        </div>
                     </div>
                 </div>
             </div>
