@@ -25,10 +25,10 @@ export default function SliderDistance({ distanceValue, setDistanceValue }) {
                 onChange={handleChange}
                 getAriaValueText={valuetext}
                 valueLabelDisplay="auto"
-                step={100}  // step ระยะ 100 เมตร
+                step={1000}  
                 marks
-                min={100}
-                max={1000}  // ค่า max เปลี่ยนเป็น 1000 เมตร (1 กิโลเมตร)
+                min={1000}
+                max={10000}  
                 color='secondary'
                 className={styles.range}
             />
