@@ -323,16 +323,6 @@ export default function SignupDetail() {
                   {openday}
                   <BsChevronDown />
                 </div>
-                <div className={styles.dropdownHeader} onClick={toggleDropdown}>
-                  {openday}
-                  <BsChevronDown />
-                </div>
-                <div className={styles.dropdownHeader} onClick={toggleDropdown}>
-                  {selectedBusinessDays.every(Boolean)
-                    ? "Everyday"
-                    : "Selected Day(s)"}
-                  <BsChevronDown />
-                </div>
                 {dropdownOpen && (
                   <div className={styles.dropdownList}>
                     {businessDays.map((day, index) => (
