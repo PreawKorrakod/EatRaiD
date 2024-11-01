@@ -134,8 +134,7 @@ export default function SignupDetail() {
     if (
       !location ||
       !profileImage ||
-      !NameOwner ||
-      !(numberPhone || LineContact)
+      !NameOwner
     ) {
       return "Please fill in all required fields.";
     }
@@ -324,12 +323,6 @@ export default function SignupDetail() {
                   {openday}
                   <BsChevronDown />
                 </div>
-                {/* <div className={styles.dropdownHeader} onClick={toggleDropdown}>
-                  {selectedBusinessDays.every(Boolean)
-                    ? "Everyday"
-                    : "Selected Day(s)"}
-                  <BsChevronDown />
-                </div> */}
                 {dropdownOpen && (
                   <div className={styles.dropdownList}>
                     {businessDays.map((day, index) => (
