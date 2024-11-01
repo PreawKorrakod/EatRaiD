@@ -23,7 +23,6 @@ export default function Info() {
   const [userId, setUserId] = useState(null);
   const [infoData, setInfoData] = useState(null);
   const [defaultIsOpen, setDefaultIsOpen] = useState(false);
-  const [overrideStatus, setOverrideStatus] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -40,8 +39,9 @@ export default function Info() {
     profileImage: "",
   });
 
-
+  const [UpdateStatus,  setUpdateStatus] = useState([]);
   const [isUpdated, setIsUpdated] = useState(false); // เพิ่ม state นี้
+
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedBusinessDays, setSelectedBusinessDays] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -54,8 +54,14 @@ export default function Info() {
     String(i).padStart(2, "0")
   );
 
-  // status ร้านให้เป็น Auto เริ่มต้น
-  const [status, setStatus] = useState("Auto");
+  // const [status, setStatus] = useState("Auto");
+
+  // const [status, setStatus] = useState(() => {
+  //   if (infoData?.toggle_status === true) return "open";
+  //   if (infoData?.toggle_status === false) return "close";
+  //   return "auto";
+  // });
+  
 
   const time_min = ["00", "15", "30", "45"];
   const businessDays = [
@@ -83,7 +89,6 @@ export default function Info() {
 
   console.log("userId:", userId);
 
-
   // ดึงข้อมูลผู้ใช้เมื่อ component mount
   useEffect(() => {
 
@@ -105,47 +110,51 @@ export default function Info() {
     fetchData();
   }, [router]);
 
+  useEffect(() => {
+    const fetchInfo = async () => {
+      if (!userId) return;
+      try {
+        const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/showinfo`, {
+          params: { RestaurantId: userId },
+          withCredentials: true,
+        });
+        if (response.data && response.data.length > 0) {
+          console.log("Restaurant info:", response.data[0]);
+          const selectedDays = response.data[0].BusinessDay.split(',').map(day => day === 'true');
+          setSelectedBusinessDays(selectedDays);
 
-  // ดึงข้อมูลร้านเมื่อ userId ถูกตั้งค่า
-  // ดึงข้อมูลร้านเมื่อ userId ถูกตั้งค่า
-useEffect(() => {
-  const fetchInfo = async () => {
-    if (!userId) return;
-    try {
-      const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/showinfo`, {
-        params: { RestaurantId: userId },
-        withCredentials: true,
-      });
-      if (response.data && response.data.length > 0) {
-        console.log("Restaurant info:", response.data[0]);
-        const selectedDays = response.data[0].BusinessDay.split(',').map(day => day === 'true');
-        setSelectedBusinessDays(selectedDays);
-
-        setInfoData(response.data[0]);
-        setFormData(prevFormData => ({
-          ...prevFormData,
-          Id: response.data[0].id,
-          name: response.data[0].Name,
-          restaurantId: response.data[0].RestaurantId,
-          businessDay: selectedDays,
-          category: response.data[0].category,
-          openTimeHR: response.data[0].OpenTimeHr,
-          openTimeMin: response.data[0].OpenTimeMin,
-          closeTimeHR: response.data[0].CloseTimeHr,
-          closeTimeMin: response.data[0].CloseTimeMin,
-          contactCall: response.data[0].Tel,
-          contactLine: response.data[0].Line,
-          location: response.data[0].Location,
-          profileImage: response.data[0].ProfilePic,
-        }));
+          setInfoData(response.data[0]);
+          setFormData(prevFormData => ({
+            ...prevFormData,
+            Id: response.data[0].id,
+            name: response.data[0].Name,
+            restaurantId: response.data[0].RestaurantId,
+            businessDay: selectedDays,
+            category: response.data[0].category,
+            openTimeHR: response.data[0].OpenTimeHr,
+            openTimeMin: response.data[0].OpenTimeMin,
+            closeTimeHR: response.data[0].CloseTimeHr,
+            closeTimeMin: response.data[0].CloseTimeMin,
+            contactCall: response.data[0].Tel,
+            contactLine: response.data[0].Line,
+            location: response.data[0].Location,
+            profileImage: response.data[0].ProfilePic,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching restaurant info:", error);
       }
-    } catch (error) {
-      console.error("Error fetching restaurant info:", error);
-    }
-  };
-  fetchInfo();
-}, [userId]);
+    };
+    fetchInfo();
+  }, [userId]);
 
+  // useEffect(() => {
+  //   if (infoData) {
+  //     const toggleStatus = infoData?.toggle_status; 
+  //     setStatus(toggleStatus === null ? "Auto" : toggleStatus ? "Open" : "Close");
+  //   }
+  // }, [infoData]);
+  
 
   console.log("selectedBusinessDays:", selectedBusinessDays);
 
@@ -167,6 +176,17 @@ useEffect(() => {
     };
     fetchCategory();
   }, [infoData?.RestaurantId]);
+
+  // useEffect(() => {
+  //   console.log("TOGGLE", infoData?.toggle_status);
+  //   if (!infoData) return;
+  //   else {
+  //     if (infoData?.toggle_status === true) setStatus("Open");
+  //     else if (infoData?.toggle_status === false) setStatus("Close");
+  //     else if (infoData?.toggle_status === null) setStatus("Auto")
+  //   };
+  // }, [userId, infoData]);
+
 
   // ตั้งค่า formData เมื่อ infoData เปลี่ยนแปลง
   useEffect(() => {
@@ -191,29 +211,18 @@ useEffect(() => {
   }, [infoData]);
 
 
-useEffect(() => {
-  if (infoData) {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      businessDay: selectedBusinessDays.join(','), // อัปเดต businessDay
-    }));
-  }
-}, [selectedBusinessDays, infoData]);
-
-console.log("selectedBusinessDays:", selectedBusinessDays); 
-
-
-  console.log("infodata:", infoData);
-
   useEffect(() => {
     if (infoData) {
-      if (infoData.toggle_status !== null) {
-        setOverrideStatus(infoData?.toggle_status);
-      } else {
-        setOverrideStatus(defaultIsOpen ? "open" : "close");
-      }
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        businessDay: selectedBusinessDays.join(','),
+      }));
     }
-  }, [infoData, defaultIsOpen]);
+  }, [selectedBusinessDays, infoData]);
+
+ 
+
+  console.log("infodata:", infoData);
 
   useEffect(() => {
     if (!infoData) return;
@@ -270,43 +279,37 @@ console.log("selectedBusinessDays:", selectedBusinessDays);
   }, [infoData]);
 
   console.log("formData:", formData);
- 
+
 
   if (!infoData) {
     return <div>Loading...</div>;
   }
 
   // Code ส่งไปค่าปุ่ม
-  const id = "store-001"; // กำหนด id ร้าน
-
-  // ข้อความ labels ที่จะใช้ใน ToggleGroup
+  const id = userId;
   const labelsText = {
     left: { title: "Open", value: "open" },
     center: { title: "Auto", value: "auto" },
     right: { title: "Close", value: "close" },
   };
 
-  // ฟังก์ชัน onChange ที่จะเรียกเมื่อเปลี่ยน toggle
-  const onChangetoggle = (storeId, newStatus) => {
-    console.log(`Store ${storeId} changed to: ${newStatus}`);
-    setStatus(
-      newStatus === true ? "Open" : newStatus === false ? "Close" : "Auto"
-    );
+  const onChangetoggle = (id, newStatus) => {
+    console.log(`Store ${id} changed to: ${newStatus}`);
+    const updatedStatus = newStatus === true ? "open" : newStatus === false ? "close" : "auto";
+    setUpdateStatus(updatedStatus);
+    axios.put(`${NEXT_PUBLIC_BASE_API_URL}/toggle`, {
+      RestaurantId: id,
+      toggle_status: newStatus,
+    })
+      .then((response) => {
+        console.log("Toggle response:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error toggling store:", error);
+      });
   };
+  
 
-  // Determine displayed status
-  const displayedIsOpen =
-    overrideStatus !== null ? overrideStatus === "open" : defaultIsOpen;
-
-  // Toggle function
-  const toggleOverride = async () => {
-    const newStatus =
-      overrideStatus === null ? (defaultIsOpen ? "close" : "open") : null;
-    setOverrideStatus(newStatus);
-
-    // Simulated update without axios
-    console.log("override", newStatus);
-  };
 
 
   const handleEditClick = () => {
@@ -342,7 +345,7 @@ console.log("selectedBusinessDays:", selectedBusinessDays);
         <div className={styles.profileCon}>
           <Image
             className={styles.uploadedImage}
-            src={formData.profileImage|| "/default-profile.png"} // รูป fallback
+            src={formData.profileImage || "/default-profile.png"} // รูป fallback
             alt="Uploaded"
             layout="fill"
             objectFit="cover"
@@ -367,7 +370,7 @@ console.log("selectedBusinessDays:", selectedBusinessDays);
           setIsModalOpen={setIsModalOpen}
           selectedBusinessDays={selectedBusinessDays}
           setSelectedBusinessDays={setSelectedBusinessDays}
-    
+
         />
 
         <div className={styles.rowCon3}>
@@ -375,7 +378,7 @@ console.log("selectedBusinessDays:", selectedBusinessDays);
         </div>
         <ToggleGroup
           id={id}
-          status={status} // ส่งสถานะเริ่มต้นเข้าไป
+          status={formData?.toggle_status === null ? "auto" : formData?.toggle_status ? "close" : "open"} // ส่งสถานะเริ่มต้นเข้าไป
           labels={labelsText} // ส่งข้อความ labels
           onChange={onChangetoggle} // ส่งฟังก์ชัน onChange
         />

@@ -635,7 +635,18 @@ app.get("/typerestaurant", async (req, res) => {
   else {
     res.status(200).json(data);
   }
-});
+}); 
+
+app.put("/toggle",async (req,res) => {
+  const {RestaurantId, toggle_status} = req.body;
+  const {data, error} = await supabase.from('Restaurant').update({toggle_status}).eq('RestaurantId', RestaurantId).select('*');
+  if (error) {
+    res.status(500).json(error);
+  }
+  else {
+    res.status(200).json(data);
+  }
+})
 
 // ===========================favorite===========================
 

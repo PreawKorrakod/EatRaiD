@@ -3,12 +3,15 @@ import PropTypes from "prop-types";
 import styles from "./toggleGroup.module.css"; // นำเข้าไฟล์ CSS
 
 const ToggleGroup = ({ id, status, labels, onChange }) => {
-  const [position, setPosition] = useState(status.toLowerCase()); // ใช้ status ที่รับมาเป็นค่าเริ่มต้น
+  const [position, setPosition] = useState(status); // ใช้ status ที่รับมาเป็นค่าเริ่มต้น
   // back ใช้ตัวแปร id และ backencvalue ในการ check status ได้เลย
 
   useEffect(() => {
-    setPosition(status.toLowerCase()); // อัปเดตตำแหน่งเมื่อค่า status เปลี่ยน
+    setPosition(status); // อัปเดตตำแหน่งเมื่อค่า status เปลี่ยน
   }, [status]);
+
+  console.log("status", status);
+  console.log("position", position);
 
   const mapStatusToBackendValue = (value) => {
     switch (value) {
@@ -17,10 +20,10 @@ const ToggleGroup = ({ id, status, labels, onChange }) => {
       case "close":
         return false; // ปิดร้าน
       case "auto":
-      default:
         return null; // โหมดอัตโนมัติ
     }
   };
+  
 
   const handleToggle = (value) => {
     setPosition(value); // อัปเดตตำแหน่ง
