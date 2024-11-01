@@ -9,9 +9,9 @@
 .container {
     position: relative;
     width: 55vw;
-    height: 75vh;
+    height: 80vh;
     background-color: #FFFBF7;
-    margin-top: 3%;
+    margin-top: 2%;
     border-radius: 2rem;
     display: flex;
     flex-direction: row;

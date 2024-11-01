@@ -4,7 +4,7 @@ import styles from "./signupdetail.module.css";
 import { BsChevronDown } from "react-icons/bs";
 import { FaLine } from "react-icons/fa6";
 import { IoCall } from "react-icons/io5";
-import Topbar from "../../../components/Topbar";
+import Navbar from "../../../components/Navbar";
 import { useRouter } from "next/navigation";
 import { AiOutlinePicture } from "react-icons/ai";
 import Link from "next/link";
@@ -63,12 +63,12 @@ export default function SignupDetail() {
       const response = await fetch(imageUrl);
       const blob = await response.blob();
       const reader = new FileReader();
-  
+
       reader.onloadend = () => {
         const base64data = reader.result;
         setProfileImage(base64data)
       };
-  
+
       reader.readAsDataURL(blob);
     } catch (error) {
       console.error("Error converting image to Base64:", error);
@@ -161,6 +161,33 @@ export default function SignupDetail() {
       return;
     }
 
+    // ตรวจสอบตำแหน่งจาก OpenStreetMap Nominatim API
+  let latitude = null;
+  let longitude = null;
+
+  try {
+    const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+      params: {
+        q: location,
+        format: 'json',
+        addressdetails: 1,
+      }
+    });
+
+    if (response.data.length > 0) {
+      latitude = response.data[0].lat;
+      longitude = response.data[0].lon;
+      console.log('la:',latitude)
+      console.log('long: ',longitude)
+    } else {
+      setErrorMessage("Could not find location coordinates.");
+      return;
+    }
+  } catch (error) {
+    console.error("Error fetching location data:", error);
+    setErrorMessage("Error fetching location data.");
+    return;
+  }
     // console.log("Confirm button clicked");
     // console.log("Selected business days:", selectedBusinessDays);
     // console.log("Location:", location);
@@ -181,12 +208,14 @@ export default function SignupDetail() {
             'Content-Type': 'multipart/form-data',
           },
 
-        })  
+        })
         newfile = res.data.profile;
       } catch (error) {
         console.log(error);
       }
     }
+
+
     const id = userID.id;
     const role = "owner";
     const email = userID.email;
@@ -198,15 +227,18 @@ export default function SignupDetail() {
     const CloseTimeHr = closeTimeHR;
     const OpenTimeMin = openTimeMIN;
     const CloseTimeMin = closeTimeMIN;
-    const Location = location; 
-    const Latitude = 0; 
-    const Longitude = 0; 
+    const Location = location;
+    const Latitude = 0;
+    const Longitude = 0;
     const BusinessDay = selectedBusinessDays.join(',');
     const Tel = numberPhone;
     const Line = LineContact;
     sessionStorage.removeItem('userID');
-    const newUserID = {  email, role, id, file,
-      Name, OpenTimeHr,CloseTimeHr, OpenTimeMin, CloseTimeMin, Location, Latitude, Longitude, BusinessDay, Tel, Line };
+    const newUserID = {
+      email, role, id, file,
+      Name, OpenTimeHr, CloseTimeHr, OpenTimeMin, CloseTimeMin, Latitude: latitude, 
+      Longitude: longitude, Longitude, BusinessDay, Tel, Line
+    };
     console.log("signup successful navigate to verify", newUserID);
     sessionStorage.setItem("userID", JSON.stringify(newUserID));
     router.push("/verify");
@@ -233,7 +265,7 @@ export default function SignupDetail() {
 
   return (
     <div className={styles.mainBg}>
-      <Topbar />
+      <Navbar></Navbar>
       <div className={styles.bigContainer}>
         <div className={styles.topContainer}>
           <button
@@ -259,8 +291,8 @@ export default function SignupDetail() {
                     <div>
                       <AiOutlinePicture className={styles.iconPicStyle} />
                       <div className={styles.rowContainer}>
-                      <h2 className={styles.picText}>click to upload </h2>
-                      <h2 className={styles.normalTextRed}>*</h2>
+                        <h2 className={styles.picText}>click to upload </h2>
+                        <h2 className={styles.normalTextRed}>*</h2>
                       </div>
                     </div>
                   ) : (

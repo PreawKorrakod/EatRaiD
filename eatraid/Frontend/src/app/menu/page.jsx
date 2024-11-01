@@ -8,7 +8,7 @@ import { BsChevronDoubleLeft, BsCheckLg, BsChevronDoubleRight, BsPlus, BsXSquare
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 import { useRouter } from "next/navigation";
-
+import Footer from '../../../components/footer';
 
 export default function menu() {
     const router = useRouter();
@@ -375,7 +375,7 @@ export default function menu() {
                                     onClick={() => setIsAlertModalOpen(false)}
                                     disabled={isLoading} // ปิดปุ่มระหว่างการโหลด
                                 >
-                                    {isLoading ? "Cancle" : "Cancle"}
+                                    {isLoading ? "Cancel" : "Cancel"}
                                 </button>
                             </>
                         )}
@@ -499,6 +499,7 @@ export default function menu() {
                     )}
                 </div>
             </div>
+            <Footer></Footer>
             {isAlertModalOpen && renderAlertModal()}
         </div>
     );
