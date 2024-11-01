@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import Image from "next/image";
 import { AiOutlinePicture } from "react-icons/ai";
 import { IoCall } from "react-icons/io5";
@@ -7,18 +7,30 @@ import { BsChevronDown } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import styles from "./Editinfo.module.css";
 import { FaCheckCircle } from "react-icons/fa";
+import axios from "axios";
+import { NEXT_PUBLIC_BASE_API_URL } from '../src/app/config/supabaseClient.js';
+import { user } from "@nextui-org/theme";
+import { User } from "@nextui-org/react";
+// import { u } from "@nextui-org/slider/dist/use-slider-a94a4c83";
+
 
 const Editinfo = ({
-  userId,
+  // userId,
   formData,
   setFormData,
   isModalOpen,
   setIsModalOpen,
-  openday,
+  infoData,
+  setInfoData,
+  selectedBusinessDays, 
+  setSelectedBusinessDays
 }) => {
+  const [userId, setUserId] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedBusinessDays, setSelectedBusinessDays] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [imageFile, setImageFile] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const businessDays = [
     "Sunday",
@@ -36,34 +48,61 @@ const Editinfo = ({
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, profileImage: URL.createObjectURL(file) });
+    if (file && file.type.startsWith("image/")) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+        setFormData({ ...formData, profileImage: reader.result });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert("Please upload a valid image file.");
     }
   };
+
 
   const handleCheckboxChange = (index) => {
     const updatedCheckedState = selectedBusinessDays.map((item, i) =>
       i === index ? !item : item
     );
     setSelectedBusinessDays(updatedCheckedState);
+
+    setFormData({
+      ...formData,
+      businessDay: updatedCheckedState.map(day => day ? 'true' : 'false').join(',')
+    });
   };
 
-  const handleSaveClick = () => {
-    setIsPopupVisible(true);
-    console.log("Data saved:", formData);
-  };
+
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
 
-  // Set selectedBusinessDays based on openday prop
+  console.log("formData", formData);
+
+  console.log("userid", userId);
+
   useEffect(() => {
-    const selectedDays = formData.businessDay
-      .split(",")
-      .map((day) => day === "true");
-    setSelectedBusinessDays(selectedDays);
-  }, [formData.businessDay]);
+
+    const fetchData = async () => {
+      try {
+        const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
+          withCredentials: true,
+        });
+        if (user !== null && user.data.length > 0) {
+          console.log(user.data[0].Id);
+          setUserId(user.data[0].Id);
+        } else {
+          router.push(`/`);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   // Calculate open days string
   const displayedOpenDays = selectedBusinessDays
@@ -82,6 +121,65 @@ const Editinfo = ({
     openDaysText = "Everyday except " + closedDays.join(", ");
   }
 
+
+  const handleSaveClick = async () => {
+    console.log("formData:", formData.Id);
+    setIsPopupVisible(true);
+
+    setTimeout(() => {
+      setIsModalOpen(false);
+      setIsPopupVisible(false);
+    }, 2000);
+    const businessDayString = selectedBusinessDays.map(day => day ? 'true' : 'false').join(',');
+
+    const updateData = new FormData();
+    updateData.append('id', formData.Id);
+    updateData.append('RestaurantId', userId);
+    updateData.append('name', formData.name);
+    updateData.append('file', imageFile || formData.profileImage);
+    updateData.append('businessDay', businessDayString);
+    updateData.append('openTimeHR', formData.openTimeHR);
+    updateData.append('openTimeMin', formData.openTimeMin);
+    updateData.append('closeTimeHR', formData.closeTimeHR);
+    updateData.append('closeTimeMin', formData.closeTimeMin);
+    updateData.append('contactCall', formData.contactCall);
+    updateData.append('contactLine', formData.contactLine);
+    updateData.append('location', formData.location);
+
+
+    try {
+      const res = await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editprofile`, updateData, {
+
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+      });
+      console.log("Profile", res.data.data[0].ProfilePic);
+      console.log("Data saved successfully:", res.data.RestaurantData[0]);
+      const updatedInfoData = res.data.RestaurantData[0];
+      const updateprofileImage = res.data.data[0].ProfilePic;
+      setInfoData({
+        Id: updatedInfoData.id,
+        Name: updatedInfoData.Name,
+        BusinessDay: updatedInfoData.BusinessDay,
+        OpenTimeHr: updatedInfoData.OpenTimeHr,
+        OpenTimeMin: updatedInfoData.OpenTimeMin,
+        CloseTimeHr: updatedInfoData.CloseTimeHr,
+        CloseTimeMin: updatedInfoData.CloseTimeMin,
+        Tel: updatedInfoData.Tel,
+        Line: updatedInfoData.Line,
+        Location: updatedInfoData.Location,
+        ProfilePic: updateprofileImage,
+      });
+
+
+    } catch (error) {
+      console.error("Error saving data:", error);
+      setErrorMessage("Failed to save data. Please try again.");
+    }
+  };
+
   const renderPopup = () => {
     if (!isPopupVisible) return null;
     return (
@@ -97,7 +195,7 @@ const Editinfo = ({
             <RxCross2 />
           </div>
 
-          <FaCheckCircle className={styles.checkIcon}/>
+          <FaCheckCircle className={styles.checkIcon} />
           <h2 className={styles.popupText}>Successfully saved!</h2>
         </div>
       </div>

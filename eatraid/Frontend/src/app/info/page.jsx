@@ -14,341 +14,9 @@ import { RxCross2 } from "react-icons/rx";
 import ToggleGroup from "../../../components/toggleGroup";
 import Editinfo from "../../../components/Editinfo";
 
-// import axios from "axios";
-// import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
-
-// export default function Info() {
-//   const router = useRouter();
-//   const [userId, setUserId] = useState(null);
-//   const [infoData, setInfoData] = useState(null);
-//   const [defaultIsOpen, setDefaultIsOpen] = useState(false); // สถานะเปิดปิดตามเวลาปกติ
-
-//   // เพิ่มสถานะสำหรับ override สถานะร้านค้า
-//   const [overrideStatus, setOverrideStatus] = useState(null);
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     category: "",
-//     businessDay: "",
-//     openTimeHR: "",
-//     openTimeMin: "",
-//     closeTimeHR: "",
-//     closeTimeMin: "",
-//     contactCall: "",
-//     contactLine: "",
-//     location: "",
-//     profileImage: "",
-//   });
-
-//   const [selectedOption, setSelectedOption] = useState("");
-//   const [selectedBusinessDays, setSelectedBusinessDays] = useState([]);
-//   const [dropdownOpen, setDropdownOpen] = useState(false);
-//   const [errorMessage, setErrorMessage] = useState("");
-//   const [profileImage, setProfileImage] = useState("");
-//   const [imageFile, setImageFile] = useState("");
-//   const [typerestaurant, setTyperestaurant] = useState("");
-
-//   const time_hr = Array.from({ length: 24 }, (_, i) =>
-//     String(i).padStart(2, "0")
-//   );
-
-//   const time_min = ["00", "15", "30", "45"];
-//   const businessDays = [
-//     "Sunday",
-//     "Monday",
-//     "Tuesday",
-//     "Wednesday",
-//     "Thursday",
-//     "Friday",
-//     "Saturday",
-//   ];
-
-//   const getCurrentDateTime = () => {
-//     return new Date();
-//   };
-
-//   const getTodayTime = (hour, minute) => {
-//     const now = new Date();
-//     now.setHours(parseInt(hour, 10));
-//     now.setMinutes(parseInt(minute, 10));
-//     now.setSeconds(0);
-//     now.setMilliseconds(0);
-//     return now;
-//   };
-
-//   useEffect(() => {
-//     if (infoData) {
-//       if (infoData.toggle_status !== null) {
-//         setOverrideStatus(infoData?.toggle_status);
-//       } else {
-//         setOverrideStatus(defaultIsOpen ? 'open' : 'close');
-//       }
-//     }
-//   }, [infoData, defaultIsOpen]);
-
-//   useEffect(() => {
-//     if (!infoData) return;
-
-//     const checkIsOpen = () => {
-//       const now = getCurrentDateTime();
-//       const currentDay = now.getDay();
-//       const isTodayOpen = selectedBusinessDays[currentDay];
-//       if (!isTodayOpen) {
-//         setDefaultIsOpen(false);
-//         return;
-//       }
-
-//       const openTime = getTodayTime(formData.openTimeHR, formData.openTimeMin);
-//       const closeTime = getTodayTime(formData.closeTimeHR, formData.closeTimeMin);
-
-//       if (closeTime <= openTime) {
-//         closeTime.setDate(closeTime.getDate() + 1);
-//       }
-
-//       if (now >= openTime && now <= closeTime) {
-//         setDefaultIsOpen(true);
-//       } else {
-//         setDefaultIsOpen(false);
-//       }
-//     };
-
-//     checkIsOpen();
-//     const interval = setInterval(checkIsOpen, 60000);
-//     return () => clearInterval(interval);
-//   }, [infoData, selectedBusinessDays, formData]);
-
-//   // ดึงข้อมูลผู้ใช้เมื่อ component mount
-//   useEffect(() => {
-
-//     const fetchData = async () => {
-//       try {
-//         const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
-//           withCredentials: true,
-//         });
-//         if (user !== null && user.data.length > 0) {
-//           console.log(user.data[0].Id);
-//           setUserId(user.data[0].Id);
-//         } else {
-//           router.push(`/`);
-//         }
-//       } catch (error) {
-//         console.error('Error fetching user data:', error);
-//       }
-//     };
-//     fetchData();
-//   }, [router]);
-
-//   // ดึงข้อมูลร้านเมื่อ userId ถูกตั้งค่า
-//   useEffect(() => {
-//     const fetchInfo = async () => {
-//       if (!userId) return;
-//       try {
-//         const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/showinfo`, {
-//           params: { RestaurantId: userId },
-//           withCredentials: true,
-//         });
-//         if (response.data && response.data.length > 0) {
-//           console.log("Restaurant info:", response.data[0]);
-//           const selectedDays = response.data[0].BusinessDay.split(',').map(day => day === 'true');
-//           setSelectedBusinessDays(selectedDays);
-//           setInfoData(response.data[0]);
-//         }
-//       } catch (error) {
-//         console.error("Error fetching restaurant info:", error);
-//       }
-//     }
-//     fetchInfo();
-//   }, [userId]);
-
-//   // ดึงประเภทร้านเมื่อ infoData ถูกตั้งค่า
-//   useEffect(() => {
-//     const fetchCategory = async () => {
-//       if (!infoData?.RestaurantId) return;
-//       try {
-//         const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/typerestaurant`, {
-//           params: { RestaurantId: infoData.RestaurantId },
-//           withCredentials: true,
-//         });
-//         console.log("Restaurant Category:", category.data[0].TypeName);
-//         const type = category.data.map((item) => item.TypeName);
-//         setTyperestaurant(type.join('/'));
-//       } catch (error) {
-//         console.error('Error fetching restaurant category:', error);
-//       }
-//     };
-//     fetchCategory();
-//   }, [infoData?.RestaurantId]);
-
-//   // ตั้งค่า formData เมื่อ infoData เปลี่ยนแปลง
-//   useEffect(() => {
-//     if (infoData) {
-//       console.log("infoData:", infoData.id);
-//       setFormData({
-//         Id: infoData.id,
-//         name: infoData.Name,
-//         category: infoData.category,
-//         openTimeHR: infoData.OpenTimeHr,
-//         openTimeMin: infoData.OpenTimeMin,
-//         closeTimeHR: infoData.CloseTimeHr,
-//         closeTimeMin: infoData.CloseTimeMin,
-//         contactCall: infoData.Tel,
-//         contactLine: infoData.Line,
-//         location: infoData.Location,
-//         profileImage: infoData.ProfilePic,
-//       });
-//     }
-//   }, [infoData]);
-
-//   console.log("formData:", formData);
-
-//   if (!infoData) {
-//     return <div>Loading...</div>;
-//   }
-
-//   // กำหนดสถานะที่จะแสดง
-//   const displayedIsOpen = overrideStatus !== null ? (overrideStatus === 'open') : defaultIsOpen;
-
-//   // ฟังก์ชันจัดการการคลิก toggle
-//   const toggleOverride = async () => {
-//     const newStatus = overrideStatus === null ? (defaultIsOpen ? 'close' : 'open') : null;
-//     setOverrideStatus(newStatus);
-//     console.log('override', newStatus);
-
-//     try {
-//       await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/toggle`, {
-//         RestaurantId: userId,
-//         toggle_status: newStatus,
-//       });
-//     } catch (error) {
-//       console.error("Error updating override status:", error);
-//       setErrorMessage("Failed to update status. Please try again.");
-//     }
-//   };
-
-//   const handleEditClick = () => {
-//     setIsModalOpen(true);
-//   };
-
-//   const handleCloseModal = () => {
-//     setIsModalOpen(false);
-//   };
-
-//   const handleChangeCategory = (event) => {
-//     setSelectedOption(event.target.value);
-//   };
-
-//   const handleChangeOpenTimeHR = (event) => {
-//     setFormData({ ...formData, openTimeHR: event.target.value });
-//   };
-
-//   const handleChangeOpenTimeMIN = (event) => {
-//     setFormData({ ...formData, openTimeMin: event.target.value });
-//   };
-
-//   const handleChangeCloseTimeHR = (event) => {
-//     const newCloseTimeHR = event.target.value;
-//     setFormData({ ...formData, closeTimeHR: newCloseTimeHR });
-//   };
-
-//   const handleChangeCloseTimeMIN = (event) => {
-//     setFormData({ ...formData, closeTimeMin: event.target.value });
-//   };
-
-//   const handleFileChange = (e) => {
-//     const file = e.target.files[0];
-//     if (file && file.type.startsWith("image/")) {
-//       setImageFile(file);
-//       const reader = new FileReader();
-//       reader.onloadend = () => {
-//         setProfileImage(reader.result);
-//         setFormData({ ...formData, profileImage: reader.result });
-//       };
-//       reader.readAsDataURL(file);
-//     } else {
-//       alert("Please upload a valid image file.");
-//     }
-//   };
-
-//   console.log("type:", typerestaurant);
-//   const handleSaveClick = async () => {
-//     console.log("formData:", formData.Id);
-
-//     const businessDayString = selectedBusinessDays.map(day => day ? 'true' : 'false').join(',');
-
-//     const updateData = new FormData();
-//     updateData.append('id', formData.Id);
-//     updateData.append('RestaurantId', userId);
-//     updateData.append('name', formData.name);
-//     updateData.append('file', imageFile);
-//     updateData.append('businessDay', businessDayString);
-//     updateData.append('openTimeHR', formData.openTimeHR);
-//     updateData.append('openTimeMin', formData.openTimeMin);
-//     updateData.append('closeTimeHR', formData.closeTimeHR);
-//     updateData.append('closeTimeMin', formData.closeTimeMin);
-//     updateData.append('contactCall', formData.contactCall);
-//     updateData.append('contactLine', formData.contactLine);
-//     updateData.append('location', formData.location);
-
-//     try {
-//       const res = await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editprofile`, updateData, {
-//         headers: {
-//           'Content-Type': 'multipart/form-data',
-//         },
-//         withCredentials: true,
-//       });
-//       console.log("Profile", res.data.data[0].ProfilePic);
-//       console.log("Data saved successfully:", res.data.RestaurantData[0]);
-//       const updatedInfoData = res.data.RestaurantData[0];
-//       const updateprofileImage = res.data.data[0].ProfilePic;
-//       setInfoData({
-//         Id: updatedInfoData.id,
-//         Name: updatedInfoData.Name,
-//         BusinessDay: updatedInfoData.BusinessDay,
-//         OpenTimeHr: updatedInfoData.OpenTimeHr,
-//         OpenTimeMin: updatedInfoData.OpenTimeMin,
-//         CloseTimeHr: updatedInfoData.CloseTimeHr,
-//         CloseTimeMin: updatedInfoData.CloseTimeMin,
-//         Tel: updatedInfoData.Tel,
-//         Line: updatedInfoData.Line,
-//         Location: updatedInfoData.Location,
-//         ProfilePic: updateprofileImage,
-//       });
-//       if (res.status === 200) {
-//         handleCloseModal();
-//         // setOverrideStatus(null);
-//       }
-
-//     } catch (error) {
-//       console.error("Error saving data:", error);
-//       setErrorMessage("Failed to save data. Please try again.");
-//     }
-//   };
-
-//   const openday = [];
-
-//   const beforeshow_open = [];
-//   const beforeshow_close = [];
-//   selectedBusinessDays.forEach((day, index) => {
-//     if (day) {
-//       beforeshow_open.push(businessDays[index]);
-//     } else {
-//       beforeshow_close.push(businessDays[index]);
-//     }
-//   });
-//   if (beforeshow_open.length === 7) {
-//     openday.push('Everyday');
-//   } else if (beforeshow_open.length < 4) {
-//     openday.push(beforeshow_open.join(', '));
-//   } else if (beforeshow_open.length >= 4) {
-//     openday.push("Everyday except " + beforeshow_close.join(', '));
-//   }
-
-//   const handleCheckboxChange = (index) => {
-//     const updatedCheckedState = selectedBusinessDays.map((item, i) =>
-//       i === index ? !item : item
-//     );
-//     setSelectedBusinessDays(updatedCheckedState);
-//   };
+import axios from "axios";
+import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+import { user } from "@nextui-org/theme";
 
 export default function Info() {
   const router = useRouter();
@@ -359,6 +27,7 @@ export default function Info() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    restaurantId: "",
     category: "",
     businessDay: "",
     openTimeHR: "",
@@ -371,6 +40,8 @@ export default function Info() {
     profileImage: "",
   });
 
+
+  const [isUpdated, setIsUpdated] = useState(false); // เพิ่ม state นี้
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedBusinessDays, setSelectedBusinessDays] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -410,56 +81,129 @@ export default function Info() {
     return now;
   };
 
-  // Mock data for testing
-  const mockUserData = {
-    data: [{ Id: "123" }],
-  };
+  console.log("userId:", userId);
 
-  const mockInfoData = {
-    id: "1",
-    Name: "Test Restaurant",
-    BusinessDay: "true,false,true,false,true,false,true",
-    OpenTimeHr: "09",
-    OpenTimeMin: "00",
-    CloseTimeHr: "21",
-    CloseTimeMin: "00",
-    Tel: "123456789",
-    Line: "@testline",
-    Location: "kmutnb",
-    ProfilePic: "/DecPic.png",
-    toggle_status: null,
-  };
 
-  const mockCategoryData = [
-    { TypeName: "Noodle" },
-    { TypeName: "Pizza" },
-    { TypeName: "Rice" },
-    { TypeName: "Italian" },
-  ];
-
+  // ดึงข้อมูลผู้ใช้เมื่อ component mount
   useEffect(() => {
-    // Simulating fetching user data
-    setUserId(mockUserData.data[0].Id);
-  }, []);
 
-  useEffect(() => {
-    if (userId) {
-      // Simulating fetching restaurant info
-      setInfoData(mockInfoData);
-      const selectedDays = mockInfoData.BusinessDay.split(",").map(
-        (day) => day === "true"
-      );
-      setSelectedBusinessDays(selectedDays);
+    const fetchData = async () => {
+      try {
+        const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
+          withCredentials: true,
+        });
+        if (user !== null && user.data.length > 0) {
+          console.log(user.data[0].Id);
+          setUserId(user.data[0].Id);
+        } else {
+          router.push(`/`);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchData();
+  }, [router]);
+
+
+  // ดึงข้อมูลร้านเมื่อ userId ถูกตั้งค่า
+  // ดึงข้อมูลร้านเมื่อ userId ถูกตั้งค่า
+useEffect(() => {
+  const fetchInfo = async () => {
+    if (!userId) return;
+    try {
+      const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/showinfo`, {
+        params: { RestaurantId: userId },
+        withCredentials: true,
+      });
+      if (response.data && response.data.length > 0) {
+        console.log("Restaurant info:", response.data[0]);
+        const selectedDays = response.data[0].BusinessDay.split(',').map(day => day === 'true');
+        setSelectedBusinessDays(selectedDays);
+
+        setInfoData(response.data[0]);
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          Id: response.data[0].id,
+          name: response.data[0].Name,
+          restaurantId: response.data[0].RestaurantId,
+          businessDay: selectedDays,
+          category: response.data[0].category,
+          openTimeHR: response.data[0].OpenTimeHr,
+          openTimeMin: response.data[0].OpenTimeMin,
+          closeTimeHR: response.data[0].CloseTimeHr,
+          closeTimeMin: response.data[0].CloseTimeMin,
+          contactCall: response.data[0].Tel,
+          contactLine: response.data[0].Line,
+          location: response.data[0].Location,
+          profileImage: response.data[0].ProfilePic,
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching restaurant info:", error);
     }
-  }, [userId]);
+  };
+  fetchInfo();
+}, [userId]);
 
+
+  console.log("selectedBusinessDays:", selectedBusinessDays);
+
+  // ดึงประเภทร้านเมื่อ infoData ถูกตั้งค่า
+  useEffect(() => {
+    const fetchCategory = async () => {
+      if (!infoData?.RestaurantId) return;
+      try {
+        const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/typerestaurant`, {
+          params: { RestaurantId: infoData?.RestaurantId },
+          withCredentials: true,
+        });
+        console.log("Restaurant Category:", category.data[0]);
+        const type = category.data.map((item) => item.TypeName);
+        setTyperestaurant(type.join('/'));
+      } catch (error) {
+        console.error('Error fetching restaurant category:', error);
+      }
+    };
+    fetchCategory();
+  }, [infoData?.RestaurantId]);
+
+  // ตั้งค่า formData เมื่อ infoData เปลี่ยนแปลง
   useEffect(() => {
     if (infoData) {
-      // Simulating fetching category data
-      const type = mockCategoryData.map((item) => item.TypeName);
-      setTyperestaurant(type.join("/"));
+      console.log("infoData:", infoData.id);
+      setFormData({
+        Id: infoData.id,
+        name: infoData.Name,
+        restaurantId: infoData.RestaurantId,
+        businessDay: selectedBusinessDays.join(','),
+        category: infoData.category,
+        openTimeHR: infoData.OpenTimeHr,
+        openTimeMin: infoData.OpenTimeMin,
+        closeTimeHR: infoData.CloseTimeHr,
+        closeTimeMin: infoData.CloseTimeMin,
+        contactCall: infoData.Tel,
+        contactLine: infoData.Line,
+        location: infoData.Location,
+        profileImage: infoData.ProfilePic,
+      });
     }
   }, [infoData]);
+
+
+useEffect(() => {
+  if (infoData) {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      businessDay: selectedBusinessDays.join(','), // อัปเดต businessDay
+    }));
+  }
+}, [selectedBusinessDays, infoData]);
+
+console.log("selectedBusinessDays:", selectedBusinessDays); 
+
+
+  console.log("infodata:", infoData);
 
   useEffect(() => {
     if (infoData) {
@@ -511,7 +255,7 @@ export default function Info() {
       setFormData({
         Id: infoData.id,
         name: infoData.Name,
-        businessDay: infoData.BusinessDay,
+        businessDay: selectedBusinessDays.join(','),
         category: infoData.category,
         openTimeHR: infoData.OpenTimeHr,
         openTimeMin: infoData.OpenTimeMin,
@@ -524,6 +268,9 @@ export default function Info() {
       });
     }
   }, [infoData]);
+
+  console.log("formData:", formData);
+ 
 
   if (!infoData) {
     return <div>Loading...</div>;
@@ -561,77 +308,9 @@ export default function Info() {
     console.log("override", newStatus);
   };
 
+
   const handleEditClick = () => {
     setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleChangeCategory = (event) => {
-    setSelectedOption(event.target.value);
-  };
-
-  const handleChangeOpenTimeHR = (event) => {
-    setFormData({ ...formData, openTimeHR: event.target.value });
-  };
-
-  const handleChangeOpenTimeMIN = (event) => {
-    setFormData({ ...formData, openTimeMin: event.target.value });
-  };
-
-  const handleChangeCloseTimeHR = (event) => {
-    const newCloseTimeHR = event.target.value;
-    setFormData({ ...formData, closeTimeHR: newCloseTimeHR });
-  };
-
-  const handleChangeCloseTimeMIN = (event) => {
-    setFormData({ ...formData, closeTimeMin: event.target.value });
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result);
-        setFormData({ ...formData, profileImage: reader.result });
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert("Please upload a valid image file.");
-    }
-  };
-
-  const handleSaveClick = async () => {
-    const businessDayString = selectedBusinessDays
-      .map((day) => (day ? "true" : "false"))
-      .join(",");
-
-    // Simulated save without axios
-    console.log("Saved data:", {
-      ...formData,
-      businessDay: businessDayString,
-      file: imageFile,
-    });
-
-    // Update infoData with mock data
-    setInfoData({
-      ...infoData,
-      Name: formData.name,
-      BusinessDay: businessDayString,
-      OpenTimeHr: formData.openTimeHR,
-      OpenTimeMin: formData.openTimeMin,
-      CloseTimeHr: formData.closeTimeHR,
-      CloseTimeMin: formData.closeTimeMin,
-      Tel: formData.contactCall,
-      Line: formData.contactLine,
-      Location: formData.location,
-      ProfilePic: profileImage || infoData.ProfilePic,
-    });
-    handleCloseModal();
   };
 
   const openday = [];
@@ -652,12 +331,7 @@ export default function Info() {
     openday.push("Everyday except " + beforeshow_close.join(", "));
   }
 
-  const handleCheckboxChange = (index) => {
-    const updatedCheckedState = selectedBusinessDays.map((item, i) =>
-      i === index ? !item : item
-    );
-    setSelectedBusinessDays(updatedCheckedState);
-  };
+  console.log("OpenDay:", openday);
 
 
   /// main page
@@ -668,7 +342,7 @@ export default function Info() {
         <div className={styles.profileCon}>
           <Image
             className={styles.uploadedImage}
-            src={infoData.ProfilePic || "/default-profile.png"} // รูป fallback
+            src={formData.profileImage|| "/default-profile.png"} // รูป fallback
             alt="Uploaded"
             layout="fill"
             objectFit="cover"
@@ -691,10 +365,13 @@ export default function Info() {
           setFormData={setFormData}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
+          selectedBusinessDays={selectedBusinessDays}
+          setSelectedBusinessDays={setSelectedBusinessDays}
+    
         />
 
         <div className={styles.rowCon3}>
-          <h1 className={styles.title}>{infoData.Name || "Restaurant Name"}</h1>
+          <h1 className={styles.title}>{formData.name || "Restaurant Name"}</h1>
         </div>
         <ToggleGroup
           id={id}
@@ -722,10 +399,10 @@ export default function Info() {
               <h2 className={styles.normalText}>Time</h2>
               <div className={styles.rowCon2}>
                 <h2 className={styles.normalText3}>
-                  {infoData.OpenTimeHr} : {infoData.OpenTimeMin} -
+                  {formData.openTimeHR} : {formData.openTimeMin} -
                 </h2>
                 <h2 className={styles.normalText5}>
-                  {infoData.CloseTimeHr} : {infoData.CloseTimeMin}
+                  {formData.closeTimeHR} : {formData.closeTimeMin}
                 </h2>
               </div>
             </div>
@@ -734,11 +411,11 @@ export default function Info() {
               <div className={styles.colCon}>
                 <div className={styles.rowCon2}>
                   <IoCall className={styles.icon} />
-                  <h2 className={styles.normalText2}>{infoData.Tel}</h2>
+                  <h2 className={styles.normalText2}>{formData.contactCall}</h2>
                 </div>
                 <div className={styles.rowCon2}>
                   <FaLine className={styles.icon} />
-                  <h2 className={styles.normalText2}>{infoData.Line}</h2>
+                  <h2 className={styles.normalText2}>{formData.contactLine}</h2>
                 </div>
               </div>
             </div>
@@ -746,11 +423,11 @@ export default function Info() {
 
           <div className={styles.halfCon}>
             <h2 className={styles.normalText}>Location</h2>
-            <h2 className={styles.locationCon}>{infoData.Location}</h2>
+            <h2 className={styles.locationCon}>{formData.location}</h2>
             <div className="mapouter">
               <div className="gmap_canvas">
                 <iframe
-                  src={`https://maps.google.com/maps?output=embed&q=${infoData.Location}`}
+                  src={`https://maps.google.com/maps?output=embed&q=${formData.location}`}
                   frameBorder="0"
                   className={styles.mapCon}
                 ></iframe>
