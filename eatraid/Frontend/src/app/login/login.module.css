@@ -144,9 +144,13 @@
 .Signup_link{
     margin-left: 0.2rem;
     font-weight: 700;
-    color: #EE7214;margin-left: 0.2rem;
-    font-weight: 700;
     color: #EE7214;
+}
+
+.Signup_link:hover{
+    margin-left: 0.2rem;
+    font-weight: 700;
+    color: #b3550e;
 }
 
 .Login_pic_wrapper{

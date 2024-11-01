@@ -1,7 +1,7 @@
 "use client";
 import styles from "./signupRestaurant.module.css";
-import image1 from "../../../public/DecPic1.png";
-import Topbar from "../../../components/Topbar";
+import image1 from '../../../public/LOGO.png';
+import Navbar from "../../../components/Navbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -38,7 +38,7 @@ export default function signupRestaurant() {
     const handleSubmit = async (e) => {
         e.preventDefault(); // ป้องกันไม่ให้ page reload
 
-        if (!isPasswordValid ) {
+        if (!isPasswordValid) {
             setError('Please complete the password and confirm password.');
             return;
         }
@@ -47,12 +47,12 @@ export default function signupRestaurant() {
             setError('Passwords do not match. Please check and try again.');
             return;
         }
-    
+
         // ตรวจสอบว่าฟอร์มมีข้อมูลครบหรือไม่
         if (!e.target.checkValidity()) {
             return; // หากไม่ครบ ให้ browser จัดการแจ้งเตือน
         }
-    
+
         setError('');
 
 
@@ -64,7 +64,7 @@ export default function signupRestaurant() {
 
                 }).then(async res => {
                     const id = res.data.data.user.id;
-                    console.log('res',res)
+                    console.log('res', res)
                     const userID = { email, id }; // สร้าง object ที่รวม email, role และ id
                     console.log("signup successful navigate to Detail", userID);
                     sessionStorage.setItem('userID', JSON.stringify(userID));
@@ -77,12 +77,12 @@ export default function signupRestaurant() {
                 console.log("Error:", error);
             }
 
-        } 
+        }
     };
 
     return (
         <div className={styles.main}>
-            <Topbar />
+            <Navbar></Navbar>
             <div className={styles.content_wrapper}>
                 <div className={styles.container}>
                     <Link href={`/signUpRole`}>
@@ -181,8 +181,14 @@ export default function signupRestaurant() {
                             <Link href={`/login`} className={styles.Signup_link}>Log in</Link>
                         </div>
                     </div>
-                    <div className={styles.Login_Picture}>
-                        <Image src={image1} alt="Sign-up illustration" className={styles.imageSide} />
+                    <div className={styles.Login_pic_wrapper}>
+                        <div className={styles.logoPicture}>
+                            <Image src={image1}
+                                width={800}
+                                height={500}
+                                className={styles.logoimg}
+                                alt="Logo" />
+                        </div>
                     </div>
                 </div>
             </div>
