@@ -134,8 +134,7 @@ export default function SignupDetail() {
     if (
       !location ||
       !profileImage ||
-      !NameOwner ||
-      !(numberPhone || LineContact)
+      !NameOwner
     ) {
       return "Please fill in all required fields.";
     }
@@ -212,6 +211,26 @@ export default function SignupDetail() {
     sessionStorage.setItem("userID", JSON.stringify(newUserID));
     router.push("/verify");
   };
+
+  const openday = [];
+  const beforeshow_open = [];
+  const beforeshow_close = [];
+  selectedBusinessDays.forEach((day, index) => {
+    if (day) {
+      beforeshow_open.push(businessDays[index]);
+    } else {
+      beforeshow_close.push(businessDays[index]);
+    }
+  });
+  if (beforeshow_open.length === 7) {
+    openday.push("Everyday");
+  } else if (beforeshow_open.length < 4) {
+    openday.push(beforeshow_open.join(", "));
+  } else if (beforeshow_open.length >= 4) {
+    openday.push("Everyday except " + beforeshow_close.join(", "));
+  }
+
+  console.log("OpenDay:", openday);
 
   return (
     <div className={styles.mainBg}>
@@ -302,9 +321,7 @@ export default function SignupDetail() {
               <h2 className={styles.normalText}>Business days</h2>
               <div className={styles.dropdown} >
                 <div className={styles.dropdownHeader} onClick={toggleDropdown}>
-                  {selectedBusinessDays.every(Boolean)
-                    ? "Everyday"
-                    : "Selected Day(s)"}
+                  {openday}
                   <BsChevronDown />
                 </div>
                 {dropdownOpen && (
