@@ -33,7 +33,7 @@ export default function SignupDetail() {
       setuserID(JSON.parse(storeduserID));
       console.log(JSON.parse(storeduserID));
     } else {
-      router.push("/");  // Redirect to home if no user ID
+      // router.push("/");  // Redirect to home if no user ID
     }
   }, []);
 
@@ -213,6 +213,7 @@ export default function SignupDetail() {
   };
 
   const openday = [];
+
   const beforeshow_open = [];
   const beforeshow_close = [];
   selectedBusinessDays.forEach((day, index) => {
@@ -223,14 +224,12 @@ export default function SignupDetail() {
     }
   });
   if (beforeshow_open.length === 7) {
-    openday.push("Everyday");
+    openday.push('Everyday');
   } else if (beforeshow_open.length < 4) {
-    openday.push(beforeshow_open.join(", "));
+    openday.push(beforeshow_open.join(', '));
   } else if (beforeshow_open.length >= 4) {
-    openday.push("Everyday except " + beforeshow_close.join(", "));
+    openday.push("Everyday except " + beforeshow_close.join(', '));
   }
-
-  console.log("OpenDay:", openday);
 
   return (
     <div className={styles.mainBg}>
@@ -322,6 +321,16 @@ export default function SignupDetail() {
               <div className={styles.dropdown} >
                 <div className={styles.dropdownHeader} onClick={toggleDropdown}>
                   {openday}
+                  <BsChevronDown />
+                </div>
+                <div className={styles.dropdownHeader} onClick={toggleDropdown}>
+                  {openday}
+                  <BsChevronDown />
+                </div>
+                <div className={styles.dropdownHeader} onClick={toggleDropdown}>
+                  {selectedBusinessDays.every(Boolean)
+                    ? "Everyday"
+                    : "Selected Day(s)"}
                   <BsChevronDown />
                 </div>
                 {dropdownOpen && (
