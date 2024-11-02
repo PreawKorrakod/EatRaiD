@@ -17,6 +17,7 @@ import { json } from 'react-router-dom';
 export default function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e) => {
@@ -29,6 +30,7 @@ export default function Login() {
 
         // Reset error message
         setError('');
+        setIsLoading(true);
 
         // Backend
         try {
@@ -53,6 +55,8 @@ export default function Login() {
             } else {
                 router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
             }
+
+            
         } catch (error) {
             console.log(error);
             setError(error.response.data.message);
@@ -109,8 +113,9 @@ export default function Login() {
                             <div className={styles.Loginbtn_wrapper}>
                                 <button
                                     type="submit"
-                                    className={styles.Loginbtn}>
-                                    Log in
+                                    className={`${styles.Loginbtn} ${isLoading ? styles.loading : ''}`}
+                                    disabled={isLoading}>
+                                    {isLoading ? 'Loading...' : 'Log in'}
                                 </button>
                             </div>
                         </form>
@@ -128,8 +133,8 @@ export default function Login() {
                             <Image src={image1}
                                 width={800}
                                 height={500}
-                                className={styles.logoimg} 
-                                alt="Logo"/>
+                                className={styles.logoimg}
+                                alt="Logo" />
                         </div>
                     </div>
                 </div>
