@@ -63,31 +63,50 @@ describe('SignupUser Component', () => {
   });
 
   test('shows error message for existing email', async () => {
-    axios.post.mockRejectedValueOnce({ response: { data: { message: 'This email already register. Please try again.' } } });
-
+    // Mock console.error
+    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+  
+    axios.post.mockRejectedValueOnce({
+      response: { data: { message: 'This email already register. Please try again.' } },
+    });
+  
     render(<SignupUser />);
-
+  
     fireEvent.change(screen.getByPlaceholderText(/Email/i), { target: { value: 'existing@example.com' } });
     const passwordInputs = screen.getAllByPlaceholderText(/Password/i);
-    fireEvent.change(passwordInputs[0], { target: { value: 'password123' } }); // ฟิลด์รหัสผ่าน
+    fireEvent.change(passwordInputs[0], { target: { value: 'password123' } });
     fireEvent.change(screen.getByPlaceholderText(/Confirm Password/i), { target: { value: 'password123' } });
     fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
-
+  
+    // Assert that the error message is displayed
     expect(await screen.findByText(/This email already register. Please try again./i)).toBeInTheDocument();
+  
+    // Clean up
+    consoleErrorMock.mockRestore(); // Restore console.error to its original implementation
   });
+  
 
   test('shows error message for password rate limit', async () => {
-    axios.post.mockRejectedValueOnce({ response: { data: { message: 'AuthApiError: email rate limit exceeded' } } });
-
+    // Mock console.error
+    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+  
+    axios.post.mockRejectedValueOnce({
+      response: { data: { message: 'AuthApiError: email rate limit exceeded' } },
+    });
+  
     render(<SignupUser />);
-
+  
     fireEvent.change(screen.getByPlaceholderText(/Email/i), { target: { value: 'test@example.com' } });
     const passwordInputs = screen.getAllByPlaceholderText(/Password/i);
-    fireEvent.change(passwordInputs[0], { target: { value: 'password123' } }); // ฟิลด์รหัสผ่าน
-
+    fireEvent.change(passwordInputs[0], { target: { value: 'password123' } });
     fireEvent.change(screen.getByPlaceholderText(/Confirm Password/i), { target: { value: 'password123' } });
     fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
-
+  
+    // Assert that the error message is displayed
     expect(await screen.findByText(/Cannot send OTP multiple times/i)).toBeInTheDocument();
+  
+    // Clean up
+    consoleErrorMock.mockRestore(); // Restore console.error to its original implementation
   });
+  
 });
