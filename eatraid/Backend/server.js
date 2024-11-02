@@ -315,74 +315,77 @@ app.get("/allrestaurant", async (req, res) => {
 app.put("/editprofile", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
-    const {
-      id,
-      RestaurantId,
-      Name,
-      Contact,
-      OpenTime,
-      CloseTime,
-      Location,
-      Latitude,
-      Longitude,
-      BusinessDay,
-    } = req.body;
+    const { id, RestaurantId, name, contactCall, contactLine, openTimeHR, openTimeMin, closeTimeHR, closeTimeMin, location, businessDay } = req.body;
+    console.log(req.body);
     const newminetype = "image/jpeg";
     const newfilename = `profile_${id}_${uuid4()}.jpeg`;
-    const { data: RestaurantData, dataerror } = await supabase
-      .from("Restaurant")
+    const { data: RestaurantData, dataerror } = await supabase.from('Restaurant')
       .update({
-        Name,
-        Contact,
-        OpenTime,
-        CloseTime,
-        Location,
-        Latitude,
-        Longitude,
-        BusinessDay,
+        Name: name,
+        Tel: contactCall,
+        Line: contactLine,
+        Location: location,
+        BusinessDay: businessDay,
+        OpenTimeHr: openTimeHR,
+        OpenTimeMin: openTimeMin,
+        CloseTimeHr: closeTimeHR,
+        CloseTimeMin: closeTimeMin,
       })
-      .eq("RestaurantId", RestaurantId)
-      .select("*");
-    if (dataerror) return res.status(500).json({ dataerror });
-    if (file) {
-      const { data: ProfileData, error: fetchError } = await supabase
-        .from("User")
-        .select("ProfilePic")
-        .eq("id", id)
-        .single();
+      .eq('RestaurantId', RestaurantId)
+      .select("*")
 
-      if (fetchError) {
-        throw fetchError;
-      }
-      if (!ProfileData) {
-        throw new Error("Post not found.");
-      }
-      const imagePath = ProfileData.ProfilePic.split("/").pop();
+    console.log("restaurant data:", RestaurantData);
+    if (dataerror) return res.status(500).json({ dataerror });
+
+    const { data: UserData, error: fetchError } = await supabase
+      .from("User")
+      .select("ProfilePic")
+      .eq("Id", RestaurantId)
+      .single();
+
+    if (fetchError) {
+      throw fetchError;
+    }
+    if (!UserData) {
+      throw new Error("Post not found.");
+    }
+
+    console.log("user data:", UserData.ProfilePic);
+
+    const oldProfilePic = UserData.ProfilePic;
+    const imagePath = oldProfilePic.split('/').pop();
+
+    if (file) {
+
       await supabase.storage.from("Profile").remove([imagePath]);
+
       const { data: updateData, error: uploadError } = await supabase.storage
         .from("Profile")
         .upload(newfilename, file.buffer, {
           contentType: newminetype,
           upsert: true,
         });
+
       if (uploadError) throw uploadError;
-      else {
-        const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
-        const { Picdata, Picdataerror } = await supabase
-          .from("User")
-          .update({ ProfilePic })
-          .eq("id", id)
-          .select("*");
-        if (Picdataerror) return res.status(500).json({ Picdataerror });
-        return res.status(200).json({ Picdata });
+
+      const ProfilePic = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
+      const { data, error } = await supabase.from("User").update({ ProfilePic }).eq("Id", RestaurantId).select("*");
+      if (error) {
+        res.status(500).json({ error });
+      } else {
+        res.status(200).json({data, RestaurantData});
       }
     } else {
-      return res.status(200).json({ RestaurantData, Picdata });
+      const ProfilePic = oldProfilePic;
+      const { data, error } = await supabase.from("User").update({ ProfilePic }).eq("Id", RestaurantId).select("*");
+      if (error) return res.status(500).json({ error });
+      return res.status(200).json({data, RestaurantData});
     }
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 });
+
 
 // app.put("/editprofile", upload.single("file"), async (req, res) => {
 //   try {
@@ -510,9 +513,11 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
     }
 
     const oldMenuPic = MenuData.MenuPic;
-    const imagePath = oldMenuPic.split("/").pop();
+    const imagePath = oldMenuPic.split('/').pop();
+
 
     if (file) {
+
       await supabase.storage.from("Menu").remove([imagePath]);
 
       const { data: updateData, error: uploadError } = await supabase.storage
@@ -528,11 +533,7 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
 
       const img = `https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/${updateData.fullPath}`;
 
-      const { data, error } = await supabase
-        .from("Menu")
-        .update({ TypeID: type, NameFood: name, Price: price, MenuPic: img })
-        .eq("Id", id)
-        .select("*");
+      const { data, error } = await supabase.from("Menu").update({ TypeID: type, NameFood: name, Price: price, MenuPic: img }).eq("Id", id).select("*");
 
       if (error) {
         res.status(500).json({ error });
@@ -542,11 +543,7 @@ app.put("/editmenu", upload.single("file"), async (req, res) => {
     } else {
       // return res.status(400).json({ msg: "No file uploaded" });
       const img = oldMenuPic;
-      const { data, error } = await supabase
-        .from("Menu")
-        .update({ TypeID: type, NameFood: name, Price: price, MenuPic: img })
-        .eq("Id", id)
-        .select("*");
+      const { data, error } = await supabase.from("Menu").update({ TypeID: type, NameFood: name, Price: price, MenuPic: img }).eq("Id", id).select("*");
 
       if (error) {
         res.status(500).json({ error });
@@ -639,6 +636,28 @@ app.get("/showinfo", async (req, res) => {
     res.status(200).json(modifiedData);
   }
 });
+
+app.get("/typerestaurant", async (req, res) => {
+  const { RestaurantId } = req.query;
+  let { data, error } = await supabase.from('typerestaurant').select("*").eq('RestaurantId', RestaurantId);
+  if (error) {
+    res.status(500).json(error);
+  }
+  else {
+    res.status(200).json(data);
+  }
+}); 
+
+app.put("/toggle",async (req,res) => {
+  const {RestaurantId, toggle_status} = req.body;
+  const {data, error} = await supabase.from('Restaurant').update({toggle_status}).eq('RestaurantId', RestaurantId).select('*');
+  if (error) {
+    res.status(500).json(error);
+  }
+  else {
+    res.status(200).json(data);
+  }
+})
 
 // ===========================favorite===========================
 

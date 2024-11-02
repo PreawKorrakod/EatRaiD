@@ -239,6 +239,7 @@ export default function restaurant({ params }) {
     const fetchCategory = async () => {
       if (!infoData?.RestaurantId) return;
       try {
+
         const category = await axios.get(
           `${NEXT_PUBLIC_BASE_API_URL}/typerestaurant`,
           {
