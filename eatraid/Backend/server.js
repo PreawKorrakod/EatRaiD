@@ -288,6 +288,17 @@ app.get("/user", async (req, res) => {
   return res.status(200).json(data);
 });
 
+app.get("/typerestaurant", async (req, res) => {
+  const { RestaurantId } = req.query;
+  let { data, error } = await supabase.from('typerestaurant').select("*").eq('RestaurantId', RestaurantId);
+  if (error) {
+    res.status(500).json(error);
+  }
+  else {
+    res.status(200).json(data);
+  }
+});
+
 // ===========================home===========================
 
 app.get("/allrestaurant", async (req, res) => {
