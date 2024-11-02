@@ -13,10 +13,13 @@
     padding-right: 6.5vw;
     padding-bottom: 4vh;
     background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .Favourite_wrapper {
-    width: 100%;
+    width: 90%;
 }
 
 .header {
@@ -37,9 +40,11 @@
     display: grid;
     justify-items: center;
     gap: 2vw; 
-    grid-template-columns: repeat(4, 1fr); 
-    padding-left: 2rem;
-    padding-right: 2rem;
+    grid-template-columns: repeat(4, 2fr); 
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    width: 100%;
+    height: max-content;
 }
 
 .content_empty{
@@ -56,31 +61,40 @@
 
 
 .pagination {
+    width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 2.5vh;
+    align-items: center;
+    margin-top: 2rem;
 }
 
 .pageButton {
-    padding: 10px;
-    margin: 0 5px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     cursor: pointer;
-    border: 2px solid #ccc;
-    background-color: #f4f4f4;
-    border-radius: 5px;
-    color: #527853;
-    
+    border: none;
+    margin: 0.1rem;
+    border-radius: 1rem;
+    background-color: #e7e7e7; 
+}
+
+.pageButton:hover{
+    background-color: #cdcdcd;
 }
 
 .pageButton:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
 }
 
 .activePage {
-    background-color: #527853;
-    color: white;
-    border: 1px solid #527853;
+    background-color: #ff5804;
+    color: #fdfdfd;
+}
+
+.activePage:hover{
+    background-color: #ef5001ed;
 }
 
 .emptyMessage{

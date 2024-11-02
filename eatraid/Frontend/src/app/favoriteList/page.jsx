@@ -16,6 +16,7 @@ import Footer from '../../../components/footer';
 // ข้อมูลปลอม
 // backend นำข้อมูลมาใส่ตรง ตัวแปร data เลยนะ
 
+const type = ['ABCDEFG','B','D']
 
 export default function FavoriteList() {
     // Pagination settings
@@ -96,9 +97,10 @@ export default function FavoriteList() {
                             {currentItems.map((restaurant) => (
                                 <RestaurantCard
                                     key={restaurant.RestaurantId}
+                                    id={restaurant.RestaurantId}
                                     img={restaurant.User?.ProfilePic ? restaurant.User.ProfilePic : "https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/Menu/Menu_4_8034dbe4-bbdf-40b6-9b8e-fe7691ad9500.jpeg"}
                                     name={restaurant.Restaurant?.Name}
-                                    id={restaurant.RestaurantId}
+                                    type={type}
                                     onRemove={handleDelete} 
                                 />
                             ))}

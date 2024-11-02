@@ -1,4 +1,4 @@
-.link_blog2{
+/* .link_blog2{
     text-decoration: none;
     color: black;
     width: 80%;
@@ -9,38 +9,49 @@
     text-decoration: none;
     color: black;
     justify-content: center;
-}
+} */
 
 .main_content{
-    display: flex;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-}
-
-
-.singleDest{
-    overflow: hidden;
-    height: 250px;
-    width: 16vw;
-    min-width: 16vw;
-    border-radius: 1rem;
-    padding-right: 1rem;
-    padding-left: 1rem;
     padding-top: 1rem;
-    box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.45);
-    margin: 1.2rem;
-    background-color: white;
+    padding-bottom: 1rem;
+    width: 100%;
 }
 
-.singleDest:hover{
+
+.singleDest {
+    display: flex;
+    flex-direction: column; /* ทำให้เนื้อหาตรงกลางเรียงเป็นแนวตั้ง */
+    height: 100%; /* ใช้ความสูงทั้งหมด */
+    overflow: hidden;
+    min-height: 30vh; 
+    max-height: 35vh;
+    width: 95%;
+    max-width: 20vw;
+    border-radius: 1rem;
+    padding: 0.6rem;
+    box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.45);
+    background-color: white;
+    transition: transform 0.3s ease; /* เพิ่ม transition สำหรับการ hover */
+}
+
+.singleDest:hover {
     box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.74);
-    scale: 1.1;
-    transition: .3s ease;
+    transform: scale(1.05); /* ใช้ transform แทน scale */
+}
+
+.dastFooter {
+    flex-grow: 1; /* ทำให้ footer ขยายเพื่อเติมพื้นที่ */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 0.5rem;
+    width: 100%;
 }
 
 .dastImage{
     width: 100%;
-    height: 50%;
+    height: 45%;
     overflow: hidden;
 }
 
@@ -48,42 +59,90 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    justify-content: center;
+    align-items: center;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
 }
 
 
-.dastFooter {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-top: 1vh;
-    width: 100%;
-    height: min-content;
-}
-
 .destText {
     color: black;
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    width: 80%;
-    margin-right: 2vw;
+    display: flex;
+    width: 100%;
+    padding-bottom: 0.2rem;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 .destText p{ 
-    font-size: larger; 
     overflow: hidden; 
     text-overflow: ellipsis; 
+    white-space: nowrap;
+    font-size: 1rem;
+    width: 80%;
 }
 
-.destText p:hover{ 
-    font-size: larger; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    text-decoration: underline;
-    color: #527853;
+.showType{
+    padding-left: 0.5rem;
+    font-size: x-small;
+    color: rgb(130, 129, 129);
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
 }
 
+.typeComponent{
+    margin-right: 0.5rem ;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 20px;
+    background-color: #e5e7eb;
+}
+
+.LinkResBtn{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 0.6rem;
+}
+
+.LinkBtn{
+    width: fit-content;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    font-size: small;
+    padding-bottom: 0.1rem;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+    border: none;
+    text-decoration: none;
+    /* color: #ff9100; */
+    color:  #ff5804;
+}
+
+.LinkBtn{
+    color: #d66000 ;
+}
+
+
+.iconMorDetail{
+    margin-left: 0.2rem;
+}
+.moreText{
+    align-items: center;
+    width: fit-content;
+    justify-content: center;
+    display: flex;
+}
 .favorite{
     display: flex;
     justify-content: flex-end;

@@ -3,8 +3,9 @@ import { useState } from 'react';
 import styles from './RestaurantCard.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BsHeartFill, BsXSquareFill, BsFillTrashFill } from "react-icons/bs";
+import { BsHeartFill, BsXSquareFill, BsFillTrashFill, BsArrowRight } from "react-icons/bs";
 import { MdHeartBroken } from "react-icons/md";
+import Tooltip from '@mui/material/Tooltip';
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
 
@@ -82,35 +83,49 @@ const RestaurantCard = (props) => {
     };
 
 
-    const { img, name, id } = props;
+    const { id, img, name, type } = props;
 
     return (
         <>
-            <div className={styles.content}>
-                <div className={styles.main_content}>
+
+            <div className={styles.main_content}>
+                {/* <Tooltip title={type.join(', ')} placement="top"></Tooltip> */}
+                <Tooltip title={type.join(', ')} placement="top">
                     <div className={styles.singleDest}>
 
                         <div className={styles.dastImage}>
-                            <Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover} width={300} height={200} />
+                            <Image src={img} alt={`Restaurant ${name}`} className={styles.Imagecover} width={2300} height={2200} />
                         </div>
 
                         <div className={styles.dastFooter}>
-                            <Link href={`/ProfileRestaurant/${id}`} className={styles.link_blog2}>
-                                <div className={styles.destText}>
-                                    <p>{name}</p>
+                            <div className={styles.destText}>
+                                <p>{name}</p>
+
+                                <div className={styles.favorite}>
+                                    <BsHeartFill
+                                        className={styles.heart_icon}
+                                        onClick={() => setIsAlertModalOpen(true)}
+                                    />
                                 </div>
-                            </Link>
-                            <div className={styles.favorite}>
-                                <BsHeartFill
-                                    className={styles.heart_icon}
-                                    onClick={() => setIsAlertModalOpen(true)}
-                                />
+                            </div>
+                            <div className={styles.showType}>
+                                {type.slice(0, 2).map((t, index) => (
+                                    <span key={index} className={styles.typeComponent}>{t}</span>
+                                ))}
+                                {type.length > 2 && <span className={styles.moreText}>+{type.length - 2} more</span>}
                             </div>
                         </div>
 
+                        <div className={styles.LinkResBtn}>
+                            <Link href={`restaurant/${id}`} className={styles.LinkBtn}>
+                                More Details <BsArrowRight className={styles.iconMorDetail} />
+                            </Link>
+                        </div>
+
                     </div>
-                </div>
-            </div >
+                </Tooltip>
+            </div>
+
 
             {isAlertModalOpen && renderAlertModal()}
         </>
@@ -118,3 +133,4 @@ const RestaurantCard = (props) => {
 };
 
 export default RestaurantCard;
+
