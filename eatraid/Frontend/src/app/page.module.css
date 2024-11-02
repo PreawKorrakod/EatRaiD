@@ -30,6 +30,39 @@
   transition: .3s ease-in-out;
 }
 
+.disabledFilters {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.AllFilterContainer.disabledFilters {
+  pointer-events: none; /* ป้องกันการคลิกหรือการโต้ตอบ */
+  cursor: not-allowed;
+}
+
+.AllFilterContainer.disabledFilters .CategoryContainer[disabled] {
+  cursor: not-allowed; /* เปลี่ยน cursor เป็น not-allowed */
+}
+
+
+
+.disabledFilters .customCheckbox,
+.disabledFilters .sliderComponent {
+  cursor: not-allowed;
+  opacity: 0.5; 
+}
+
+.disabledSearchBox .inputSearch {
+  cursor: not-allowed;
+  opacity: 0.5; /* ทำให้กล่องค้นหาจางลงเพื่อให้ดูเหมือนถูก disable */
+}
+
+.SearchBox_btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5; /* ทำให้ปุ่มจางลงเมื่อถูก disable */
+  /* คุณสามารถเพิ่มสไตล์อื่น ๆ ที่ต้องการได้ที่นี่ */
+}
+
 
 .iconRe{
   width: 20px;

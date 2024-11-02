@@ -171,16 +171,22 @@ export default function Home() {
         .get(`${NEXT_PUBLIC_BASE_API_URL}/allrestaurant`)
         .then(async (res) => {
           console.log(res.data);
-          const transformedData = res.data.map((restaurant, index) => ({
+
+          // Filter out restaurants with null type or price before transforming data
+          const filteredData = res.data.filter(
+            restaurant => restaurant.Types !== null && restaurant.minPrice !== null && restaurant.maxPrice !== null
+          );
+
+          const transformedData = filteredData.map((restaurant, index) => ({
             id: index + 1,
             name: restaurant.Name,
             image: restaurant.ProfilePic,
             type: restaurant.Types,
             location: restaurant.Location,
-            price: { min: restaurant.minPrice, max: restaurant.maxPrice }, 
+            price: { min: restaurant.minPrice, max: restaurant.maxPrice },
             coordinates: { latitude: restaurant.Latitude, longitude: restaurant.Longitude }
           }));
-      
+
           setData(transformedData);
           setFilteredResults(transformedData);
         })
@@ -366,7 +372,7 @@ export default function Home() {
 
   const filterRes = () => {
     return (
-      <div className={styles.AllFilterContainer}>
+      <div className={`${styles.AllFilterContainer} ${randomResult ? styles.disabledFilters : ""}`}>
         <div className={styles.CategoryContainer}>
           <div className={styles.Categoryheader}>Categories</div>
           <div className={styles.categoryComponents}>
@@ -378,20 +384,19 @@ export default function Home() {
                 onChange={(e) => {
                   const value = e.target.value;
                   if (value === "All") {
-                    // If "All" is selected, reset all other selections
                     setGroupSelected(["All"]);
                   } else {
-                    // If another category is selected, remove "All" from selection
                     setGroupSelected((prevSelected) => {
                       if (prevSelected.includes("All")) {
                         return [...prevSelected.filter((item) => item !== "All"), value];
                       }
                       return prevSelected.includes(value)
                         ? prevSelected.filter((item) => item !== value)
-                        : [...prevSelected, value]; // Add the new category if not already selected
+                        : [...prevSelected, value];
                     });
                   }
                 }}
+                disabled={!!randomResult} // Disable if randomResult has a value
               >
                 {type.Name || type}
               </CustomCheckbox>
@@ -399,7 +404,11 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.CategoryContainer}>
-          <SliderPrice value={priceRange} onChange={setPriceRange} />
+          <SliderPrice
+            value={priceRange}
+            onChange={setPriceRange}
+            disabled={!!randomResult} // Disable if randomResult has a value
+          />
         </div>
         <div className={styles.CategoryContainer}>
           <SliderDistance
@@ -407,15 +416,17 @@ export default function Home() {
             setDistanceValue={(newDistance) => {
               setDistanceValue(newDistance);
               if (!locationFetched) {
-                getUserLocation(); // ขอ location เมื่อเริ่มเลื่อน slider
+                getUserLocation(); // Request location only when slider is moved
               }
             }}
             maxDistance={maxDistance}
+            disabled={!!randomResult} // Disable if randomResult has a value
           />
         </div>
       </div>
     );
   };
+
 
   useEffect(() => {
     const filterData = () => {
@@ -464,7 +475,7 @@ export default function Home() {
       <div className={styles.Container}>
         <div className={styles.Search_Filter_wrapper}>
           <form className={styles.search_wrapper}>
-            <div className={`${styles.SearchBox} ${isFocused ? styles.active : ""}`}>
+            <div className={`${styles.SearchBox} ${isFocused ? styles.active : ""} ${randomResult ? styles.disabledSearchBox : ""}`}>
               <IoSearch size={25} className={styles.icon_Search} />
               <input
                 type="text"
@@ -474,9 +485,10 @@ export default function Home() {
                 onBlur={() => setIsFocused(false)}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                disabled={!!randomResult} // Disable input when randomResult is set
               />
             </div>
-            <button type="submit" className={styles.SearchBox_btn}>Search</button>
+            <button type="submit" className={styles.SearchBox_btn} disabled={!!randomResult} >Search</button>
           </form>
           <div className={styles.Filter_wrapper}>
             <div className={styles.Filter_header}>Filter Restaurant</div>
@@ -493,10 +505,10 @@ export default function Home() {
                 <span>{isRandomizing ? 'Randomizing...' : 'Random'}</span>
               </button>
               {randomResult && (
-              <button className={styles.ClearRandombtn} onClick={handleClearRandom}>
-                <IoReloadSharp className={styles.iconRe}/>Clear Random
-              </button>
-            )}
+                <button className={styles.ClearRandombtn} onClick={handleClearRandom}>
+                  <IoReloadSharp className={styles.iconRe} />Clear Random
+                </button>
+              )}
             </div>
 
             <div className={styles.ShowResForRandom}>
@@ -505,7 +517,7 @@ export default function Home() {
                   shufflingCards.map((card) => (
                     <HomeCard
                       key={card.id}
-                      id={card.id}                      
+                      id={card.id}
                       img={card.image}
                       name={card.name}
                       type={card.type}
