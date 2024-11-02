@@ -37,21 +37,21 @@ const data = [
   },
   {
     id: 2,
-    name: "Food B",
+    name: "ติดมันส์",
     image: image2,
     type: ["Local food", "Fast food"],
     location: "kmutnb",
     price: { min: 100, max: 150 },
-    coordinates: { latitude: 0, longitude: 0 }, // ค่าที่ใกล้เคียง
+    coordinates: { latitude: 13.81828, longitude: 100.51448 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 3,
-    name: "Food C",
+    name: "มาสด้า",
     image: image3,
     type: ["noodle", "Fast food"],
     location: "kmutnb",
     price: { min: 100, max: 250 },
-    coordinates: { latitude: 10, longitude: 0 }, // ค่าที่ใกล้เคียง
+    coordinates: { latitude: 13.81970, longitude: 100.51160 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 4,
@@ -127,21 +127,21 @@ const data = [
   },
   {
     id: 12,
-    name: "Food L",
+    name: "SUB",
     image: image2,
     type: ["Local food", "Dessert"],
     location: "kmutnb",
     price: { min: 120, max: 120 },
-    coordinates: { latitude: 13.7511, longitude: 100.5511 }, // ค่าที่ใกล้เคียง
+    coordinates: { latitude: 13.82741, longitude: 100.51358 }, // ค่าที่ใกล้เคียง
   },
   {
     id: 13,
-    name: "Food M",
+    name: "Kmutnb",
     image: image2,
     type: ["Local food", "Dessert"],
     location: "kmutnb",
     price: { min: 90, max: 110 },
-    coordinates: { latitude: 13.7512, longitude: 100.5512 }, // ค่าที่ใกล้เคียง
+    coordinates: { latitude: 13.81915, longitude: 100.51431 }, // ค่าที่ใกล้เคียง
   },
 ];
 
@@ -154,6 +154,7 @@ export default function Home() {
   const [filteredResults, setFilteredResults] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 300]);
   const [distanceValue, setDistanceValue] = useState(1000); // ระยะทางเริ่มต้น
+  const [maxDistance, setMaxDistance] = useState(10000); // ค่าเริ่มต้นก่อนการคำนวณ
   const [userLocation, setUserLocation] = useState({ latitude: 0, longitude: 0 });
   const [locationFetched, setLocationFetched] = useState(false);
   const [randomResult, setRandomResult] = useState(null);
@@ -203,7 +204,25 @@ export default function Home() {
     }, 2000); // เวลาสุ่มที่ต้องการ
   };
 
+  useEffect(() => {
+    // ฟังก์ชันสำหรับคำนวณ maxDistance จากระยะทางที่ไกลที่สุด
+    const calculateMaxDistance = () => {
+      const distances = data.map((item) => {
+        return getDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          item.coordinates.latitude,
+          item.coordinates.longitude
+        );
+      });
+      const maxDist = Math.max(...distances); // หาค่ามากที่สุด
+      setMaxDistance(Math.ceil(maxDist * 1000)); // ปัดขึ้นและบวก 1
+    };
 
+    if (locationFetched) {
+      calculateMaxDistance(); // คำนวณ maxDistance หลังจากขอ location
+    }
+  }, [locationFetched, userLocation]);
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -223,16 +242,31 @@ export default function Home() {
     }
   };
 
+  // lat1 => UserLatitude
+  // lon1 => UserLong
+  // lat2 => ResLatitude
+  // Lon2 => ResLong
   const getDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // รัศมีของโลกในกิโลเมตร
-    const dLat = (lat2 - lat1) * (Math.PI / 180);
-    const dLon = (lon2 - lon1) * (Math.PI / 180);
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // ระยะทางในเมตร
+    const earthRadiusKm = 6371; // รัศมีของโลกในกิโลเมตร
+
+    // แปลงละติจูดและลองจิจูดเป็นเรเดียน
+    const lat1Rad = Math.radians(lat1);
+    const lat2Rad = Math.radians(lat2);
+    const lon1Rad = Math.radians(lon1);
+    const lon2Rad = Math.radians(lon2);
+
+    // คำนวณระยะทาง
+    const distance = Math.acos(
+      Math.sin(lat1Rad) * Math.sin(lat2Rad) +
+      Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.cos(lon2Rad - lon1Rad)
+    ) * earthRadiusKm;
+
+    return distance;
   };
+
+  // ฟังก์ชันเสริมสำหรับแปลงจากองศาเป็นเรเดียน
+  Math.radians = (degrees) => degrees * (Math.PI / 180);
+
 
 
   useEffect(() => {
@@ -338,6 +372,7 @@ export default function Home() {
                 getUserLocation(); // ขอ location เมื่อเริ่มเลื่อน slider
               }
             }}
+            maxDistance={maxDistance}
           />
         </div>
       </div>
@@ -372,8 +407,10 @@ export default function Home() {
             item.coordinates.latitude,
             item.coordinates.longitude
           );
-          return distance <= distanceValue;
+          console.log("dis ", item.name, distance)
+          return distance <= distanceValue / 1000;
         });
+
       }
 
       setFilteredResults(filtered);
