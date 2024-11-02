@@ -30,7 +30,6 @@ export default function Login() {
 
         // Reset error message
         setError('');
-        setIsLoading(true);
 
         // Backend
         try {
@@ -49,7 +48,7 @@ export default function Login() {
             const role = user.Role
             console.log("Info:", user);
             console.log("role:", role);
-
+            setIsLoading(true);
             if (role === 'owner') {
                 router.push(`${NEXT_PUBLIC_BASE_WEB_URL}/info`);
             } else {
