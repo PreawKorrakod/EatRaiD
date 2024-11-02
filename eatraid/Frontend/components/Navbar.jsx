@@ -42,7 +42,7 @@ export default function Navbar() {
                     console.log('Failed:', user);
                 };
             } catch (error) {
-                console.error("Error fetching user status:", error);
+                // console.error("Error fetching user status:", error);
             }
 
         };

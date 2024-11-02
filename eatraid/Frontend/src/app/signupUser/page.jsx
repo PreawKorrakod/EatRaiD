@@ -72,7 +72,7 @@ export default function SignupUser() {
                     router.push('/verify');
 
                 }).catch(error => {
-                    console.error('Error during signup:', error);
+                    // console.error('Error during signup:', error);
                     if (error.response.data.message == "AuthApiError: email rate limit exceeded") {
                         setError('Cannot send OTP multiple times');
                     } else {
