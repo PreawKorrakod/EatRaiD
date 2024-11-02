@@ -79,6 +79,7 @@
     grid-template-columns: repeat(3, 1fr); 
     padding-right: 2.5vw;
     border: #a9a9a9 1px solid;
+    box-shadow: 0 0 3px 3px rgba(49, 49, 49, 0.1);
 }
 
 .content_empty{
