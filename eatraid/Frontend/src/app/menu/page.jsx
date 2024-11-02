@@ -143,17 +143,18 @@ export default function menu() {
 
 
 
-    // เป็นฟังก์ชันตรวจสอบ input ของ User ตรงส่วน Price ของ frontend ไม่มีอะไรต้องดึง
     const handleInput = (event) => {
         let value = event.target.value;
     
         // ตรวจสอบว่ากรอกเป็นตัวอักษรหรือตัวเลข
         if (/[^0-9]/g.test(value)) {
             setError('Please enter numbers only.');
+            value = value.replace(/[^0-9]/g, ''); // ลบอักษรที่ไม่ใช่ตัวเลข
         }
         // ตรวจสอบว่าเริ่มต้นด้วย 0 แต่ไม่ใช่เพียงเลข 0 ตัวเดียว
         else if (value.length > 1 && value.startsWith('0')) {
             setError('Please do not enter numbers starting with 0.');
+            value = value.replace(/^0+/, ''); // ลบตัวศูนย์นำหน้า
         }
         // ตรวจสอบว่าราคาต้องมากกว่าศูนย์
         else if (value && parseInt(value, 10) <= 0) {
@@ -163,9 +164,11 @@ export default function menu() {
             setError(''); // เคลียร์ข้อผิดพลาดถ้าข้อมูลถูกต้อง
         }
     
-        // กรองเฉพาะตัวเลข
-        event.target.value = value.replace(/[^0-9]/g, '');
+        // อัปเดตค่าใน formData
+        setFormData((prev) => ({ ...prev, price: value }));
     };
+    
+    
     
 
 
@@ -345,8 +348,8 @@ export default function menu() {
                                             name="price"
                                             value={formData.price}
                                             onChange={(e) => {
-                                                handleInput(e);
                                                 handleChange(e);
+                                                handleInput(e);
                                             }}
                                             required
                                         />
