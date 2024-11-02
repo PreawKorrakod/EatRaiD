@@ -254,6 +254,7 @@ export default function SignupDetail() {
                     accept="image/*"
                     hidden
                     onChange={handleFileChange}
+                    placeholder="picture"
                   />
                   {!profileImage ? (
                     <div>
@@ -270,6 +271,7 @@ export default function SignupDetail() {
                       alt="Uploaded"
                       layout="fill"
                       objectFit="cover"
+                      name='uploaded pic'
                     />
                   )}
                 </label>
@@ -285,6 +287,7 @@ export default function SignupDetail() {
                     value={NameOwner}
                     className={styles.textfieldStyle}
                     onChange={(e) => setNameOwner(e.target.value)}
+                    placeholder="Enter your name"
                   />
                 </div>
 
@@ -292,24 +295,24 @@ export default function SignupDetail() {
                 <div className={styles.rowContainer}>
                   <div className={styles.contactBox}>
                     <IoCall className={styles.iconStyle} />
-
                     <input
                       name="Phone"
                       value={numberPhone}
                       className={styles.textfieldStyleContact}
                       onChange={(e) => setNumberPhone(e.target.value)}
+                      placeholder="Enter your phone number"
                     />
                   </div>
                 </div>
                 <div className={styles.rowContainer}>
                   <div className={styles.contactBox}>
                     <FaLine className={styles.iconStyle} />
-
                     <input
-                      name="Line"
+                     
                       value={LineContact}
                       className={styles.textfieldStyleContact}
                       onChange={(e) => setLineContact(e.target.value)}
+                      placeholder="Enter your line contact"
                     />
                   </div>
                 </div>
@@ -332,8 +335,11 @@ export default function SignupDetail() {
                           id={day}
                           checked={selectedBusinessDays[index]}
                           onChange={() => handleCheckboxChange(index)}
+                          // aria-labelledby={day}
+                          // data-testid={day}
+                          // name= "day"
+                          // placeholder="day"
                         />
-                        <label htmlFor={day}>{day}</label>
                       </div>
                     ))}
                   </div>
@@ -351,6 +357,7 @@ export default function SignupDetail() {
                   max="23"
                   step="01"
                   onChange={handleChangeOpenTimeHR}
+                  aria-label="Open time hour"
                 />
                 <h2 className={styles.normalText}> : </h2>
                 <input
@@ -361,6 +368,7 @@ export default function SignupDetail() {
                   max="45"
                   step="15"
                   onChange={handleChangeOpenTimeMIN}
+                  aria-label="Open time min"
                 />
               </div>
             </div>
@@ -375,6 +383,7 @@ export default function SignupDetail() {
                   max="23"
                   step="1"
                   onChange={handleChangeCloseTimeHR}
+                  aria-label="Close time hour"
                 />
                 <h2 className={styles.normalText}> : </h2>
                 <input
@@ -385,6 +394,7 @@ export default function SignupDetail() {
                   max="45"
                   step="15"
                   onChange={handleChangeCloseTimeMIN}
+                  aria-label="Close time min"
                 />
               </div>
             </div>
@@ -406,6 +416,7 @@ export default function SignupDetail() {
                 setLocation(e.target.value);
                 console.log(e.target.value);
               }}
+              placeholder="Enter your location"
             />
             <div className="mapouter">
               <div className="gmap_canvas">

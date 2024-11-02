@@ -399,6 +399,19 @@
     transform: scale(1.1);
 }
 
+
+.textfieldStyle::placeholder {
+    color: transparent; /* Makes the placeholder transparent */
+}
+
+.textfieldStyleContact::placeholder {
+    color: transparent; /* Makes the placeholder transparent */
+}
+
+.locationTextfield::placeholder {
+    color: transparent;
+}
+
 .confirmButton {
     background: linear-gradient(90deg, #891F0C 0%, #E16813 100%);
     color: #FFF4EB;
