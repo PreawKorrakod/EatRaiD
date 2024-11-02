@@ -22,7 +22,6 @@ export default function Info() {
   const router = useRouter();
   const [userId, setUserId] = useState(null);
   const [infoData, setInfoData] = useState(null);
-  const [defaultIsOpen, setDefaultIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -39,29 +38,12 @@ export default function Info() {
     profileImage: "",
   });
 
-  const [UpdateStatus,  setUpdateStatus] = useState([]);
-  const [isUpdated, setIsUpdated] = useState(false); // เพิ่ม state นี้
-
-  const [selectedOption, setSelectedOption] = useState("");
   const [selectedBusinessDays, setSelectedBusinessDays] = useState([]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [profileImage, setProfileImage] = useState("");
-  const [imageFile, setImageFile] = useState("");
   const [typerestaurant, setTyperestaurant] = useState("");
 
   const time_hr = Array.from({ length: 24 }, (_, i) =>
     String(i).padStart(2, "0")
   );
-
-  // const [status, setStatus] = useState("Auto");
-
-  // const [status, setStatus] = useState(() => {
-  //   if (infoData?.toggle_status === true) return "open";
-  //   if (infoData?.toggle_status === false) return "close";
-  //   return "auto";
-  // });
-  
 
   const time_min = ["00", "15", "30", "45"];
   const businessDays = [
@@ -124,22 +106,6 @@ export default function Info() {
           setSelectedBusinessDays(selectedDays);
 
           setInfoData(response.data[0]);
-          setFormData(prevFormData => ({
-            ...prevFormData,
-            Id: response.data[0].id,
-            name: response.data[0].Name,
-            restaurantId: response.data[0].RestaurantId,
-            businessDay: selectedDays,
-            category: response.data[0].category,
-            openTimeHR: response.data[0].OpenTimeHr,
-            openTimeMin: response.data[0].OpenTimeMin,
-            closeTimeHR: response.data[0].CloseTimeHr,
-            closeTimeMin: response.data[0].CloseTimeMin,
-            contactCall: response.data[0].Tel,
-            contactLine: response.data[0].Line,
-            location: response.data[0].Location,
-            profileImage: response.data[0].ProfilePic,
-          }));
         }
       } catch (error) {
         console.error("Error fetching restaurant info:", error);
@@ -148,13 +114,7 @@ export default function Info() {
     fetchInfo();
   }, [userId]);
 
-  // useEffect(() => {
-  //   if (infoData) {
-  //     const toggleStatus = infoData?.toggle_status; 
-  //     setStatus(toggleStatus === null ? "Auto" : toggleStatus ? "Open" : "Close");
-  //   }
-  // }, [infoData]);
-  
+
 
   console.log("selectedBusinessDays:", selectedBusinessDays);
 
@@ -176,40 +136,7 @@ export default function Info() {
     };
     fetchCategory();
   }, [infoData?.RestaurantId]);
-
-  // useEffect(() => {
-  //   console.log("TOGGLE", infoData?.toggle_status);
-  //   if (!infoData) return;
-  //   else {
-  //     if (infoData?.toggle_status === true) setStatus("Open");
-  //     else if (infoData?.toggle_status === false) setStatus("Close");
-  //     else if (infoData?.toggle_status === null) setStatus("Auto")
-  //   };
-  // }, [userId, infoData]);
-
-
-  // ตั้งค่า formData เมื่อ infoData เปลี่ยนแปลง
-  useEffect(() => {
-    if (infoData) {
-      console.log("infoData:", infoData.id);
-      setFormData({
-        Id: infoData.id,
-        name: infoData.Name,
-        restaurantId: infoData.RestaurantId,
-        businessDay: selectedBusinessDays.join(','),
-        category: infoData.category,
-        openTimeHR: infoData.OpenTimeHr,
-        openTimeMin: infoData.OpenTimeMin,
-        closeTimeHR: infoData.CloseTimeHr,
-        closeTimeMin: infoData.CloseTimeMin,
-        contactCall: infoData.Tel,
-        contactLine: infoData.Line,
-        location: infoData.Location,
-        profileImage: infoData.ProfilePic,
-      });
-    }
-  }, [infoData]);
-
+  
 
   useEffect(() => {
     if (infoData) {
@@ -220,48 +147,24 @@ export default function Info() {
     }
   }, [selectedBusinessDays, infoData]);
 
- 
+  useEffect(() => {
+    if (infoData?.toggle_status !== undefined) {
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        toggle_status: infoData.toggle_status,
+      }));
+    }
+  }, [infoData]);
+
+
 
   console.log("infodata:", infoData);
-
-  useEffect(() => {
-    if (!infoData) return;
-
-    const checkIsOpen = () => {
-      const now = getCurrentDateTime();
-      const currentDay = now.getDay();
-      const isTodayOpen = selectedBusinessDays[currentDay];
-      if (!isTodayOpen) {
-        setDefaultIsOpen(false);
-        return;
-      }
-
-      const openTime = getTodayTime(formData.openTimeHR, formData.openTimeMin);
-      const closeTime = getTodayTime(
-        formData.closeTimeHR,
-        formData.closeTimeMin
-      );
-
-      if (closeTime <= openTime) {
-        closeTime.setDate(closeTime.getDate() + 1);
-      }
-
-      if (now >= openTime && now <= closeTime) {
-        setDefaultIsOpen(true);
-      } else {
-        setDefaultIsOpen(false);
-      }
-    };
-
-    checkIsOpen();
-    const interval = setInterval(checkIsOpen, 60000);
-    return () => clearInterval(interval);
-  }, [infoData, selectedBusinessDays, formData]);
 
   // Set formData when infoData changes
   useEffect(() => {
     if (infoData) {
-      setFormData({
+      setFormData(prevFormData => ({
+        ...prevFormData,
         Id: infoData.id,
         name: infoData.Name,
         businessDay: selectedBusinessDays.join(','),
@@ -274,7 +177,8 @@ export default function Info() {
         contactLine: infoData.Line,
         location: infoData.Location,
         profileImage: infoData.ProfilePic,
-      });
+        toggle_status: infoData.toggle_status !== undefined ? infoData.toggle_status : null, // ค่าที่คาดว่าจะได้
+      }));
     }
   }, [infoData]);
 
@@ -285,31 +189,18 @@ export default function Info() {
     return <div>Loading...</div>;
   }
 
+
   // Code ส่งไปค่าปุ่ม
   const id = userId;
   const labelsText = {
-    left: { title: "Open", value: "open" },
-    center: { title: "Auto", value: "auto" },
-    right: { title: "Close", value: "close" },
+    left: { title: "Open", value: true },
+    center: { title: "Auto", value: null },
+    right: { title: "Close", value: false },
   };
 
   const onChangetoggle = (id, newStatus) => {
     console.log(`Store ${id} changed to: ${newStatus}`);
-    const updatedStatus = newStatus === true ? "open" : newStatus === false ? "close" : "auto";
-    setUpdateStatus(updatedStatus);
-    axios.put(`${NEXT_PUBLIC_BASE_API_URL}/toggle`, {
-      RestaurantId: id,
-      toggle_status: newStatus,
-    })
-      .then((response) => {
-        console.log("Toggle response:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error toggling store:", error);
-      });
   };
-  
-
 
 
   const handleEditClick = () => {
@@ -335,6 +226,7 @@ export default function Info() {
   }
 
   console.log("OpenDay:", openday);
+  console.log("toggle_status:", formData?.toggle_status);
 
 
   /// main page
@@ -370,7 +262,6 @@ export default function Info() {
           setIsModalOpen={setIsModalOpen}
           selectedBusinessDays={selectedBusinessDays}
           setSelectedBusinessDays={setSelectedBusinessDays}
-
         />
 
         <div className={styles.rowCon3}>
@@ -378,10 +269,13 @@ export default function Info() {
         </div>
         <ToggleGroup
           id={id}
-          status={formData?.toggle_status === null ? "auto" : formData?.toggle_status ? "close" : "open"} // ส่งสถานะเริ่มต้นเข้าไป
-          labels={labelsText} // ส่งข้อความ labels
-          onChange={onChangetoggle} // ส่งฟังก์ชัน onChange
+          formData={formData}
+          status={formData?.toggle_status}
+          setFormData={setFormData}
+          labels={labelsText}
+          onChange={onChangetoggle}
         />
+
 
         <div className={styles.rowCon}>
           <div className={styles.halfCon}>
