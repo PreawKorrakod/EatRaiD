@@ -81,7 +81,7 @@ export default function Navbar() {
                 setIsUserLoggedIn(false);
                 setIsEmailUser('');
                 setIsOwnerLoggedIn(false);
-
+                router.push(`/`);
             } else {
                 console.error('Logout failed');
             }
