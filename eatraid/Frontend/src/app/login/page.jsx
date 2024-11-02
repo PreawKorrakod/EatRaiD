@@ -5,7 +5,7 @@ import image1 from '../../../public/LOGO.png';
 import Navbar from '../../../components/Navbar';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useContext, useState } from 'react';
+import { useContext, useState,useEffect} from 'react';
 import { BsExclamationCircle, BsArrowLeft } from "react-icons/bs";
 import { redirect, useRouter } from "next/navigation";
 import { NEXT_PUBLIC_BASE_API_URL, NEXT_PUBLIC_BASE_WEB_URL } from '../../../src/app/config/supabaseClient.js';
@@ -19,6 +19,23 @@ export default function Login() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        // ตรวจสอบว่าผู้ใช้ได้ login อยู่แล้วหรือไม่
+        const checkLoginStatus = async () => {
+            try {
+                const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, { withCredentials: true });
+                if (response.data[0]) {
+                    // Redirect ไปยังหน้าหลักหากผู้ใช้ได้ login อยู่แล้ว
+                    router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
+                }
+            } catch (error) {
+                console.log('User is not logged in');
+            }
+        };
+
+        checkLoginStatus();
+    }, [router]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -55,7 +72,7 @@ export default function Login() {
                 router.push(`${NEXT_PUBLIC_BASE_WEB_URL}`);
             }
 
-            
+
         } catch (error) {
             console.log(error);
             setError(error.response.data.message);
