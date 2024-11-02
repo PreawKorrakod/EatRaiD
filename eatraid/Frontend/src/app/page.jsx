@@ -178,7 +178,8 @@ export default function Home() {
           );
 
           const transformedData = filteredData.map((restaurant, index) => ({
-            id: index + 1,
+            IDindex: index+1,
+            id: restaurant.RestaurantId,
             name: restaurant.Name,
             image: restaurant.ProfilePic,
             type: restaurant.Types,
@@ -516,7 +517,7 @@ export default function Home() {
                 shufflingCards.length > 0 ? (
                   shufflingCards.map((card) => (
                     <HomeCard
-                      key={card.id}
+                      key={card.IDindex}
                       id={card.id}
                       img={card.image}
                       name={card.name}
@@ -531,7 +532,7 @@ export default function Home() {
                 )
               ) : randomResult ? (
                 <HomeCard
-                  id={randomResult.id}
+                  id={randomResult.IDindex}
                   img={randomResult.image}
                   name={randomResult.name}
                   type={randomResult.type}
@@ -542,7 +543,7 @@ export default function Home() {
               ) : (
                 currentItems.map((item) => (
                   <HomeCard
-                    key={item.id}
+                    key={item.IDindex}
                     id={item.id}
                     img={item.image}
                     name={item.name}

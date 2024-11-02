@@ -6,6 +6,7 @@
     height: calc(100vh - 3rem);
     padding: 1rem; 
     overflow-y: auto; 
+    overflow-x: hidden;
 }
 /* px/16 = rem */
 
@@ -308,32 +309,40 @@
 }
 
 .pagination {
+    width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 2.5vh;
+    align-items: center;
+    margin-top: 2rem;
 }
 
 .pageButton {
-    padding: 10px;
-    margin: 0 5px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     cursor: pointer;
-    border: 2px solid #ccc;
-    background-color: #f4f4f4;
-    border-radius: 5px;
-    color: #527853;
-    width: 3vw;
-    
+    border: none;
+    margin: 0.1rem;
+    border-radius: 1rem;
+    background-color: #e7e7e7; 
+}
+
+.pageButton:hover{
+    background-color: #cdcdcd;
 }
 
 .pageButton:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
 }
 
 .activePage {
-    background-color: #527853;
-    color: white;
-    border: 1px solid #527853;
+    background-color: #ff5804;
+    color: #fdfdfd;
+}
+
+.activePage:hover{
+    background-color: #ef5001ed;
 }
 
 .Menuheader{
