@@ -163,7 +163,50 @@ export default function Home() {
   const [isShuffling, setIsShuffling] = useState(false);
   const [shuffledCards, setShuffledCards] = useState([]); // เก็บรายการที่ถูกสลับ
   const [shufflingCards, setShufflingCards] = useState([]); // เก็บการ์ดที่แสดงในขณะสุ่ม
+  const [data, setData] = useState([ 
+      {
+        id: 1,
+        name: "Food sample",
+        image: image1,
+        type: ["noodle", "Fast food"],
+        location: "kmutnb",
+        price: { min: 30, max: 90 },
+        coordinates: { latitude: 13.7503, longitude: 100.5503 },
+      }]
+    )
 
+  useEffect(() => {
+    try {
+      axios
+        .get(`${NEXT_PUBLIC_BASE_API_URL}/allrestaurant`)
+        .then(async (res) => {
+          console.log(res.data);
+          const transformedData = res.data.map((restaurant, index) => ({
+            id: index + 1,
+            name: restaurant.Name,
+            image: restaurant.ProfilePic,
+            type: restaurant.Types,
+            location: restaurant.Location,
+            price: { min: restaurant.minPrice, max: restaurant.maxPrice }, 
+            coordinates: { latitude: restaurant.Latitude, longitude: restaurant.Longitude }
+          }));
+      
+          setData(transformedData);
+          setFilteredResults(transformedData);
+        })
+        .catch((error) => {
+          console.error("Failed to receive information :", error);
+          setError("Failed to receive information");
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('data is', data)
+  }, [data])
+  
   const handleClearRandom = () => {
     setRandomResult(null);
     setCurrentPage(1); // รีเซ็ตกลับไปที่หน้าหลัก
