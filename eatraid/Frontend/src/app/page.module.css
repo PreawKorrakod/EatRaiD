@@ -5,6 +5,38 @@
   background-color: #fdfdfd;
 }
 
+.ClearRandombtn{
+  width: fit-content;
+  margin-left: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid #6b7280; 
+  background-color: #EEEEEE; 
+  color: #6b7280 ;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0.8rem;
+  font-size: smaller;
+}
+
+.ClearRandombtn:hover{
+  background-color: #e5e7eb;
+  color: #6b7280 ;
+  scale: 1.1;
+  transition: .3s ease-in-out;
+}
+
+
+.iconRe{
+  width: 20px;
+  height: 20px;
+  margin-right: 0.3rem;
+}
+
 .Container{
   width: 100%;
   height: auto;

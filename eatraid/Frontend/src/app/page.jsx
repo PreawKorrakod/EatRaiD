@@ -24,6 +24,7 @@ import SliderDistance from "../../components/SliderDistance";
 import SliderPrice from "../../components/SliderPrice";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { IoReloadSharp } from "react-icons/io5";
 
 const data = [
   {
@@ -163,6 +164,10 @@ export default function Home() {
   const [shuffledCards, setShuffledCards] = useState([]); // เก็บรายการที่ถูกสลับ
   const [shufflingCards, setShufflingCards] = useState([]); // เก็บการ์ดที่แสดงในขณะสุ่ม
 
+  const handleClearRandom = () => {
+    setRandomResult(null);
+    setCurrentPage(1); // รีเซ็ตกลับไปที่หน้าหลัก
+  };
 
   const handleRandomize = () => {
     if (filteredResults.length === 0) return; // ตรวจสอบว่ามีผลลัพธ์หรือไม่
@@ -454,6 +459,11 @@ export default function Home() {
                 <GiPerspectiveDiceSixFacesRandom className={styles.randomicon} size={25} />
                 <span>{isRandomizing ? 'Randomizing...' : 'Random'}</span>
               </button>
+              {randomResult && (
+              <button className={styles.ClearRandombtn} onClick={handleClearRandom}>
+                <IoReloadSharp className={styles.iconRe}/>Clear Random
+              </button>
+            )}
             </div>
 
             <div className={styles.ShowResForRandom}>
@@ -472,21 +482,9 @@ export default function Home() {
                     />
                   ))
                 ) : (
-                  filteredResults.map((card) => (
-                    <HomeCard
-                      key={card.id}
-                      id={card.id}
-                      img={card.image}
-                      name={card.name}
-                      type={card.type}
-                      distance={locationFetched
-                        ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
-                        : "N/A"}
-                    />
-                  ))
+                  <p>Loading...</p>
                 )
               ) : randomResult ? (
-
                 <HomeCard
                   id={randomResult.id}
                   img={randomResult.image}
@@ -496,28 +494,24 @@ export default function Home() {
                     ? getDistance(userLocation.latitude, userLocation.longitude, randomResult.coordinates.latitude, randomResult.coordinates.longitude).toFixed(2)
                     : "N/A"}
                 />
-
-              ) : currentItems.length > 0 ? (
-                currentItems.map((card) => (
+              ) : (
+                currentItems.map((item) => (
                   <HomeCard
-                    key={card.id}
-                    id={card.id}
-                    img={card.image}
-                    name={card.name}
-                    type={card.type}
+                    key={item.id}
+                    id={item.id}
+                    img={item.image}
+                    name={item.name}
+                    type={item.type}
                     distance={locationFetched
-                      ? getDistance(userLocation.latitude, userLocation.longitude, card.coordinates.latitude, card.coordinates.longitude).toFixed(2)
+                      ? getDistance(userLocation.latitude, userLocation.longitude, item.coordinates.latitude, item.coordinates.longitude).toFixed(2)
                       : "N/A"}
                   />
                 ))
-              ) : (
-                <div className={styles.noResultsMessage}>No results found.</div>
               )}
             </div>
+          </div>
 
-
-
-            {/* Pagination Controls */}
+          {!randomResult && (
             <div className={styles.pagination}>
               <button className={styles.pageButton} onClick={handlePreviousPage} disabled={currentPage === 1}>
                 <BsChevronDoubleLeft />
@@ -527,7 +521,7 @@ export default function Home() {
                 <BsChevronDoubleRight />
               </button>
             </div>
-          </div>
+          )}
         </div>
       </div>
       <Footer />
