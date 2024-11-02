@@ -4,6 +4,7 @@
     flex-direction: column;
     background: linear-gradient(90deg,  #c72c11 0%, #EE7214 100%);
     transition:  0.5s ease-in-out;
+    justify-self: flex-end
 }
 
 .upperFooter{

@@ -1,7 +1,7 @@
 "use client";
 import styles from "./verify.module.css";
 import React, { useState, useRef, useEffect } from "react";
-import Topbar from "../../../components/Topbar";
+import Navbar from "../../../components/Navbar";
 import { MdMarkEmailUnread } from "react-icons/md";
 import { FaArrowLeft } from "react-icons/fa6";
 import { BsExclamationCircle } from "react-icons/bs";
@@ -130,7 +130,7 @@ export default function Verify() {
 
   return (
     <div className={styles.mainBg}>
-      <Topbar />
+      <Navbar></Navbar>
       <div className={styles.bg}>
         <div className={styles.bigContainer}>
           <div className={styles.topContainer}>
@@ -138,7 +138,7 @@ export default function Verify() {
               onClick={() => router.back()}
               className={styles.iconArrowStyle}
             >
-              <FaArrowLeft />
+              <FaArrowLeft/>
             </button>
           </div>
           <div className={styles.iconCon}>

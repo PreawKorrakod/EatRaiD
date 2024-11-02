@@ -8,7 +8,7 @@ import { BsChevronDoubleLeft, BsCheckLg, BsChevronDoubleRight, BsPlus, BsXSquare
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 import { useRouter } from "next/navigation";
-
+import Footer from '../../../components/footer';
 
 export default function menu() {
     const router = useRouter();
@@ -143,25 +143,33 @@ export default function menu() {
 
 
 
-    // เป็นฟังก์ชันตรวจสอบ input ของ User ตรงส่วน Price ของ frontend ไม่มีอะไรต้องดึง
     const handleInput = (event) => {
         let value = event.target.value;
-
+    
         // ตรวจสอบว่ากรอกเป็นตัวอักษรหรือตัวเลข
         if (/[^0-9]/g.test(value)) {
             setError('Please enter numbers only.');
+            value = value.replace(/[^0-9]/g, ''); // ลบอักษรที่ไม่ใช่ตัวเลข
         }
         // ตรวจสอบว่าเริ่มต้นด้วย 0 แต่ไม่ใช่เพียงเลข 0 ตัวเดียว
         else if (value.length > 1 && value.startsWith('0')) {
             setError('Please do not enter numbers starting with 0.');
+            value = value.replace(/^0+/, ''); // ลบตัวศูนย์นำหน้า
+        }
+        // ตรวจสอบว่าราคาต้องมากกว่าศูนย์
+        else if (value && parseInt(value, 10) <= 0) {
+            setError('Price must be greater than 0.');
         }
         else {
-            setError('');
+            setError(''); // เคลียร์ข้อผิดพลาดถ้าข้อมูลถูกต้อง
         }
-
-        // กรองเฉพาะตัวเลข และลบเลข 0 นำหน้า (ยกเว้น 0 ตัวเดียว)
-        event.target.value = value.replace(/[^0-9]/g, '');
+    
+        // อัปเดตค่าใน formData
+        setFormData((prev) => ({ ...prev, price: value }));
     };
+    
+    
+    
 
 
 
@@ -340,15 +348,15 @@ export default function menu() {
                                             name="price"
                                             value={formData.price}
                                             onChange={(e) => {
-                                                handleInput(e);
                                                 handleChange(e);
+                                                handleInput(e);
                                             }}
                                             required
                                         />
                                     </div>
                                     ฿
                                 </div>
-                                {error && <p className={styles.error}>< BsExclamationCircle className={styles.iconExc} />{error}</p>} {/* แสดงคำเตือนหากมี */}
+                                {error && <p className={styles.error}><BsExclamationCircle className={styles.iconExc} />{error}</p>} {/* แสดงคำเตือนหากมี */}
                             </div>
                         </div>
                     )}
@@ -375,7 +383,7 @@ export default function menu() {
                                     onClick={() => setIsAlertModalOpen(false)}
                                     disabled={isLoading} // ปิดปุ่มระหว่างการโหลด
                                 >
-                                    {isLoading ? "Cancle" : "Cancle"}
+                                    {isLoading ? "Cancel" : "Cancel"}
                                 </button>
                             </>
                         )}
@@ -499,6 +507,7 @@ export default function menu() {
                     )}
                 </div>
             </div>
+            <Footer></Footer>
             {isAlertModalOpen && renderAlertModal()}
         </div>
     );

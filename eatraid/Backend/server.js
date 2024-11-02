@@ -220,12 +220,12 @@ app.post("/login", async (req, res) => {
 
   if (User.length == 0) {
     return res
-      .status(401)
+      .status(404)
       .json({ message: "Can't find this email. Try again." });
   } else if (userError) {
     console.log(userError)
     return res
-      .status(401)
+      .status(500)
       .json({ message: "Error while login. Try again.", error: error.message });
   }
 
@@ -302,13 +302,56 @@ app.get("/typerestaurant", async (req, res) => {
 // ===========================home===========================
 
 app.get("/allrestaurant", async (req, res) => {
-  let { data, error } = await supabase.from("typerestaurant").select("*");
+  let { data, error } = await supabase.from("Restaurant").select(`
+      RestaurantId,
+      Name,
+      Menu (
+        Price,
+        Type (
+          Name
+        )
+      ),
+      User (
+        ProfilePic
+      ),
+      Location,
+      Latitude,
+      Longitude
+    `);
   if (error) {
     res.status(500).json(error);
   } else {
-    res.status(200).json(data);
+    const restaurantsWithPriceRange = data.map(restaurant => {
+      const prices = restaurant.Menu.map(menuItem => menuItem.Price).filter(price => price !== null);
+      
+      const minPrice = prices.length > 0 ? Math.min(...prices) : null;
+      const maxPrice = prices.length > 0 ? Math.max(...prices) : null;
+    
+      return {
+        RestaurantId: restaurant.RestaurantId,
+        Name: restaurant.Name,
+        ProfilePic: restaurant.User.ProfilePic,
+        Location: restaurant.Location,
+        minPrice,
+        maxPrice,
+        Latitude: restaurant.Latitude,
+        Longitude: restaurant.Longitude,
+        Types: restaurant.Menu.map(menuItem => menuItem.Type.Name)
+      };
+    });
+    
+    res.status(200).json(restaurantsWithPriceRange);
   }
 });
+
+// app.get("/allrestaurant", async (req, res) => {
+//   let { data, error } = await supabase.from("typerestaurant").select("*");
+//   if (error) {
+//     res.status(500).json(error);
+//   } else {
+//     res.status(200).json(data);
+//   }
+// });
 
 // ===========================profile - restaurant===========================
 
