@@ -29,7 +29,8 @@
 }
 
 .content_grid {
-    background-color: #FFFBF7;
+    background-color: #FFFFFF;
+    border: #a9a9a9 1px solid;
     padding-top: 2vw;
     padding-bottom: 2vw;
     border-radius: 1rem;
@@ -42,7 +43,7 @@
 }
 
 .content_empty{
-    background-color: #FFFBF7;
+    background-color: #FFFFFF;
     padding-top: 2vw;
     padding-bottom: 2vw;
     border-radius: 1rem;
