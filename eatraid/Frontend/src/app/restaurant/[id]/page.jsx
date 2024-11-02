@@ -10,9 +10,9 @@ import { GoDotFill } from "react-icons/go";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import MenuCard from "../../../../components/MenuCard";
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
-import image1 from "../../../../public/imgTest4.png";
-import image2 from "../../../../public/imgTest5.png";
-import image3 from "../../../../public/imgTest6.png";
+// import image1 from "../../../public/imgTest4.png";
+// import image2 from "../../../public/imgTest5.png";
+// import image3 from "../../../public/imgTest6.png";
 import axios from "axios";
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../../src/app/config/supabaseClient.js';
 
@@ -227,6 +227,8 @@ export default function restaurant({ params }) {
     fetchInfo();
   }, [params.id]);
 
+  console.log("infoData", infoData);
+
 
 
   useEffect(() => {
@@ -237,9 +239,10 @@ export default function restaurant({ params }) {
           params: { RestaurantId: params.id },
           withCredentials: true,
         });
-        console.log("Restaurant Category:", category.data[0].TypeName);
+        // console.log("Restaurant Category:", category.data.map((item) => item.TypeName));
         const type = category.data.map((item) => item.TypeName);
-        setTyperestaurant(type.join('/'));
+        console.log("Type:", type);
+        setTyperestaurant(type.join(', '));
       } catch (error) {
         console.error('Error fetching restaurant category:', error);
       }
@@ -448,7 +451,7 @@ export default function restaurant({ params }) {
               </button>
             </div>
           )}
-        </div>
+        </div>  
       </div>
     </div>
   );

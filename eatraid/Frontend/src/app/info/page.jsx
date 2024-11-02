@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./info.module.css";
 import { BsChevronDown } from "react-icons/bs";
 import { FaLine } from "react-icons/fa6";
@@ -9,21 +9,23 @@ import { useRouter } from "next/navigation";
 import { AiOutlinePicture } from "react-icons/ai";
 import Image from "next/image";
 import { FaArrowLeft } from "react-icons/fa6";
+import { FiEdit3 } from "react-icons/fi";
+import { RxCross2 } from "react-icons/rx";
+import ToggleGroup from "../../../components/toggleGroup";
+import Editinfo from "../../../components/Editinfo";
 
 import axios from "axios";
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+import { user } from "@nextui-org/theme";
 
 export default function Info() {
   const router = useRouter();
   const [userId, setUserId] = useState(null);
   const [infoData, setInfoData] = useState(null);
-  const [defaultIsOpen, setDefaultIsOpen] = useState(false); // สถานะเปิดปิดตามเวลาปกติ
-  
-  // เพิ่มสถานะสำหรับ override สถานะร้านค้า
-  const [overrideStatus, setOverrideStatus] = useState(null); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    restaurantId: "",
     category: "",
     businessDay: "",
     openTimeHR: "",
@@ -36,12 +38,7 @@ export default function Info() {
     profileImage: "",
   });
 
-  const [selectedOption, setSelectedOption] = useState("");
   const [selectedBusinessDays, setSelectedBusinessDays] = useState([]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [profileImage, setProfileImage] = useState("");
-  const [imageFile, setImageFile] = useState("");
   const [typerestaurant, setTyperestaurant] = useState("");
 
   const time_hr = Array.from({ length: 24 }, (_, i) =>
@@ -72,48 +69,7 @@ export default function Info() {
     return now;
   };
 
-  useEffect(() => {   
-    if (infoData) {
-      if (infoData.toggle_status !== null) {
-        setOverrideStatus(infoData?.toggle_status);
-      } else {
-        setOverrideStatus(defaultIsOpen ? 'open' : 'close');
-      }
-    }
-  }, [infoData, defaultIsOpen]);
-
-
-  useEffect(() => {
-    if (!infoData) return;
-
-    const checkIsOpen = () => {
-      const now = getCurrentDateTime();
-      const currentDay = now.getDay();
-      const isTodayOpen = selectedBusinessDays[currentDay];
-      if (!isTodayOpen) {
-        setDefaultIsOpen(false);
-        return;
-      }
-
-      const openTime = getTodayTime(formData.openTimeHR, formData.openTimeMin);
-      const closeTime = getTodayTime(formData.closeTimeHR, formData.closeTimeMin);
-
-      if (closeTime <= openTime) {
-        closeTime.setDate(closeTime.getDate() + 1);
-      }
-
-      if (now >= openTime && now <= closeTime) {
-        setDefaultIsOpen(true);
-      } else {
-        setDefaultIsOpen(false);
-      }
-    };
-
-    checkIsOpen();
-    const interval = setInterval(checkIsOpen, 60000);
-    return () => clearInterval(interval);
-  }, [infoData, selectedBusinessDays, formData]);
-
+  console.log("userId:", userId);
 
   // ดึงข้อมูลผู้ใช้เมื่อ component mount
   useEffect(() => {
@@ -136,7 +92,6 @@ export default function Info() {
     fetchData();
   }, [router]);
 
-  // ดึงข้อมูลร้านเมื่อ userId ถูกตั้งค่า
   useEffect(() => {
     const fetchInfo = async () => {
       if (!userId) return;
@@ -149,14 +104,19 @@ export default function Info() {
           console.log("Restaurant info:", response.data[0]);
           const selectedDays = response.data[0].BusinessDay.split(',').map(day => day === 'true');
           setSelectedBusinessDays(selectedDays);
+
           setInfoData(response.data[0]);
         }
       } catch (error) {
         console.error("Error fetching restaurant info:", error);
       }
-    }
+    };
     fetchInfo();
   }, [userId]);
+
+
+
+  console.log("selectedBusinessDays:", selectedBusinessDays);
 
   // ดึงประเภทร้านเมื่อ infoData ถูกตั้งค่า
   useEffect(() => {
@@ -164,10 +124,10 @@ export default function Info() {
       if (!infoData?.RestaurantId) return;
       try {
         const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/typerestaurant`, {
-          params: { RestaurantId: infoData.RestaurantId },
+          params: { RestaurantId: infoData?.RestaurantId },
           withCredentials: true,
         });
-        console.log("Restaurant Category:", category.data[0].TypeName);
+        console.log("Restaurant Category:", category.data[0]);
         const type = category.data.map((item) => item.TypeName);
         setTyperestaurant(type.join('/'));
       } catch (error) {
@@ -176,14 +136,38 @@ export default function Info() {
     };
     fetchCategory();
   }, [infoData?.RestaurantId]);
+  
 
-  // ตั้งค่า formData เมื่อ infoData เปลี่ยนแปลง
   useEffect(() => {
     if (infoData) {
-      console.log("infoData:", infoData.id);
-      setFormData({
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        businessDay: selectedBusinessDays.join(','),
+      }));
+    }
+  }, [selectedBusinessDays, infoData]);
+
+  useEffect(() => {
+    if (infoData?.toggle_status !== undefined) {
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        toggle_status: infoData.toggle_status,
+      }));
+    }
+  }, [infoData]);
+
+
+
+  console.log("infodata:", infoData);
+
+  // Set formData when infoData changes
+  useEffect(() => {
+    if (infoData) {
+      setFormData(prevFormData => ({
+        ...prevFormData,
         Id: infoData.id,
         name: infoData.Name,
+        businessDay: selectedBusinessDays.join(','),
         category: infoData.category,
         openTimeHR: infoData.OpenTimeHr,
         openTimeMin: infoData.OpenTimeMin,
@@ -193,7 +177,8 @@ export default function Info() {
         contactLine: infoData.Line,
         location: infoData.Location,
         profileImage: infoData.ProfilePic,
-      });
+        toggle_status: infoData.toggle_status !== undefined ? infoData.toggle_status : null, // ค่าที่คาดว่าจะได้
+      }));
     }
   }, [infoData]);
 
@@ -204,130 +189,25 @@ export default function Info() {
     return <div>Loading...</div>;
   }
 
-  // กำหนดสถานะที่จะแสดง
-  const displayedIsOpen = overrideStatus !== null ? (overrideStatus === 'open') : defaultIsOpen;
 
-  // ฟังก์ชันจัดการการคลิก toggle
-  const toggleOverride = async () => {
-    const newStatus = overrideStatus === null ? (defaultIsOpen ? 'close' : 'open') : null;
-    setOverrideStatus(newStatus);
-    console.log('override', newStatus);
-    
-    try {
-      await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/toggle`, {
-        RestaurantId: userId,
-        toggle_status: newStatus, 
-      });
-    } catch (error) {
-      console.error("Error updating override status:", error);
-      setErrorMessage("Failed to update status. Please try again.");
-    }
+  // Code ส่งไปค่าปุ่ม
+  const id = userId;
+  const labelsText = {
+    left: { title: "Open", value: true },
+    center: { title: "Auto", value: null },
+    right: { title: "Close", value: false },
   };
-  
+
+  const onChangetoggle = (id, newStatus) => {
+    console.log(`Store ${id} changed to: ${newStatus}`);
+  };
+
 
   const handleEditClick = () => {
     setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleChangeCategory = (event) => {
-    setSelectedOption(event.target.value);
-  };
-
-
-  const handleChangeOpenTimeHR = (event) => {
-    setFormData({ ...formData, openTimeHR: event.target.value });
-  };
-
-  const handleChangeOpenTimeMIN = (event) => {
-    setFormData({ ...formData, openTimeMin: event.target.value });
-  };
-
-  const handleChangeCloseTimeHR = (event) => {
-    const newCloseTimeHR = event.target.value;
-    setFormData({ ...formData, closeTimeHR: newCloseTimeHR });
-  };
-
-  const handleChangeCloseTimeMIN = (event) => {
-    setFormData({ ...formData, closeTimeMin: event.target.value });
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result);
-        setFormData({ ...formData, profileImage: reader.result });
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert("Please upload a valid image file.");
-    }
-  };
-
-
-  console.log("type:", typerestaurant);
-  const handleSaveClick = async () => {
-    console.log("formData:", formData.Id);
-
-    const businessDayString = selectedBusinessDays.map(day => day ? 'true' : 'false').join(',');
-
-    const updateData = new FormData();
-    updateData.append('id', formData.Id);
-    updateData.append('RestaurantId', userId);
-    updateData.append('name', formData.name);
-    updateData.append('file', imageFile);
-    updateData.append('businessDay', businessDayString);
-    updateData.append('openTimeHR', formData.openTimeHR);
-    updateData.append('openTimeMin', formData.openTimeMin);
-    updateData.append('closeTimeHR', formData.closeTimeHR);
-    updateData.append('closeTimeMin', formData.closeTimeMin);
-    updateData.append('contactCall', formData.contactCall);
-    updateData.append('contactLine', formData.contactLine);
-    updateData.append('location', formData.location);
-
-    try {
-      const res = await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editprofile`, updateData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-      });
-      console.log("Profile", res.data.data[0].ProfilePic);
-      console.log("Data saved successfully:", res.data.RestaurantData[0]);
-      const updatedInfoData = res.data.RestaurantData[0];
-      const updateprofileImage = res.data.data[0].ProfilePic;
-      setInfoData({
-        Id: updatedInfoData.id,
-        Name: updatedInfoData.Name,
-        BusinessDay: updatedInfoData.BusinessDay,
-        OpenTimeHr: updatedInfoData.OpenTimeHr,
-        OpenTimeMin: updatedInfoData.OpenTimeMin,
-        CloseTimeHr: updatedInfoData.CloseTimeHr,
-        CloseTimeMin: updatedInfoData.CloseTimeMin,
-        Tel: updatedInfoData.Tel,
-        Line: updatedInfoData.Line,
-        Location: updatedInfoData.Location,
-        ProfilePic: updateprofileImage,
-      });
-      if (res.status === 200) {
-        handleCloseModal();
-        // setOverrideStatus(null); 
-      }
-
-    } catch (error) {
-      console.error("Error saving data:", error);
-      setErrorMessage("Failed to save data. Please try again.");
-    }
-  };
-
   const openday = [];
-
   const beforeshow_open = [];
   const beforeshow_close = [];
   selectedBusinessDays.forEach((day, index) => {
@@ -338,305 +218,101 @@ export default function Info() {
     }
   });
   if (beforeshow_open.length === 7) {
-    openday.push('Everyday');
+    openday.push("Everyday");
   } else if (beforeshow_open.length < 4) {
-    openday.push(beforeshow_open.join(', '));
+    openday.push(beforeshow_open.join(", "));
   } else if (beforeshow_open.length >= 4) {
-    openday.push("Everyday except " + beforeshow_close.join(', '));
+    openday.push("Everyday except " + beforeshow_close.join(", "));
   }
 
-  const handleCheckboxChange = (index) => {
-    const updatedCheckedState = selectedBusinessDays.map((item, i) =>
-      i === index ? !item : item
-    );
-    setSelectedBusinessDays(updatedCheckedState);
-  };
+  console.log("OpenDay:", openday);
+  console.log("toggle_status:", formData?.toggle_status);
 
-  const Modal = () => {
-    if (!isModalOpen) return null;
-    return (
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
-          <h1 className={styles.titleM}>Edit profile</h1>
-          <div className={styles.bigContainerM}>
-            <div className={styles.inputContainerM}>
-              <div className={styles.textfieldBigContainerLM}>
-                <div className={styles.rowContainerM}>
-                  <div className={styles.picBigContainerM}>
-                    <label className={styles.pictureContainerM}>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onChange={handleFileChange}
-                        required
-                      />
-                      {!formData.profileImage ? (
-                        <div>
-                          <AiOutlinePicture className={styles.iconPicStyleM} />
-                          <h2 className={styles.picTextM}>click to upload</h2>
-                        </div>
-                      ) : (
-                        <Image
-                          className={styles.uploadedImageM}
-                          src={formData.profileImage}
-                          alt="Uploaded"
-                          layout="fill"
-                          objectFit="cover"
-                        />
-                      )}
-                    </label>
-                  </div>
-                  <div className={styles.colContainerM}>
-                    <h2 className={styles.normalTextM}>Name</h2>
-                    <input
-                      name="Name"
-                      className={styles.textfieldStyleM}
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                    />
-                    {/* <h2 className={styles.normalTextM}>Category</h2>
-                    <select
-                      className={styles.ddTextfieldStyleM}
-                      value={selectedOption}
-                      onChange={handleChangeCategory}
-                    >
-                      {categoryDropdown.map((category, index) => (
-                        <option key={index} value={category}>
-                          {category}
-                        </option>
-                      ))}
-                    </select> */}
-                  </div>
-                </div>
 
-                <div className={styles.colContainer2M}>
-                  <h2 className={styles.normalTextM}>Business days</h2>
-                  <div className={styles.dropdownM} onClick={() => setDropdownOpen(!dropdownOpen)}>
-                    <div className={styles.dropdownHeaderM}>
-                      {openday}
-                      <BsChevronDown />
-                    </div>
-                    {dropdownOpen && (
-                      <div className={styles.dropdownListM}>
-                        {businessDays.map((day, index) => (
-                          <div key={index} className={styles.checkboxM}>
-                            <input
-                              type="checkbox"
-                              id={day}
-                              checked={selectedBusinessDays[index]}
-                              onChange={() => handleCheckboxChange(index)}
-                            />
-                            <label htmlFor={day}>{day}</label>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className={styles.rowContainerM}>
-                  <div className={styles.colTimeM}>
-                    <h2 className={styles.normalTextM}>Open time</h2>
-                    <div className={styles.textfieldSubContainerM}>
-                      <select
-                        className={styles.ddTextfieldStyleM}
-                        value={formData.openTimeHR}
-                        onChange={handleChangeOpenTimeHR}
-                      >
-                        {time_hr.map((hr, index) => (
-                          <option key={index} value={hr}>
-                            {hr}
-                          </option>
-                        ))}
-                      </select>
-                      <select
-                        className={styles.ddTextfieldStyleM}
-                        value={formData.openTimeMin}
-                        onChange={handleChangeOpenTimeMIN}
-                      >
-                        {time_min.map((min, index) => (
-                          <option key={index} value={min}>
-                            {min}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div className={styles.colTimeM}>
-                    <h2 className={styles.normalTextM}>Close time</h2>
-                    <div className={styles.textfieldSubContainerM}>
-                      <select
-                        className={styles.ddTextfieldStyleM}
-                        value={formData.closeTimeHR}
-                        onChange={handleChangeCloseTimeHR}
-                      >
-                        {time_hr.map((hr, index) => (
-                          <option key={index} value={hr}>
-                            {hr}
-                          </option>
-                        ))}
-                      </select>
-                      <h2 className={styles.normalTextM}> : </h2>
-                      <select
-                        className={styles.ddTextfieldStyleM}
-                        value={formData.closeTimeMin}
-                        onChange={handleChangeCloseTimeMIN}
-                      >
-                        {time_min.map((min, index) => (
-                          <option key={index} value={min}>
-                            {min}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.textfieldBigContainerRM}>
-                <div className={styles.textfieldSubContainerM}>
-                  <h2 className={styles.normalTextM}>Location</h2>
-                </div>
-                <textarea
-                  name="Location"
-                  className={styles.locationTextfieldM}
-                  rows={4}
-                  value={formData.location}
-                  onChange={(e) => {
-                    setFormData({ ...formData, location: e.target.value });
-                  }}
-                />
-                <div className="mapouter">
-                  <div className="gmap_canvas">
-                    <iframe
-                      src={`https://maps.google.com/maps?output=embed&q=${formData.location}`}
-                      frameBorder="0"
-                      className={styles.mapContainerM}
-                    ></iframe>
-                  </div>
-                </div>
-                <div className={styles.rowContainer2M}>
-                  <h2 className={styles.normalTextM}>Contact</h2>
-                  <div className={styles.colContactM}>
-                    <div className={styles.rowCon}>
-                      <IoCall className={styles.iconStyleM} />
-                      <input
-                        name="Phone"
-                        className={styles.textfieldStyleM}
-                        value={formData.contactCall}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            contactCall: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className={styles.rowCon}>
-                      <FaLine className={styles.iconStyleM} />
-                      <input
-                        name="Line"
-                        className={styles.textfieldStyleM}
-                        value={formData.contactLine}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            contactLine: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className={styles.rowCon2}>
-              <button className={styles.saveButtonM} onClick={handleSaveClick}>
-                Save
-              </button>
-              <button
-                className={styles.closeButtonM}
-                onClick={() => setIsModalOpen(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      );
-    };
-
+  /// main page
   return (
     <div className={styles.mainBg}>
       <Navbar />
-      <div className={styles.profileCon}>
-        <Image
-          className={styles.uploadedImage}
-          src={infoData.ProfilePic || "/default-profile.png"} // รูป fallback
-          alt="Uploaded"
-          layout="fill"
-          objectFit="cover"
-        />
-      </div>
       <div className={styles.bigContainer}>
-        {/* <button className={styles.editButton} onClick={handleEditClick}>
-          Edit Profile
-        </button> */}
+        <div className={styles.profileCon}>
+          <Image
+            className={styles.uploadedImage}
+            src={formData.profileImage || "/default-profile.png"} // รูป fallback
+            alt="Uploaded"
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
+
         <div className={styles.rowCon1}>
-          <div className={styles.toggleContainer}>
-            <label className={styles.switch}>
-              <input
-                type="checkbox"
-                checked={overrideStatus !== null ? overrideStatus === 'open': displayedIsOpen}
-                onChange={toggleOverride}
-              />
-              <span className={styles.slider}></span>
-            </label>
-            <span className={styles.statusText}>
-              {overrideStatus === 'open' && "Open"}
-              {overrideStatus === 'close' && "Close"}
-              {overrideStatus === null && (displayedIsOpen ? "Open" : "Close")}
-            </span>
-          </div>
           <button className={styles.editButton} onClick={handleEditClick}>
-            Edit Profile
+            <div className={styles.rowCon2}>
+              <FiEdit3 className={styles.editIcon} />
+              Edit Profile
+            </div>
           </button>
         </div>
-        <h1 className={styles.title}>{infoData.Name || "Restaurant Name"}</h1>
+
+        {/* Render Editinfo outside of the button */}
+        <Editinfo
+          userID={userId}
+          formData={formData}
+          setFormData={setFormData}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          selectedBusinessDays={selectedBusinessDays}
+          setSelectedBusinessDays={setSelectedBusinessDays}
+        />
+
+        <div className={styles.rowCon3}>
+          <h1 className={styles.title}>{formData.name || "Restaurant Name"}</h1>
+        </div>
+        <ToggleGroup
+          id={id}
+          formData={formData}
+          status={formData?.toggle_status}
+          setFormData={setFormData}
+          labels={labelsText}
+          onChange={onChangetoggle}
+        />
+
+
         <div className={styles.rowCon}>
           <div className={styles.halfCon}>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Category</h2>
-              <h2 className={styles.normalText4}>{typerestaurant}</h2>
+              {/* back แยกด้วยไรมาใส่ใน split */}
+              {typerestaurant.split("/").map((category, index) => (
+                <h2 key={index} className={styles.normalText4}>
+                  {category.trim()}
+                </h2>
+              ))}
             </div>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Business day</h2>
               <h2 className={styles.normalText2}>{openday}</h2>
-
             </div>
             <div className={styles.rowCon}>
-              <h2 className={styles.normalText}>Open time</h2>
-              <h2 className={styles.normalText3}>
-                {infoData.OpenTimeHr} : {infoData.OpenTimeMin}
-              </h2>
-              <h2 className={styles.normalText1}>Close time</h2>
-              <h2 className={styles.normalText2}>
-                {infoData.CloseTimeHr} : {infoData.CloseTimeMin}
-              </h2>
+              <h2 className={styles.normalText}>Time</h2>
+              <div className={styles.rowCon2}>
+                <h2 className={styles.normalText3}>
+                  {formData.openTimeHR} : {formData.openTimeMin} -
+                </h2>
+                <h2 className={styles.normalText5}>
+                  {formData.closeTimeHR} : {formData.closeTimeMin}
+                </h2>
+              </div>
             </div>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Contact</h2>
               <div className={styles.colCon}>
-                <div className={styles.rowCon}>
+                <div className={styles.rowCon2}>
                   <IoCall className={styles.icon} />
-                  <h2 className={styles.normalText2}>{infoData.Tel}</h2>
+                  <h2 className={styles.normalText2}>{formData.contactCall}</h2>
                 </div>
-                <div className={styles.rowCon}>
+                <div className={styles.rowCon2}>
                   <FaLine className={styles.icon} />
-                  <h2 className={styles.normalText2}>{infoData.Line}</h2>
+                  <h2 className={styles.normalText2}>{formData.contactLine}</h2>
                 </div>
               </div>
             </div>
@@ -644,11 +320,11 @@ export default function Info() {
 
           <div className={styles.halfCon}>
             <h2 className={styles.normalText}>Location</h2>
-            <h2 className={styles.locationCon}>{infoData.Location}</h2>
+            <h2 className={styles.locationCon}>{formData.location}</h2>
             <div className="mapouter">
               <div className="gmap_canvas">
                 <iframe
-                  src={`https://maps.google.com/maps?output=embed&q=${infoData.Location}`}
+                  src={`https://maps.google.com/maps?output=embed&q=${formData.location}`}
                   frameBorder="0"
                   className={styles.mapCon}
                 ></iframe>
@@ -657,7 +333,6 @@ export default function Info() {
           </div>
         </div>
       </div>
-      {isModalOpen && <Modal />}
     </div>
   );
 }
