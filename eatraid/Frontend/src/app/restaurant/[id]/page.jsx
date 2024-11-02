@@ -10,23 +10,8 @@ import { GoDotFill } from "react-icons/go";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import MenuCard from "../../../../components/MenuCard";
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
-// import image1 from "../../../public/imgTest4.png";
-// import image2 from "../../../public/imgTest5.png";
-// import image3 from "../../../public/imgTest6.png";
 import axios from "axios";
 import { NEXT_PUBLIC_BASE_API_URL } from "../../../../src/app/config/supabaseClient.js";
-
-// Data array
-// const data = [
-//   { id: 1, name: "food A", image: image1, type: "noodle", price: "50" },
-//   { id: 2, name: "food B", image: image2, type: "noodle", price: "50" },
-//   { id: 3, name: "food C", image: image3, type: "Western", price: "50" },
-//   { id: 4, name: "food C", image: image3, type: "Western", price: "50" },
-//   { id: 5, name: "food B", image: image2, type: "noodle", price: "50" },
-//   { id: 6, name: "food C", image: image3, type: "Western", price: "50" },
-//   { id: 7, name: "food C", image: image3, type: "Western", price: "50" },
-//   // ... more items
-// ];
 
 export default function restaurant({ params }) {
   // const router = useRouter();
@@ -113,8 +98,8 @@ export default function restaurant({ params }) {
 
   useEffect(() => {
     if (infoData) {
-      if (infoData.toggle_status !== null) {
-        setOverrideStatus(infoData?.toggle_status);
+      if (infoData?.toggle_status !== null) {
+        setOverrideStatus(infoData?.toggle_status === true ? "open" : "close");
       } else {
         setOverrideStatus(defaultIsOpen ? "open" : "close");
       }
@@ -336,9 +321,9 @@ export default function restaurant({ params }) {
   }
 
   const statusClass =
-    toggle_status === "close"
+    overrideStatus === "close"
       ? styles.statusClosed
-      : toggle_status === "open"
+      : overrideStatus === "open"
       ? styles.statusOpen
       : console.log("fail");
 
@@ -370,9 +355,9 @@ export default function restaurant({ params }) {
             <h1 className={styles.title}>{infoData.Name}</h1>
             <GoDotFill className={`${styles.iconDot} ${statusClass}`} />
             <span className={statusClass}>
-              {infoData?.toggle_status === "open" && "Open"}
-              {infoData?.toggle_status === "close" && "Close"}
-              {infoData?.toggle_status === null &&
+              {overrideStatus === "open" && "Open"}
+              {overrideStatus === "close" && "Close"}
+              {overrideStatus === null &&
                 (displayedIsOpen ? "Open" : "Close")}
             </span>
           </div>
