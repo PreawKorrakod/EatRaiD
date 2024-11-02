@@ -13,6 +13,7 @@ const HomeCard = (props) => {
     return (
 
         <div className={styles.main_content}>
+             {/* <Tooltip title={type.join(', ')} placement="top"></Tooltip> */}
             <Tooltip title={type.join(', ')} placement="top">
                 <div className={styles.singleDest}>
 
