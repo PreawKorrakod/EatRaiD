@@ -10,23 +10,8 @@ import { GoDotFill } from "react-icons/go";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import MenuCard from "../../../../components/MenuCard";
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
-import image1 from "../../../../public/imgTest4.png";
-import image2 from "../../../../public/imgTest5.png";
-import image3 from "../../../../public/imgTest6.png";
 import axios from "axios";
-import { NEXT_PUBLIC_BASE_API_URL } from '../../../../src/app/config/supabaseClient.js';
-
-// Data array
-// const data = [
-//   { id: 1, name: "food A", image: image1, type: "noodle", price: "50" },
-//   { id: 2, name: "food B", image: image2, type: "noodle", price: "50" },
-//   { id: 3, name: "food C", image: image3, type: "Western", price: "50" },
-//   { id: 4, name: "food C", image: image3, type: "Western", price: "50" },
-//   { id: 5, name: "food B", image: image2, type: "noodle", price: "50" },
-//   { id: 6, name: "food C", image: image3, type: "Western", price: "50" },
-//   { id: 7, name: "food C", image: image3, type: "Western", price: "50" },
-//   // ... more items
-// ];
+import { NEXT_PUBLIC_BASE_API_URL } from "../../../../src/app/config/supabaseClient.js";
 
 export default function restaurant({ params }) {
   // const router = useRouter();
@@ -71,8 +56,9 @@ export default function restaurant({ params }) {
       pages.push(
         <button
           key={i}
-          className={`${styles.pageButton} ${currentPage === i ? styles.activePage : ""
-            }`}
+          className={`${styles.pageButton} ${
+            currentPage === i ? styles.activePage : ""
+          }`}
           onClick={() => handlePageClick(i)}
         >
           {i}
@@ -81,7 +67,6 @@ export default function restaurant({ params }) {
     }
     return pages;
   };
-
 
   const [infoData, setInfoData] = useState(null);
   const [defaultIsOpen, setDefaultIsOpen] = useState(false);
@@ -113,22 +98,23 @@ export default function restaurant({ params }) {
 
   useEffect(() => {
     if (infoData) {
-      if (infoData.toggle_status !== null) {
-        setOverrideStatus(infoData?.toggle_status);
+      if (infoData?.toggle_status !== null) {
+        setOverrideStatus(infoData?.toggle_status === true ? "open" : "close");
       } else {
-        setOverrideStatus(defaultIsOpen ? 'open' : 'close');
+        setOverrideStatus(defaultIsOpen ? "open" : "close");
       }
     }
   }, [infoData, defaultIsOpen]);
 
   useEffect(() => {
-    axios.get(`${NEXT_PUBLIC_BASE_API_URL}/get-fav-restaurant`, {
-      params: { RestaurantId: params.id },
-      withCredentials: true
-    })
+    axios
+      .get(`${NEXT_PUBLIC_BASE_API_URL}/get-fav-restaurant`, {
+        params: { RestaurantId: params.id },
+        withCredentials: true,
+      })
       .then((res) => {
         setFav(res.data);
-      })
+      });
   }, [params.id]);
 
   useEffect(() => {
@@ -144,7 +130,10 @@ export default function restaurant({ params }) {
       }
 
       const openTime = getTodayTime(infoData.OpenTimeHr, infoData.OpenTimeMin);
-      const closeTime = getTodayTime(infoData.CloseTimeHr, infoData.CloseTimeMin);
+      const closeTime = getTodayTime(
+        infoData.CloseTimeHr,
+        infoData.CloseTimeMin
+      );
 
       if (closeTime <= openTime) {
         closeTime.setDate(closeTime.getDate() + 1);
@@ -165,7 +154,6 @@ export default function restaurant({ params }) {
   useEffect(() => {
     const fetchMenuData = async () => {
       try {
-
         const menu = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/showmenu`, {
           params: { RestaurantId: params.id },
           withCredentials: true,
@@ -173,10 +161,9 @@ export default function restaurant({ params }) {
 
         console.log(menu.data);
         setData(menu.data);
-
       } catch (error) {
-        console.error('Error fetching menu data:', error);
-        alert('Failed to fetch menu data.');
+        console.error("Error fetching menu data:", error);
+        alert("Failed to fetch menu data.");
       }
     };
     fetchMenuData();
@@ -195,7 +182,7 @@ export default function restaurant({ params }) {
           console.log("No user data found.");
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
     fetchData();
@@ -206,42 +193,51 @@ export default function restaurant({ params }) {
       setLoading(true); // Show loading
       if (!params.id) return;
       try {
-        const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/showinfo`, {
-          params: { RestaurantId: params.id },
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${NEXT_PUBLIC_BASE_API_URL}/showinfo`,
+          {
+            params: { RestaurantId: params.id },
+            withCredentials: true,
+          }
+        );
         if (response.data && response.data.length > 0) {
           console.log("Restaurant info:", response.data[0]);
-          const selectedDays = response.data[0].BusinessDay.split(',').map(day => day === 'true');
+          const selectedDays = response.data[0].BusinessDay.split(",").map(
+            (day) => day === "true"
+          );
           setSelectedBusinessDays(selectedDays);
           setInfoData(response.data[0]);
         }
       } catch (error) {
         console.error("Error fetching restaurant info:", error);
-
       } finally {
         setLoading(false); // Hide loading
       }
-    }
+    };
 
     fetchInfo();
   }, [params.id]);
 
-
+  console.log("infoData", infoData);
 
   useEffect(() => {
     const fetchCategory = async () => {
       if (!infoData?.RestaurantId) return;
       try {
-        const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/typerestaurant`, {
-          params: { RestaurantId: params.id },
-          withCredentials: true,
-        });
-        console.log("Restaurant Category:", category.data[0].TypeName);
+
+        const category = await axios.get(
+          `${NEXT_PUBLIC_BASE_API_URL}/typerestaurant`,
+          {
+            params: { RestaurantId: params.id },
+            withCredentials: true,
+          }
+        );
+        // console.log("Restaurant Category:", category.data.map((item) => item.TypeName));
         const type = category.data.map((item) => item.TypeName);
-        setTyperestaurant(type.join('/'));
+        console.log("Type:", type);
+        setTyperestaurant(type.join(", "));
       } catch (error) {
-        console.error('Error fetching restaurant category:', error);
+        console.error("Error fetching restaurant category:", error);
       }
     };
     fetchCategory();
@@ -250,7 +246,6 @@ export default function restaurant({ params }) {
   if (loading) {
     return <div>Loading...</div>;
   }
-
 
   const openday = [];
 
@@ -264,13 +259,12 @@ export default function restaurant({ params }) {
     }
   });
   if (beforeshow_open.length === 7) {
-    openday.push('Everyday');
+    openday.push("Everyday");
   } else if (beforeshow_open.length < 4) {
-    openday.push(beforeshow_open.join(', '));
+    openday.push(beforeshow_open.join(", "));
   } else if (beforeshow_open.length >= 4) {
-    openday.push("Everyday except " + beforeshow_close.join(', '));
+    openday.push("Everyday except " + beforeshow_close.join(", "));
   }
-
 
   if (!infoData) {
     return <div>Loading...</div>;
@@ -278,12 +272,13 @@ export default function restaurant({ params }) {
 
   console.log("infoData", infoData);
 
-  const displayedIsOpen = overrideStatus !== null ? (overrideStatus === 'open') : defaultIsOpen;
+  const displayedIsOpen =
+    overrideStatus !== null ? overrideStatus === "open" : defaultIsOpen;
 
   const handleFavClick = async () => {
     console.log("isLikedByUser", isLikedByUser);
     if (!userId) {
-      alert('Please login to favorite this restaurant.');
+      alert("Please login to favorite this restaurant.");
       return;
     } else {
       try {
@@ -293,18 +288,22 @@ export default function restaurant({ params }) {
             data: { user: userId, restaurant: params.id },
             withCredentials: true,
           });
-          setFav(prevFav => prevFav.filter(f => f.UserId !== userId));
+          setFav((prevFav) => prevFav.filter((f) => f.UserId !== userId));
         } else {
-          res = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/add-to-fav`, {
-            user: userId,
-            restaurant : params.id,
-          }, {
-            withCredentials: true,
-          });
-          setFav(prevFav => [...prevFav, { UserId: userId }]);
+          res = await axios.post(
+            `${NEXT_PUBLIC_BASE_API_URL}/add-to-fav`,
+            {
+              user: userId,
+              restaurant: params.id,
+            },
+            {
+              withCredentials: true,
+            }
+          );
+          setFav((prevFav) => [...prevFav, { UserId: userId }]);
         }
       } catch (error) {
-        console.error('Error updating favorite:', error);
+        console.error("Error updating favorite:", error);
       }
     }
   };
@@ -313,25 +312,36 @@ export default function restaurant({ params }) {
 
   const isLikedByUser = fav.some(({ UserId }) => UserId === userId);
 
+  let toggle_status; 
+
+  if (infoData?.toggle_status === null) {
+    toggle_status = displayedIsOpen ? "open" : "close"; 
+  } else {
+    toggle_status = infoData.toggle_status; 
+  }
+
   const statusClass =
-    infoData?.toggle_status === "open" ? styles.statusOpen : styles.statusClosed;
-  const statusText = infoData?.toggle_status === "open" ? "Open" : "Close";
+    overrideStatus === "close"
+      ? styles.statusClosed
+      : overrideStatus === "open"
+      ? styles.statusOpen
+      : console.log("fail");
 
   return (
     <div className={styles.mainBg}>
       <Navbar />
       <div className={styles.scrollableContainer}>
-
         <div className={styles.bigContainer}>
           <div className={styles.profileCon}>
             <Image
               className={styles.uploadedImage}
-              src={infoData.ProfilePic}
+              src={infoData.ProfilePic || "/default-profile.png"} // fallback image
               alt="Uploaded"
               layout="fill"
               objectFit="cover"
             />
           </div>
+
           <button className={styles.editButton} onClick={handleFavClick}>
             Favorite
             {isLikedByUser ? (
@@ -340,53 +350,60 @@ export default function restaurant({ params }) {
               <IoHeartOutline className={styles.favoriteIcon} />
             )}
           </button>
-          <div className={styles.rowCon2}>
+
+          <div className={styles.rowCon3}>
             <h1 className={styles.title}>{infoData.Name}</h1>
             <GoDotFill className={`${styles.iconDot} ${statusClass}`} />
-            <span className={`${styles.statusText} ${statusClass}`}>
-              {infoData?.toggle_status === 'open' && "Open"}
-              {infoData?.toggle_status === 'close' && "Close"}
-              {infoData?.toggle_status === null && (displayedIsOpen ? "Open" : "Close")}
+            <span className={statusClass}>
+              {overrideStatus === "open" && "Open"}
+              {overrideStatus === "close" && "Close"}
+              {overrideStatus === null &&
+                (displayedIsOpen ? "Open" : "Close")}
             </span>
           </div>
+
           <div className={styles.rowCon}>
             <div className={styles.halfCon}>
               <div className={styles.rowCon}>
                 <h2 className={styles.normalText}>Category</h2>
-                <h2 className={styles.normalText4}>{typerestaurant}</h2>
+                <div className={styles.rowCon4}>
+                  {typerestaurant.split(",").map((category, index) => (
+                    <h2 key={index} className={styles.normalText4}>
+                      {category.trim()}
+                    </h2>
+                  ))}
+                </div>
               </div>
               <div className={styles.rowCon}>
                 <h2 className={styles.normalText}>Business day</h2>
                 <h2 className={styles.normalText2}>{openday}</h2>
               </div>
               <div className={styles.rowCon}>
-                <h2 className={styles.normalText}>Open time</h2>
-                <h2 className={styles.normalText3}>
-                  {infoData.OpenTimeHr} : {infoData.OpenTimeMin}
-                </h2>
-                <h2 className={styles.normalText1}>Close time</h2>
-                <h2 className={styles.normalText2}>
-                  {infoData.CloseTimeHr} : {infoData.CloseTimeMin}
-                </h2>
+                <h2 className={styles.normalText}>Time</h2>
+                <div className={styles.rowCon2}>
+                  <h2 className={styles.normalText3}>
+                    {infoData.OpenTimeHr} : {infoData.OpenTimeMin} -
+                  </h2>
+                  <h2 className={styles.normalText5}>
+                    {infoData.CloseTimeHr} : {infoData.CloseTimeMin}
+                  </h2>
+                </div>
               </div>
               <div className={styles.rowCon}>
                 <h2 className={styles.normalText}>Contact</h2>
                 <div className={styles.colCon}>
-                  <div className={styles.rowCon}>
+                  <div className={styles.rowCon2}>
                     <IoCall className={styles.icon} />
-                    <h2 className={styles.normalText2}>
-                      {infoData.Tel}
-                    </h2>
+                    <h2 className={styles.normalText2}>{infoData.Tel}</h2>
                   </div>
-                  <div className={styles.rowCon}>
+                  <div className={styles.rowCon2}>
                     <FaLine className={styles.icon} />
-                    <h2 className={styles.normalText2}>
-                      {infoData.Line}
-                    </h2>
+                    <h2 className={styles.normalText2}>{infoData.Line}</h2>
                   </div>
                 </div>
               </div>
             </div>
+
             <div className={styles.halfCon}>
               <h2 className={styles.normalText}>Location</h2>
               <h2 className={styles.locationCon}>{infoData.Location}</h2>
@@ -401,53 +418,52 @@ export default function restaurant({ params }) {
               </div>
             </div>
           </div>
-        </div>
+          <div className={styles.outerContainer}>
+            <div className={styles.MenuContainer}>
+              <div className={styles.Menuheader}>Menu</div>
+              {currentItems.length > 0 ? (
+                <div className={styles.content_grid}>
+                  {currentItems.map((restaurant) => (
+                    <MenuCard
+                      key={restaurant.Id}
+                      id={restaurant.Id}
+                      img={restaurant.MenuPic ? restaurant.MenuPic : null}
+                      name={restaurant.NameFood}
+                      type={restaurant.Type.Name}
+                      price={restaurant.Price}
+                      role="customer"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.content_empty}>
+                  <p className={styles.emptyMessage}>No menu added yet.</p>
+                </div>
+              )}
+              {/* Pagination Controls */}
+              {data.length > 0 && (
+                <div className={styles.pagination}>
+                  <button
+                    className={styles.pageButton}
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                  >
+                    <BsChevronDoubleLeft className={styles.Arrow} />
+                  </button>
 
-        <div className={styles.MenuContainer}>
-          <div className={styles.Menuheader}>Menu</div>
-          {currentItems.length > 0 ? (
-            <div className={styles.content_grid}>
-              {/* backend มาเชื่อมให้ใส่ข้อมูล restaurant.(ชื่อคอลัมน์) นะ */}
-              {currentItems.map((restaurant) => (
-                <MenuCard
-                  key={restaurant.Id}
-                  id={restaurant.Id}
-                  img={restaurant.MenuPic ? restaurant.MenuPic : null}
-                  name={restaurant.NameFood}
-                  type={restaurant.Type.Name}
-                  price={restaurant.Price}
-                  role="customer"
-                // role = 'owner'
-                />
-              ))}
-            </div>
-          ) : (
-            <div className={styles.content_empty}>
-              <p className={styles.emptyMessage}>No menu added yet.</p>
-            </div>
-          )}
-          {/* Pagination Controls */}
-          {data.length > 0 && (
-            <div className={styles.pagination}>
-              <button
-                className={styles.pageButton}
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-              >
-                <BsChevronDoubleLeft className={styles.Arrow} />
-              </button>
+                  {renderPageNumbers()}
 
-              {renderPageNumbers()}
-
-              <button
-                className={styles.pageButton}
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-              >
-                <BsChevronDoubleRight className={styles.Arrow} />
-              </button>
+                  <button
+                    className={styles.pageButton}
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                  >
+                    <BsChevronDoubleRight className={styles.Arrow} />
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
