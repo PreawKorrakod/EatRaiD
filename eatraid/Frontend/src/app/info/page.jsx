@@ -136,7 +136,7 @@ export default function Info() {
     };
     fetchCategory();
   }, [infoData?.RestaurantId]);
-  
+
 
   useEffect(() => {
     if (infoData) {
@@ -281,12 +281,13 @@ export default function Info() {
           <div className={styles.halfCon}>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Category</h2>
-              {/* back แยกด้วยไรมาใส่ใน split */}
-              {typerestaurant.split("/").map((category, index) => (
-                <h2 key={index} className={styles.normalText4}>
-                  {category.trim()}
-                </h2>
-              ))}
+              <div className={styles.rowCon4}>
+                {typerestaurant.split("/").map((category, index) => (
+                  <h2 key={index} className={styles.normalText4}>
+                    {category.trim()}
+                  </h2>
+                ))}
+              </div>
             </div>
             <div className={styles.rowCon}>
               <h2 className={styles.normalText}>Business day</h2>
