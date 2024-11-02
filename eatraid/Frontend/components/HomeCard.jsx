@@ -10,11 +10,13 @@ import Tooltip from '@mui/material/Tooltip';
 const HomeCard = (props) => {
     const { id, img, name, type, distance } = props;
 
+    const uniqueTypes = [...new Set(type)];
+
     return (
 
         <div className={styles.main_content}>
              {/* <Tooltip title={type.join(', ')} placement="top"></Tooltip> */}
-            <Tooltip title={type.join(', ')} placement="top">
+            <Tooltip title={uniqueTypes.join(', ')} placement="top">
                 <div className={styles.singleDest}>
 
                     <div className={styles.dastImage}>
@@ -27,10 +29,10 @@ const HomeCard = (props) => {
                         </div>
 
                         <div className={styles.showType}>
-                            {type.slice(0, 2).map((t, index) => (
+                            {uniqueTypes.slice(0, 2).map((t, index) => (
                                 <span key={index} className={styles.typeComponent}>{t}</span>
                             ))}
-                            {type.length > 2 && <span className={styles.moreText}>+{type.length - 2} more</span>}
+                            {uniqueTypes.length > 2 && <span className={styles.moreText}>+{uniqueTypes.length - 2} more</span>}
                         </div>
 
                         {distance === "N/A" ? '' : (
