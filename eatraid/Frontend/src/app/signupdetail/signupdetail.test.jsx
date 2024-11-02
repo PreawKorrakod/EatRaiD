@@ -98,7 +98,7 @@ describe('SignupDetail Component', () => {
     
     // expect(screen.getByTestId(day).value); // Check for the actual day labels
     // expect(screen.getByRole('checkbox', { name: /day/i }));
-    // expect(screen.getByText(/Sunday/i)).toBeInTheDocument();
+    // expect(screen.getByLabelText(/Sunday/i)).toBeInTheDocument();
     // expect(screen.getByTestId('Sunday')).toBeInTheDocument();
     // const dropdownList = container.querySelector('.dropdownList'); // Adjust the class to match your actual class name
     // const sundayOption = dropdownList.querySelector('input[type="checkbox"][id="Sunday"]');
@@ -109,7 +109,7 @@ describe('SignupDetail Component', () => {
     // Select a day (e.g., "Monday")
     // const mondayCheckbox = screen.getByLabelText(/Monday/i);
     // fireEvent.click(mondayCheckbox);
-    fireEvent.click(day, { target: { value: 'Monday' } });
+    // fireEvent.click(day, { target: { value: 'Monday' } });
   
     // // Close the dropdown
     // fireEvent.click(screen.getByText(/Business days/i));

@@ -337,9 +337,11 @@ export default function SignupDetail() {
                           onChange={() => handleCheckboxChange(index)}
                           // aria-labelledby={day}
                           // data-testid={day}
-                          // name= "day"
+                          // name= {day}
                           // placeholder="day"
+
                         />
+                         <label htmlFor={day}>{day}</label>
                       </div>
                     ))}
                   </div>
