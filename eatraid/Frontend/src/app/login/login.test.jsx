@@ -76,14 +76,14 @@ test('sends login request for customer role and redirects to home', async () => 
 });
 
 test('displays error message on login failure', async () => {
-axios.post.mockRejectedValue({ response: { data: { message: 'Invalid credentials' } } });
+    axios.post.mockRejectedValue({ response: { data: { message: 'Invalid credentials' } } });
 
-render(<Login />);
+    render(<Login />);
 
-fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'test@example.com' } });
-fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'wrongpassword' } });
-fireEvent.click(screen.getByRole('button', { name: /log in/i }));
+    fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'wrongpassword' } });
+    fireEvent.click(screen.getByRole('button', { name: /log in/i }));
 
-expect(await screen.findByText('Invalid credentials')).toBeInTheDocument();
+    expect(await screen.findByText('Invalid credentials')).toBeInTheDocument();
 });
 });
