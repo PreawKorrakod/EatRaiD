@@ -22,7 +22,7 @@ const Editinfo = ({
   setIsModalOpen,
   infoData,
   setInfoData,
-  selectedBusinessDays, 
+  selectedBusinessDays,
   setSelectedBusinessDays
 }) => {
   const [userId, setUserId] = useState(null);
@@ -173,7 +173,40 @@ const Editinfo = ({
         ProfilePic: updateprofileImage,
       });
 
+      let latitude = null;
+      let longitude = null;
+      console.log(infoData);
 
+      try {
+        const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+          params: {
+            q: infoData.Location,
+            format: 'json',
+            addressdetails: 1,
+          }
+        });
+        console.log(response)
+        if (response.data.length > 0) {
+          latitude = response.data[0].lat;
+          longitude = response.data[0].lon;
+          console.log('la:', latitude);
+          console.log('long:', longitude);
+
+          // Update formData with latitude and longitude
+          setFormData(prevFormData => ({
+            ...prevFormData,
+            latitude: latitude,
+            longitude: longitude,
+          }));
+        } else {
+          setErrorMessage("Could not find location coordinates.");
+          return;
+        }
+      } catch (error) {
+        console.error("Error fetching location data:", error);
+        setErrorMessage("Error fetching location data.");
+        return;
+      }
     } catch (error) {
       console.error("Error saving data:", error);
       setErrorMessage("Failed to save data. Please try again.");
