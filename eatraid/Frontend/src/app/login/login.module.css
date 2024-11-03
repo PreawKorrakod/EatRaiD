@@ -110,6 +110,10 @@
     opacity: 0.8;
 }
 
+.loading{
+    cursor: not-allowed;
+}
+
 
 .Loginbtn_wrapper{
     margin-top: 2rem;

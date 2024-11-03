@@ -4,6 +4,14 @@
     background: linear-gradient(90deg,  #881E0B 0%, #EE7214 80%);
 }
 
+
+.loading{
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #cccccc;  
+    color: #666666; 
+}
+
 /* uncomment line 42 before merge! */
 
 .bigContainer {
