@@ -12,11 +12,10 @@
     color: #666666; 
 }
 
-/* uncomment line 42 before merge! */
-
 .bigContainer {
     width: 70vw;
     height: 85vh;
+    max-height: 85vh;
     /* background-color: #673a0d; */
     background-color: #FFF;
     border-radius: 50px;

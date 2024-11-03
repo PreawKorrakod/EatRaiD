@@ -105,9 +105,6 @@ export default function SignupDetail() {
 
   const handleChangeCloseTimeHR = (event) => {
     const newCloseTimeHR = event.target.value;
-    if (parseInt(newCloseTimeHR) < parseInt(openTimeHR)) {
-      setOpenTimeHR(newCloseTimeHR);
-    }
     setCloseTimeHR(newCloseTimeHR);
   };
 
@@ -156,6 +153,12 @@ export default function SignupDetail() {
   };
 
   const handleConfirmClick = async () => {
+
+    if (parseInt(closeTimeHR) < parseInt(openTimeHR)) {
+      setErrorMessage("Close time cannot be earlier than open time.");
+      return;
+    }
+
     const error = validateInputs();
     if (error) {
       setErrorMessage(error);
