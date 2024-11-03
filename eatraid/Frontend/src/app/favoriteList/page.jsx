@@ -28,6 +28,7 @@ export default function FavoriteList() {
             try {
                 const response = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/get-fav-list`, { withCredentials: true });
                 console.log('Success:', response.data);
+                console.log('type',response.data[0].Restaurant.Menu);
                 setData(response.data); // เก็บข้อมูลที่ได้รับ
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -100,7 +101,7 @@ export default function FavoriteList() {
                                     id={restaurant.RestaurantId}
                                     img={restaurant.User?.ProfilePic ? restaurant.User.ProfilePic : "https://gemuxctpjqhmwbtxrpul.supabase.co/storage/v1/object/public/Menu/Menu_4_8034dbe4-bbdf-40b6-9b8e-fe7691ad9500.jpeg"}
                                     name={restaurant.Restaurant?.Name}
-                                    type={type}
+                                    type={restaurant.Restaurant?.Menu?.map((menu) => menu.Type?.Name)}
                                     onRemove={handleDelete} 
                                 />
                             ))}

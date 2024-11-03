@@ -711,7 +711,7 @@ app.get("/get-fav-list", async (req, res) => {
   } else {
     const { data: fav, error } = await supabase
       .from("Favorite")
-      .select("RestaurantId,Restaurant(Name),User(ProfilePic)")
+      .select("RestaurantId,Restaurant(Name,Menu(Type(Name))),User(ProfilePic)")
       .eq("UserId", req.session.userId)
       .order("Id", { ascending: true });
     if (error) {
