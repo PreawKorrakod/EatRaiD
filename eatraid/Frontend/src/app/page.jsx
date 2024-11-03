@@ -26,143 +26,143 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { IoReloadSharp } from "react-icons/io5";
 
-const data = [
-  {
-    id: 1,
-    name: "Food A",
-    image: image1,
-    type: ["noodle", "Fast food"],
-    location: "kmutnb",
-    price: { min: 30, max: 90 },
-    coordinates: { latitude: 13.7503, longitude: 100.5503 },
-    menu: ["ข้าวขาหมู","ต้มยำ","หมูกะทะ"],
-  },
-  {
-    id: 2,
-    name: "ติดมันส์",
-    image: image2,
-    type: ["Local food", "Fast food"],
-    location: "kmutnb",
-    price: { min: 100, max: 150 },
-    coordinates: { latitude: 13.81828, longitude: 100.51448 }, // ค่าที่ใกล้เคียง
-    menu: ["ข้าวขาหมู","ต้มยำ","หมูกะทะ"],
-  },
-  {
-    id: 3,
-    name: "มาสด้า",
-    image: image3,
-    type: ["noodle", "Fast food"],
-    location: "kmutnb",
-    price: { min: 100, max: 250 },
-    coordinates: { latitude: 13.81970, longitude: 100.51160 }, // ค่าที่ใกล้เคียง
-    menu: ["ข้าวขาหมู","ต้มยำ","หมูกะทะ"],
-  },
-  {
-    id: 4,
-    name: "Food D",
-    image: image1,
-    type: ["noodle", "Fast food"],
-    location: "kmutnb",
-    price: { min: 80, max: 150 },
-    coordinates: { latitude: 13.7503, longitude: 100.5503 }, // ค่าที่ใกล้เคียง
-    menu: ["ราดหน้า","ต้มยำ","หมูกะทะ"],
-  },
-  {
-    id: 5,
-    name: "Food E",
-    image: image2,
-    type: ["Local food", "Fast food"],
-    location: "kmutnb",
-    price: { min: 20, max: 60 },
-    coordinates: { latitude: 13.7504, longitude: 100.5504 }, // ค่าที่ใกล้เคียง
-    menu: ["Waffle","Toast"],
-  },
-  {
-    id: 6,
-    name: "Food F",
-    image: image2,
-    type: ["Local food", "Fast food"],
-    location: "kmutnb",
-    price: { min: 150, max: 300 },
-    coordinates: { latitude: 13.7505, longitude: 100.5505 }, // ค่าที่ใกล้เคียง
-    menu: ["Waffle","Toast"],
+// const data = [
+//   {
+//     id: 1,
+//     name: "Food A",
+//     image: image1,
+//     type: ["noodle", "Fast food"],
+//     location: "kmutnb",
+//     price: { min: 30, max: 90 },
+//     coordinates: { latitude: 13.7503, longitude: 100.5503 },
+//     menu: ["ข้าวขาหมู","ต้มยำ","หมูกะทะ"],
+//   },
+//   {
+//     id: 2,
+//     name: "ติดมันส์",
+//     image: image2,
+//     type: ["Local food", "Fast food"],
+//     location: "kmutnb",
+//     price: { min: 100, max: 150 },
+//     coordinates: { latitude: 13.81828, longitude: 100.51448 }, // ค่าที่ใกล้เคียง
+//     menu: ["ข้าวขาหมู","ต้มยำ","หมูกะทะ"],
+//   },
+//   {
+//     id: 3,
+//     name: "มาสด้า",
+//     image: image3,
+//     type: ["noodle", "Fast food"],
+//     location: "kmutnb",
+//     price: { min: 100, max: 250 },
+//     coordinates: { latitude: 13.81970, longitude: 100.51160 }, // ค่าที่ใกล้เคียง
+//     menu: ["ข้าวขาหมู","ต้มยำ","หมูกะทะ"],
+//   },
+//   {
+//     id: 4,
+//     name: "Food D",
+//     image: image1,
+//     type: ["noodle", "Fast food"],
+//     location: "kmutnb",
+//     price: { min: 80, max: 150 },
+//     coordinates: { latitude: 13.7503, longitude: 100.5503 }, // ค่าที่ใกล้เคียง
+//     menu: ["ราดหน้า","ต้มยำ","หมูกะทะ"],
+//   },
+//   {
+//     id: 5,
+//     name: "Food E",
+//     image: image2,
+//     type: ["Local food", "Fast food"],
+//     location: "kmutnb",
+//     price: { min: 20, max: 60 },
+//     coordinates: { latitude: 13.7504, longitude: 100.5504 }, // ค่าที่ใกล้เคียง
+//     menu: ["Waffle","Toast"],
+//   },
+//   {
+//     id: 6,
+//     name: "Food F",
+//     image: image2,
+//     type: ["Local food", "Fast food"],
+//     location: "kmutnb",
+//     price: { min: 150, max: 300 },
+//     coordinates: { latitude: 13.7505, longitude: 100.5505 }, // ค่าที่ใกล้เคียง
+//     menu: ["Waffle","Toast"],
 
-  },
-  {
-    id: 7,
-    name: "Food G",
-    image: image2,
-    type: ["Local food", "Fast food", "healthy"],
-    location: "kmutnb",
-    price: { min: 220, max: 250 },
-    coordinates: { latitude: 13.7506, longitude: 100.5506 }, // ค่าที่ใกล้เคียง
-    menu: ["Waffle","Toast"],
+//   },
+//   {
+//     id: 7,
+//     name: "Food G",
+//     image: image2,
+//     type: ["Local food", "Fast food", "healthy"],
+//     location: "kmutnb",
+//     price: { min: 220, max: 250 },
+//     coordinates: { latitude: 13.7506, longitude: 100.5506 }, // ค่าที่ใกล้เคียง
+//     menu: ["Waffle","Toast"],
 
-  },
-  {
-    id: 8,
-    name: "Food H",
-    image: image2,
-    type: ["Local food", "Fast food"],
-    location: "kmutnb",
-    price: { min: 50, max: 80 },
-    coordinates: { latitude: 13.7507, longitude: 100.5507 }, // ค่าที่ใกล้เคียง
-    menu: ["Waffle","Toast"],
+//   },
+//   {
+//     id: 8,
+//     name: "Food H",
+//     image: image2,
+//     type: ["Local food", "Fast food"],
+//     location: "kmutnb",
+//     price: { min: 50, max: 80 },
+//     coordinates: { latitude: 13.7507, longitude: 100.5507 }, // ค่าที่ใกล้เคียง
+//     menu: ["Waffle","Toast"],
 
-  },
-  {
-    id: 9,
-    name: "Food I",
-    image: image2,
-    type: ["Local food", "Fast food"],
-    location: "kmutnb",
-    price: { min: 10, max: 30 },
-    coordinates: { latitude: 13.7508, longitude: 100.5508 }, // ค่าที่ใกล้เคียง
-    menu: ["Waffle","Toast"],
-  },
-  {
-    id: 10,
-    name: "Food J",
-    image: image2,
-    type: ["Local food", "Fast food"],
-    location: "kmutnb",
-    price: { min: 300, max: 300 },
-    coordinates: { latitude: 13.7509, longitude: 100.5509 }, // ค่าที่ใกล้เคียง
-    menu: ["Waffle","Toast"],
-  },
-  {
-    id: 11,
-    name: "Food K",
-    image: image2,
-    type: ["Local food", "Dessert"],
-    location: "kmutnb",
-    price: { min: 100, max: 150 },
-    coordinates: { latitude: 13.7510, longitude: 100.5510 }, // ค่าที่ใกล้เคียง
-    menu: ["Waffle","Toast"],
+//   },
+//   {
+//     id: 9,
+//     name: "Food I",
+//     image: image2,
+//     type: ["Local food", "Fast food"],
+//     location: "kmutnb",
+//     price: { min: 10, max: 30 },
+//     coordinates: { latitude: 13.7508, longitude: 100.5508 }, // ค่าที่ใกล้เคียง
+//     menu: ["Waffle","Toast"],
+//   },
+//   {
+//     id: 10,
+//     name: "Food J",
+//     image: image2,
+//     type: ["Local food", "Fast food"],
+//     location: "kmutnb",
+//     price: { min: 300, max: 300 },
+//     coordinates: { latitude: 13.7509, longitude: 100.5509 }, // ค่าที่ใกล้เคียง
+//     menu: ["Waffle","Toast"],
+//   },
+//   {
+//     id: 11,
+//     name: "Food K",
+//     image: image2,
+//     type: ["Local food", "Dessert"],
+//     location: "kmutnb",
+//     price: { min: 100, max: 150 },
+//     coordinates: { latitude: 13.7510, longitude: 100.5510 }, // ค่าที่ใกล้เคียง
+//     menu: ["Waffle","Toast"],
 
-  },
-  {
-    id: 12,
-    name: "SUB",
-    image: image2,
-    type: ["Local food", "Dessert"],
-    location: "kmutnb",
-    price: { min: 120, max: 120 },
-    coordinates: { latitude: 13.82741, longitude: 100.51358 }, // ค่าที่ใกล้เคียง
-    menu: ["Waffle","Toast"],
+//   },
+//   {
+//     id: 12,
+//     name: "SUB",
+//     image: image2,
+//     type: ["Local food", "Dessert"],
+//     location: "kmutnb",
+//     price: { min: 120, max: 120 },
+//     coordinates: { latitude: 13.82741, longitude: 100.51358 }, // ค่าที่ใกล้เคียง
+//     menu: ["Waffle","Toast"],
 
-  },
-  {
-    id: 13,
-    name: "Kmutnb",
-    image: image2,
-    type: ["Local food", "Dessert"],
-    location: "kmutnb",
-    price: { min: 90, max: 110 },
-    coordinates: { latitude: 13.81915, longitude: 100.51431 }, // ค่าที่ใกล้เคียง
-        menu: ["Waffle","Toast"],
-  },
-];
+//   },
+//   {
+//     id: 13,
+//     name: "Kmutnb",
+//     image: image2,
+//     type: ["Local food", "Dessert"],
+//     location: "kmutnb",
+//     price: { min: 90, max: 110 },
+//     coordinates: { latitude: 13.81915, longitude: 100.51431 }, // ค่าที่ใกล้เคียง
+//         menu: ["Waffle","Toast"],
+//   },
+// ];
 
 
 export default function Home() {
@@ -181,45 +181,44 @@ export default function Home() {
   const [isShuffling, setIsShuffling] = useState(false);
   const [shuffledCards, setShuffledCards] = useState([]); // เก็บรายการที่ถูกสลับ
   const [shufflingCards, setShufflingCards] = useState([]); // เก็บการ์ดที่แสดงในขณะสุ่ม
-  // const [data, setData] = useState([])
+  const [data, setData] = useState([])
 
-  // useEffect(() => {
-  //   try {
-  //     axios
-  //       .get(`${NEXT_PUBLIC_BASE_API_URL}/allrestaurant`)
-  //       .then(async (res) => {
-  //         console.log(res.data);
+  useEffect(() => {
+    try {
+      axios
+        .get(`${NEXT_PUBLIC_BASE_API_URL}/allrestaurant`)
+        .then(async (res) => {
+          console.log(res.data);
 
-  //         // Filter out restaurants with null type or price before transforming data
-  //         const filteredData = res.data.filter(
-  //           restaurant => restaurant.Types !== null && restaurant.minPrice !== null && restaurant.maxPrice !== null
-  //         );
+          // Filter out restaurants with null type or price before transforming data
+          const filteredData = res.data.filter(
+            restaurant => restaurant.Types !== null && restaurant.minPrice !== null && restaurant.maxPrice !== null
+          );
 
-  //         const transformedData = filteredData.map((restaurant, index) => ({
-  //           IDindex: index+1,
-  //           id: restaurant.RestaurantId,
-  //           name: restaurant.Name,
-  //           image: restaurant.ProfilePic,
-  //           type: restaurant.Types,
-  //           location: restaurant.Location,
-  //           price: { min: restaurant.minPrice, max: restaurant.maxPrice },
-  //           coordinates: { latitude: restaurant.Latitude, longitude: restaurant.Longitude },
-  //           // เพิ่มเข้ามาเพื่อดึงเมนู
-  //           // menu: restaurant.MenuItems,
+          const transformedData = filteredData.map((restaurant, index) => ({
+            IDindex: index+1,
+            id: restaurant.RestaurantId,
+            name: restaurant.Name,
+            image: restaurant.ProfilePic,
+            type: restaurant.Types,
+            location: restaurant.Location,
+            price: { min: restaurant.minPrice, max: restaurant.maxPrice },
+            coordinates: { latitude: restaurant.Latitude, longitude: restaurant.Longitude },
+            menu: restaurant.FoodNames,
             
-  //         }));
-
-  //         setData(transformedData);
-  //         setFilteredResults(transformedData);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Failed to receive information :", error);
-  //         setError("Failed to receive information");
-  //       });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, []);
+          }));
+          console.log(transformedData)
+          setData(transformedData);
+          setFilteredResults(transformedData);
+        })
+        .catch((error) => {
+          console.error("Failed to receive information :", error);
+          setError("Failed to receive information");
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   useEffect(() => {
     console.log('data is', data)
