@@ -307,6 +307,7 @@ app.get("/allrestaurant", async (req, res) => {
       Name,
       Menu (
         Price,
+        NameFood,
         Type (
           Name
         )
@@ -336,6 +337,7 @@ app.get("/allrestaurant", async (req, res) => {
         maxPrice,
         Latitude: restaurant.Latitude,
         Longitude: restaurant.Longitude,
+        FoodNames: restaurant.Menu.map(menuItem => menuItem.NameFood),
         Types: restaurant.Menu.map(menuItem => menuItem.Type.Name)
       };
     });

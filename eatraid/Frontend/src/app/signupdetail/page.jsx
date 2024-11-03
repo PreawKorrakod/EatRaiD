@@ -57,6 +57,7 @@ export default function SignupDetail() {
   const [NameOwner, setNameOwner] = useState(""); //เก็บชื่อที่ตัวแปร NameOwner
   const [numberPhone, setNumberPhone] = useState(""); //เก็บเบอร์ที่ตัวแปร numberPhone
   const [LineContact, setLineContact] = useState(""); // เก็บไลน์ที่ตัวแปร numberPhone
+  const [loading, setLoading] = useState(false);
 
   const convertImageToBase64 = async (imageUrl) => {
     try {
@@ -161,33 +162,36 @@ export default function SignupDetail() {
       return;
     }
 
+    setLoading(true);
+
     // ตรวจสอบตำแหน่งจาก OpenStreetMap Nominatim API
-  let latitude = null;
-  let longitude = null;
+    let latitude = null;
+    let longitude = null;
 
-  try {
-    const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
-      params: {
-        q: location,
-        format: 'json',
-        addressdetails: 1,
+    try {
+      const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+        params: {
+          q: location,
+          format: 'json',
+          addressdetails: 1,
+        }
+      });
+
+      if (response.data.length > 0) {
+        latitude = response.data[0].lat;
+        longitude = response.data[0].lon;
+        console.log('la:', latitude)
+        console.log('long: ', longitude)
+      } else {
+        setErrorMessage("Could not find location coordinates.");
+        return;
       }
-    });
-
-    if (response.data.length > 0) {
-      latitude = response.data[0].lat;
-      longitude = response.data[0].lon;
-      console.log('la:',latitude)
-      console.log('long: ',longitude)
-    } else {
-      setErrorMessage("Could not find location coordinates.");
+    } catch (error) {
+      console.error("Error fetching location data:", error);
+      setErrorMessage("Error fetching location data.");
+      setLoading(false);
       return;
     }
-  } catch (error) {
-    console.error("Error fetching location data:", error);
-    setErrorMessage("Error fetching location data.");
-    return;
-  }
     // console.log("Confirm button clicked");
     // console.log("Selected business days:", selectedBusinessDays);
     // console.log("Location:", location);
@@ -212,6 +216,7 @@ export default function SignupDetail() {
         newfile = res.data.profile;
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
     }
 
@@ -236,12 +241,13 @@ export default function SignupDetail() {
     sessionStorage.removeItem('userID');
     const newUserID = {
       email, role, id, file,
-      Name, OpenTimeHr, CloseTimeHr, OpenTimeMin, CloseTimeMin, Latitude: latitude, 
-      Longitude: longitude, Longitude, BusinessDay, Tel, Line
+      Name, OpenTimeHr, CloseTimeHr, OpenTimeMin, CloseTimeMin, Latitude: latitude,
+      Longitude: longitude, BusinessDay, Tel, Line
     };
     console.log("signup successful navigate to verify", newUserID);
     sessionStorage.setItem("userID", JSON.stringify(newUserID));
     router.push("/verify");
+    setLoading(false);
   };
 
   const openday = [];
@@ -450,8 +456,11 @@ export default function SignupDetail() {
             </div>
           </div>
         </div>
-        <button className={styles.confirmButton} onClick={handleConfirmClick}>
-          Confirm
+        <button onClick={handleConfirmClick}
+          disabled={loading}
+          className={`${styles.confirmButton} ${loading ? styles.loading : ""}`}
+        >
+          {loading ? "Loading..." : "Confirm"}
         </button>
         <div className={styles.bottomContainer}>
           <h2 className={styles.bottomText}>Already have an account?</h2>
