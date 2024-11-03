@@ -162,6 +162,7 @@ export default function SignupDetail() {
     const error = validateInputs();
     if (error) {
       setErrorMessage(error);
+      setTimeout(() => setErrorMessage(""), 5000);
       return;
     }
 
