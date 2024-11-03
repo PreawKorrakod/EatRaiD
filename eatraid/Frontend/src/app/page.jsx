@@ -171,7 +171,8 @@ export default function Home() {
   const [groupSelected, setGroupSelected] = useState(["All"]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredResults, setFilteredResults] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 300]);
+  const [maxPrice, setMaxPrice] = useState(300);
+  const [priceRange, setPriceRange] = useState([0, maxPrice]);
   const [maxDistance, setMaxDistance] = useState(1000); // ค่าเริ่มต้นก่อนการคำนวณ
   const [newDistance, setNewDistance] = useState(maxDistance);
   const [distanceValue, setDistanceValue] = useState(maxDistance); // ระยะทางเริ่มต้น
@@ -183,6 +184,7 @@ export default function Home() {
   const [shuffledCards, setShuffledCards] = useState([]); // เก็บรายการที่ถูกสลับ
   const [shufflingCards, setShufflingCards] = useState([]); // เก็บการ์ดที่แสดงในขณะสุ่ม
   const [data, setData] = useState([])
+
 
   useEffect(() => {
     try {
@@ -224,6 +226,15 @@ export default function Home() {
   useEffect(() => {
     console.log('data is', data)
   }, [data])
+
+  useEffect(() => {
+    if (data.length > 0) {
+      // คำนวณราคาสูงสุดจากข้อมูล
+      const highestPrice = Math.max(...data.map(restaurant => restaurant.price.max));
+      setMaxPrice(highestPrice); // อัพเดตค่าราคาสูงสุด
+      setPriceRange([0, highestPrice]); // อัพเดตช่วงราคาใน SliderPrice
+    }
+  }, [data]);
 
   const handleClearRandom = () => {
     setRandomResult(null);
@@ -429,6 +440,7 @@ export default function Home() {
         <div className={styles.CategoryContainer}>
           <SliderPrice
             value={priceRange}
+            maxPrice={maxPrice}
             onChange={setPriceRange}
             disabled={!!randomResult} // Disable if randomResult has a value
           />
