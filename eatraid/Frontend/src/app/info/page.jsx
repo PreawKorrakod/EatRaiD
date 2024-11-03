@@ -36,6 +36,8 @@ export default function Info() {
     contactLine: "",
     location: "",
     profileImage: "",
+    Latitude: "",
+    Longitude: "",
   });
 
   const [selectedBusinessDays, setSelectedBusinessDays] = useState([]);
@@ -177,6 +179,8 @@ export default function Info() {
         contactLine: infoData.Line,
         location: infoData.Location,
         profileImage: infoData.ProfilePic,
+        Latitude: infoData.Latitude,
+        Longitude: infoData.Longitude,
         toggle_status: infoData.toggle_status !== undefined ? infoData.toggle_status : null, // ค่าที่คาดว่าจะได้
       }));
     }
@@ -257,6 +261,7 @@ export default function Info() {
         <Editinfo
           userID={userId}
           formData={formData}
+          infoData={infoData}
           setFormData={setFormData}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
