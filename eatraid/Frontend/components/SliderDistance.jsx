@@ -2,10 +2,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import styles from './SliderDistance.module.css';
+import { orange} from '@mui/material/colors';
 
 function valuetext(value) {
     return  `${Math.ceil(value / 1000)} Km`;; // แปลงเป็นกิโลเมตรสำหรับการแสดงผล
 }
+const primary = orange[800];
 
 export default function SliderDistance({ distanceValue, setDistanceValue, maxDistance }) {
     const handleChange = (event, newValue) => {
@@ -29,7 +31,7 @@ export default function SliderDistance({ distanceValue, setDistanceValue, maxDis
                 marks
                 min={1000}  // ค่าเริ่มต้นเป็น 1 กิโลเมตร
                 max={maxDistance}// กำหนดค่า max ตาม maxDistance ที่คำนวณได้
-                color='secondary'
+                color= {primary}
                 className={styles.range}
             />
         </Box>

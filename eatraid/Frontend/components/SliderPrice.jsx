@@ -2,10 +2,14 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import styles from './SliderPrice.module.css';
+import { orange} from '@mui/material/colors';
+
 
 function valuetext(value) {
   return `${value} บาท`;
 }
+
+const primary = orange[800];
 
 const minDistance = 10;
 
@@ -38,7 +42,7 @@ export default function SliderPrice({ value, onChange }) {
         min={0} // Adjust this if necessary
         max={300} // Adjust this to match your data's price range
         step={10}
-        color='secondary'
+        color= {primary}
         className={styles.Range}
       />
     </Box>
