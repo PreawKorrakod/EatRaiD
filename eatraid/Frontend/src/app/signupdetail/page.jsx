@@ -184,6 +184,7 @@ export default function SignupDetail() {
         console.log('long: ', longitude)
       } else {
         setErrorMessage("Could not find location coordinates.");
+        setLoading(false);
         return;
       }
     } catch (error) {

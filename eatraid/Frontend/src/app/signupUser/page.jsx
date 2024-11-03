@@ -7,7 +7,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle } from "react-icons/bs";
 import { useRouter } from "next/navigation";
-
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
@@ -17,7 +16,7 @@ export default function SignupUser() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState('');
     const minPasswordLength = 6;
-
+    const [loading, setLoading] = useState(false);
 
     const router = useRouter();
 
@@ -55,8 +54,10 @@ export default function SignupUser() {
         }
 
         setError('');
+        setLoading(true)
 
         if (isPasswordMatching) {
+            setLoading(true)
             try {
                 axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
                     email: email,
@@ -70,18 +71,22 @@ export default function SignupUser() {
                     console.log("signup successful navigate to verify", userID);
                     sessionStorage.setItem('userID', JSON.stringify(userID));
                     router.push('/verify');
+                    setLoading(false)
 
                 }).catch(error => {
                     console.error('Error during signup:', error);
                     if (error.response.data.message == "AuthApiError: email rate limit exceeded") {
                         setError('Cannot send OTP multiple times');
+                        setLoading(false)
                     } else {
                         setError('This email already register. Please try again.');
+                        setLoading(false)
                     }
                     // alert('This email already register. Please try again.')
                 });
             } catch (error) {
                 console.log("Error:", error);
+                setLoading(false)
             }
         }
     };
@@ -176,9 +181,10 @@ export default function SignupUser() {
                             <div className={styles.Loginbtn_wrapper}>
                                 <button
                                     type="submit"
-                                    className={styles.Loginbtn}
+                                    className={`${styles.Loginbtn} ${loading ? styles.loading : ''}`}
+                                    disabled={loading}
                                 >
-                                    Sign up
+                                    {loading ? 'Loading...' : 'Sign up'}
                                 </button>
                             </div>
                         </form>

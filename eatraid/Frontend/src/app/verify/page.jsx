@@ -18,6 +18,7 @@ export default function Verify() {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [error, setError] = useState("");
   const [profileImage, setProfileImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const storedUserID = sessionStorage.getItem("userID");
@@ -51,41 +52,45 @@ export default function Verify() {
   };
 
   const handleVerify = () => {
+    setLoading(true);
     if (otp.some((digit) => digit === "")) {
       setError("Please enter all 6 digits of the OTP before verifying.");
+      setLoading(false);
     } else {
       // Implement verification logic here
       console.log("Verifying OTP:", otp.join(""));
+      setLoading(false);
 
       if (
-          userID.OpenTimeHr === '00' &&
-          userID.CloseTimeHr === '00' &&
-          userID.OpenTimeMin === '00' &&
-          userID.CloseTimeMin === '00'
+        userID.OpenTimeHr === '00' &&
+        userID.CloseTimeHr === '00' &&
+        userID.OpenTimeMin === '00' &&
+        userID.CloseTimeMin === '00'
       ) {
-          userID.OpenTimeHr = '-';
-          userID.CloseTimeHr = '-';
-          userID.OpenTimeMin = '-';
-          userID.CloseTimeMin = '-';
+        userID.OpenTimeHr = '-';
+        userID.CloseTimeHr = '-';
+        userID.OpenTimeMin = '-';
+        userID.CloseTimeMin = '-';
       }
 
       try {
+        setLoading(true);
         axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
           email: userID.email,
           OTP: otp.join(""),
           role: userID.role,
           profilePic: userID.file,
           user: userID.id,
-          Name: userID.Name || "-", 
+          Name: userID.Name || "-",
           OpenTimeHr: userID.OpenTimeHr,
-          CloseTimeHr: userID.CloseTimeHr, 
-          OpenTimeMin: userID.OpenTimeMin, 
+          CloseTimeHr: userID.CloseTimeHr,
+          OpenTimeMin: userID.OpenTimeMin,
           CloseTimeMin: userID.CloseTimeMin,
-          Location: userID.Location || "-", 
-          Latitude: userID.Latitude, 
+          Location: userID.Location || "-",
+          Latitude: userID.Latitude,
           Longitude: userID.Longitude,
-          BusinessDay: userID.BusinessDay, 
-          Tel: userID.Tel || "-", 
+          BusinessDay: userID.BusinessDay,
+          Tel: userID.Tel || "-",
           Line: userID.Line || "-"
 
         }).then(async res => {
@@ -94,19 +99,22 @@ export default function Verify() {
 
           if (userID.role === "customer") {
             router.push("/login"); // Redirect to home page
+            setLoading(false);
           } else if (userID.role === "owner") {
             sessionStorage.removeItem('userID');
             router.push("/login");
+            setLoading(false);
           }
         }).catch(error => {
           console.error('Error during verify OTP:', error);
-            setError("Wrong OTP. Try again.");
+          setError("Wrong OTP. Try again.");
         });
       } catch (error) {
         console.log(error);
       }
 
       setError("");
+      setLoading(false);
     }
   };
 
@@ -138,7 +146,7 @@ export default function Verify() {
               onClick={() => router.back()}
               className={styles.iconArrowStyle}
             >
-              <FaArrowLeft/>
+              <FaArrowLeft />
             </button>
           </div>
           <div className={styles.iconCon}>
@@ -178,8 +186,16 @@ export default function Verify() {
             >
               Cancel
             </button>
-            <button className={styles.verifyButton} onClick={handleVerify}>
+            {/* <button className={styles.verifyButton} onClick={handleVerify}>
               Verify
+            </button> */}
+            <button
+              type="submit"
+              className={`${styles.verifyButton} ${loading ? styles.loading : ''}`}
+              disabled={loading}
+              onClick={handleVerify}
+            >
+              {loading ? 'Loading...' : 'Verify'}
             </button>
           </div>
         </div>

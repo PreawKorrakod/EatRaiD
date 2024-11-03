@@ -17,6 +17,7 @@ export default function signupRestaurant() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState('');
     const minPasswordLength = 6;
+    const [loading, setLoading] = useState(false);
 
     const router = useRouter();
 
@@ -54,9 +55,10 @@ export default function signupRestaurant() {
         }
 
         setError('');
-
+        setLoading(true);
 
         if (isPasswordMatching) {
+            setLoading(true);
             try {
                 axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
                     email: email,
@@ -75,6 +77,7 @@ export default function signupRestaurant() {
                 });
             } catch (error) {
                 console.log("Error:", error);
+                setLoading(false);
             }
 
         }
@@ -170,9 +173,10 @@ export default function signupRestaurant() {
                             <div className={styles.Loginbtn_wrapper}>
                                 <button
                                     type="submit"
-                                    className={styles.Loginbtn}
+                                    className={`${styles.Loginbtn} ${loading ? styles.loading : ''}`}
+                                    disabled={loading}
                                 >
-                                    Sign up
+                                    {loading ? 'Loading...' : 'Sign up'}
                                 </button>
                             </div>
                         </form>
