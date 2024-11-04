@@ -576,7 +576,8 @@ export default function Home() {
                 )
               ) : randomResult ? (
                 <HomeCard
-                  id={randomResult.IDindex}
+                  key={randomResult.IDindex}
+                  id={randomResult.id}
                   img={randomResult.image}
                   name={randomResult.name}
                   type={randomResult.type}
