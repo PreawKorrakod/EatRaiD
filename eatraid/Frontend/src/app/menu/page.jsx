@@ -51,8 +51,8 @@ export default function menu() {
                 if (user !== null) {
                     console.log(user.data[0].Id);
                     setUserId(user.data[0].Id);
-                } else { 
-                    router.push(`/`); 
+                } else {
+                    router.push(`/`);
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);
@@ -109,7 +109,7 @@ export default function menu() {
     // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
     // const Userfromsession = userId
     // const OwnerID = data[0]?.RestaurantId
-  
+
 
     const handleDelete = (restaurantId) => {
         setData((prevData) => prevData.filter((restaurant) => restaurant.Id !== restaurantId));
@@ -145,7 +145,7 @@ export default function menu() {
 
     const handleInput = (event) => {
         let value = event.target.value;
-    
+
         // ตรวจสอบว่ากรอกเป็นตัวอักษรหรือตัวเลข
         if (/[^0-9]/g.test(value)) {
             setError('Please enter numbers only.');
@@ -163,13 +163,13 @@ export default function menu() {
         else {
             setError(''); // เคลียร์ข้อผิดพลาดถ้าข้อมูลถูกต้อง
         }
-    
+
         // อัปเดตค่าใน formData
         setFormData((prev) => ({ ...prev, price: value }));
     };
-    
-    
-    
+
+
+
 
 
 
@@ -230,13 +230,13 @@ export default function menu() {
             setIsLoading(false); // หยุดการโหลด
             setIsAddSuccess(true); // แสดงข้อความเพิ่มเมนูสำเร็จ
 
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            // await new Promise((resolve) => setTimeout(resolve, 1000));
 
             setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาด
             setTimeout(() => {
                 setIsAddSuccess(false); // ซ่อนข้อความ "Add success" หลังจากเวลาผ่านไป
                 setIsAlertModalOpen(false);
-            }, 2000); // ซ่อนข้อความหลังจาก 2 วินาที
+            }, 1000); // ซ่อนข้อความหลังจาก 2 วินาที
 
 
             handleaddMenu();
@@ -453,9 +453,20 @@ export default function menu() {
                         <div className={styles.AddContainer}>
                             <button
                                 className={styles.Addbtn}
-                                onClick={() => setIsAlertModalOpen(true)}>
+                                onClick={() => {
+                                    // รีเซ็ตค่า state ที่เกี่ยวข้องกับโมดอลทุกครั้งที่กดปุ่ม
+                                    setFormData({ foodname: '', type: '', price: '' });
+                                    setMenuImage('');
+                                    setImagefile(null);
+                                    setErrorImg('');
+                                    setIsAlertModalOpen(true);
+                                    setIsLoading(false);
+                                    setIsAddSuccess(false)
+                                }}
+                            >
                                 <BsPlus className={styles.Plusicon} />Add Menu
                             </button>
+
                         </div>
                     </div>
 
@@ -470,7 +481,7 @@ export default function menu() {
                                     name={restaurant.NameFood}
                                     type={restaurant.Type.Name}
                                     price={restaurant.Price}
-                                    role = 'owner'
+                                    role='owner'
                                     // owner={OwnerID}
                                     // user={Userfromsession}
                                     onEdit={handleMenuUpdate}
