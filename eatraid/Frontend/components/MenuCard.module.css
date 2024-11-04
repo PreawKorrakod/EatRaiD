@@ -37,14 +37,12 @@
 }
 
 
-
-
 .dastImage{
     width: 45%;
     height: 100%;
     overflow: hidden;
     background-color: #F9E8D9 ;
-    border-radius: 10px;
+    border-radius: 10px; 
 }
 
 .Imagecover{
@@ -90,12 +88,12 @@
     padding-bottom: 0.2rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-    /* background-color:#F7B787; */
     border-radius: 15px;
     font-size: small;
-    color: #FFFFFF;
     width: fit-content;
-    background-color: #527853;
+    border: 1px solid #e5e7eb; 
+    background-color: #e5e7eb;
+    color: #6b7280; 
 }
 
 .pricefood{
@@ -279,7 +277,7 @@
 
 .headerTextModal{
     margin-bottom: 2rem;
-    color: #527853;
+    color: black;
 }
 
 .Confirmbtn:disabled,
@@ -321,7 +319,7 @@
 .Menudisplay{
     width: 100%;
     height: 100%;
-    background-color: #F9E8D9;
+    background-color:  #e1e1e1;
     overflow: hidden;
     border-radius: 10px;
     margin-bottom: 0.5rem;
@@ -337,7 +335,7 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    color: #b4a599;
+    color: #979595;
 }
 
 .Imageicon{
@@ -387,7 +385,8 @@
     width: 100%;
     border: none;
     border-radius: 0.2rem;
-    background-color: #EEE2D8;
+    border: 1px solid black;
+    background-color: #ffffff;
     font-size: 18px;
     padding-left: 0.5rem;
     padding-right: 0.2rem;
@@ -404,7 +403,7 @@
 
 .inputContainer:focus {
     outline: none; 
-    box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.42);; 
+    box-shadow: inset 0 0 5px rgba(39, 39, 39, 0.216);
 }
 
 .titleStyles{
@@ -417,7 +416,7 @@
     width: 100%;
     border: none;
     border-radius: 0.2rem;
-    background-color: #EEE2D8;
+    background-color: #ffffff;
     font-size: 18px;
     padding-left: 0.5rem;
     padding-right: 0.2rem;
@@ -426,6 +425,7 @@
     /* box-shadow: 0px 4px 6px 0px rgba(174, 174, 174, 0.502); */
     font-size: 16px;
     color: #0b0b0bd9;
+    border: 1px solid black;
 }
 
 .optionTextStyles:focus {

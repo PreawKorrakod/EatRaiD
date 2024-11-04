@@ -1,0 +1,46 @@
+.checkboxBase {
+    border: 1px solid #EEEEEE; 
+    background-color: #EEEEEE; 
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    width:fit-content;
+    align-items: center;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    margin-right: 0.5rem;
+    font-size: smaller;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+.checkboxBase:hover {
+    background-color: #e5e7eb;
+}
+
+.checkboxContent {
+    color: #6b7280 ;
+}
+
+.checkboxSelected {
+    border-color: #1e293b;; 
+    background-color: #1e293b; 
+}
+
+.checkboxSelected:hover {
+    background-color: #EE7214; 
+    border-color: #EE7214; 
+}
+
+.checkboxSelectedContent {
+    color: #ffffff; 
+}
+
+.checkboxFocusVisible {
+    outline: none;
+    box-shadow: 0 0 0 2px #EE7214; 
+    border-radius: 0.25rem;
+    outline-offset: 2px;
+}

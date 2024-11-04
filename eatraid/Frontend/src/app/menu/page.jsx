@@ -7,10 +7,11 @@ import MenuCard from '../../../components/MenuCard';
 import { BsChevronDoubleLeft, BsCheckLg, BsChevronDoubleRight, BsPlus, BsXSquareFill, BsUpload, BsImages, BsExclamationCircle, BsCheckCircleFill, BsFillTrashFill } from "react-icons/bs";
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
-
-
+import { useRouter } from "next/navigation";
+import Footer from '../../../components/footer';
 
 export default function menu() {
+    const router = useRouter();
     const [userId, setUserId] = useState(null);
     const [data, setData] = useState([]);
     const [MenuImage, setMenuImage] = useState('');
@@ -47,14 +48,22 @@ export default function menu() {
                 const user = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/user`, {
                     withCredentials: true,
                 });
-                // console.log(user.data[0].Id);
-                setUserId(user.data[0].Id);
+                if (user !== null) {
+                    console.log(user.data[0].Id);
+                    setUserId(user.data[0].Id);
+                } else { 
+                    router.push(`/`); 
+                }
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
         };
         fetchData();
     }, [userId]);
+
+
+
+
 
     useEffect(() => {
         const fetchMenuData = async () => {
@@ -98,10 +107,9 @@ export default function menu() {
 
 
     // เอาข้อมูลมาใส่ใช้ตัวแปรนี้นะ เป็นการ check ว่า จะโชว์ปุ่ม edit ไหม
-    const Userfromsession = userId
-    const OwnerID = data[0]?.RestaurantId
-    // console.log('User ID : ', Userfromsession)
-    // console.log('Owner ID : ', OwnerID)
+    // const Userfromsession = userId
+    // const OwnerID = data[0]?.RestaurantId
+  
 
     const handleDelete = (restaurantId) => {
         setData((prevData) => prevData.filter((restaurant) => restaurant.Id !== restaurantId));
@@ -135,25 +143,33 @@ export default function menu() {
 
 
 
-    // เป็นฟังก์ชันตรวจสอบ input ของ User ตรงส่วน Price ของ frontend ไม่มีอะไรต้องดึง
     const handleInput = (event) => {
         let value = event.target.value;
-
+    
         // ตรวจสอบว่ากรอกเป็นตัวอักษรหรือตัวเลข
         if (/[^0-9]/g.test(value)) {
             setError('Please enter numbers only.');
+            value = value.replace(/[^0-9]/g, ''); // ลบอักษรที่ไม่ใช่ตัวเลข
         }
         // ตรวจสอบว่าเริ่มต้นด้วย 0 แต่ไม่ใช่เพียงเลข 0 ตัวเดียว
         else if (value.length > 1 && value.startsWith('0')) {
             setError('Please do not enter numbers starting with 0.');
+            value = value.replace(/^0+/, ''); // ลบตัวศูนย์นำหน้า
+        }
+        // ตรวจสอบว่าราคาต้องมากกว่าศูนย์
+        else if (value && parseInt(value, 10) <= 0) {
+            setError('Price must be greater than 0.');
         }
         else {
-            setError('');
+            setError(''); // เคลียร์ข้อผิดพลาดถ้าข้อมูลถูกต้อง
         }
-
-        // กรองเฉพาะตัวเลข และลบเลข 0 นำหน้า (ยกเว้น 0 ตัวเดียว)
-        event.target.value = value.replace(/[^0-9]/g, '');
+    
+        // อัปเดตค่าใน formData
+        setFormData((prev) => ({ ...prev, price: value }));
     };
+    
+    
+    
 
 
 
@@ -186,7 +202,7 @@ export default function menu() {
         formDataToSend.append('TypeID', formData.type);
         formDataToSend.append('Price', formData.price);
 
-        
+
         setErrorMessage(''); // รีเซ็ตข้อความข้อผิดพลาดก่อนเริ่ม
         setIsAddSuccess(false); // เริ่มจาก false เพื่อแน่ใจว่าไม่แสดงผลก่อนเวลา
 
@@ -209,8 +225,8 @@ export default function menu() {
 
 
             setIsLoading(true); // เริ่มการโหลด
-            await new Promise((resolve) => setTimeout(resolve, 2000)); 
-        
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
             setIsLoading(false); // หยุดการโหลด
             setIsAddSuccess(true); // แสดงข้อความเพิ่มเมนูสำเร็จ
 
@@ -222,7 +238,7 @@ export default function menu() {
                 setIsAlertModalOpen(false);
             }, 2000); // ซ่อนข้อความหลังจาก 2 วินาที
 
-            
+
             handleaddMenu();
             // รีเซ็ตข้อมูลฟอร์ม
             setFormData({ foodname: '', type: '', price: '' });
@@ -235,7 +251,7 @@ export default function menu() {
             setErrorMessage('Failed to add menu. Please try again.');
         }
     };
-    
+
 
     // Modal Add popup
     const renderAlertModal = () => {
@@ -332,15 +348,15 @@ export default function menu() {
                                             name="price"
                                             value={formData.price}
                                             onChange={(e) => {
-                                                handleInput(e);
                                                 handleChange(e);
+                                                handleInput(e);
                                             }}
                                             required
                                         />
                                     </div>
                                     ฿
                                 </div>
-                                {error && <p className={styles.error}>< BsExclamationCircle className={styles.iconExc} />{error}</p>} {/* แสดงคำเตือนหากมี */}
+                                {error && <p className={styles.error}><BsExclamationCircle className={styles.iconExc} />{error}</p>} {/* แสดงคำเตือนหากมี */}
                             </div>
                         </div>
                     )}
@@ -367,7 +383,7 @@ export default function menu() {
                                     onClick={() => setIsAlertModalOpen(false)}
                                     disabled={isLoading} // ปิดปุ่มระหว่างการโหลด
                                 >
-                                    {isLoading ? "Cancle" : "Cancle"}
+                                    {isLoading ? "Cancel" : "Cancel"}
                                 </button>
                             </>
                         )}
@@ -454,8 +470,9 @@ export default function menu() {
                                     name={restaurant.NameFood}
                                     type={restaurant.Type.Name}
                                     price={restaurant.Price}
-                                    owner={OwnerID}
-                                    user={Userfromsession}
+                                    role = 'owner'
+                                    // owner={OwnerID}
+                                    // user={Userfromsession}
                                     onEdit={handleMenuUpdate}
                                     onRemove={handleDelete}
                                 />
@@ -490,6 +507,7 @@ export default function menu() {
                     )}
                 </div>
             </div>
+            <Footer></Footer>
             {isAlertModalOpen && renderAlertModal()}
         </div>
     );

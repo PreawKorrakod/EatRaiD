@@ -1,0 +1,152 @@
+.main_content{
+    justify-content: center;
+    width: 100%;
+}
+
+
+.singleDest {
+    display: flex;
+    flex-direction: column; /* ทำให้เนื้อหาตรงกลางเรียงเป็นแนวตั้ง */
+    height: 100%; /* ใช้ความสูงทั้งหมด */
+    overflow: hidden;
+    min-height: 30vh; 
+    max-height: 30vh; 
+    width: 100%;
+    max-width: 18vw;
+    border-radius: 1rem;
+    padding: 0.6rem;
+    box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.45);
+    background-color: white;
+    transition: transform 0.3s ease; /* เพิ่ม transition สำหรับการ hover */
+}
+
+.singleDest:hover {
+    box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.74);
+    transform: scale(1.05); /* ใช้ transform แทน scale */
+}
+
+.dastFooter {
+    flex-grow: 1; /* ทำให้ footer ขยายเพื่อเติมพื้นที่ */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 0.5rem;
+    width: 100%;
+}
+
+
+.dastImage{
+    width: 100%;
+    height: 45%;
+    overflow: hidden;
+}
+
+.Imagecover{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    justify-content: center;
+    align-items: center;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+
+.destText {
+    color: black;
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    padding-bottom: 0.2rem;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+}
+
+.destText p{ 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap;
+    font-size: 1rem;
+}
+
+.showType{
+    font-size: xx-small;
+    color: rgb(130, 129, 129);
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.typeComponent{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    margin-right: 0.5rem ;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 20px;
+    background-color: #e5e7eb;
+}
+
+.showDistance{
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    margin-left: 0.5rem;
+    font-size: small;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    color: #939393;
+}
+
+.LocationIcon{
+    margin-right: 0.1rem;
+    font-size: small;
+}
+
+.LinkResBtn{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 0.6rem;
+}
+
+.LinkBtn{
+    width: fit-content;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    font-size: small;
+    padding-bottom: 0.1rem;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+    border: none;
+    text-decoration: none;
+    /* color: #ff9100; */
+    color:  #ff5804;
+}
+
+.LinkBtn{
+    color: #ff9100 ;
+}
+
+
+.iconMorDetail{
+    margin-left: 0.2rem;
+}
+.moreText{
+    align-items: center;
+    width: fit-content;
+    justify-content: center;
+    display: flex;
+}

@@ -1,14 +1,23 @@
 .mainBg {
     width: 100vw;
     height: 100vh;
-    background-color: #F9E8D9;
+    background: linear-gradient(90deg,  #881E0B 0%, #EE7214 80%);
+}
+
+
+.loading{
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #cccccc;  
+    color: #666666; 
 }
 
 .bigContainer {
     width: 70vw;
     height: 85vh;
+    max-height: max-content;
     /* background-color: #673a0d; */
-    background-color: #FFFBF7;
+    background-color: #FFF;
     border-radius: 50px;
     padding: 15px 30px 10px 30px;
     margin: auto;
@@ -30,45 +39,57 @@
     font-family: 'Poppins';
     font-size: 18px;
     font-weight: normal;
-    color: #527853;
+    color: #EE7214;
     text-decoration: underline;
     border: none;
     cursor: pointer;
     outline: none;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease transform 0.2s ease;
 }
 
 .LoginButton:hover {
-    color: #3b5234;
-    background-color: #e2ddd7;
+    color: #b05611;
+    transform: scale(1.02);
 }
 
 .bottomText {
     font-family: 'Poppins';
     font-size: 18px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
     width: max-content;
     min-width: fit-content;
-    margin: 0px 10px 0px 10px
+    padding: 0px 10px 0px 0px
 }
 
 .title {
     font-family: 'Poppins';
     font-size: 42px;
     font-weight: 800;
-    color: #527853;
+    color: #000;
     text-align: center;
+    margin-top: -40px;
 }
 
 .normalText {
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
     width: max-content;
     min-width: fit-content;
-    margin: 0px 0px 10px 10px
+    margin: 0px 0px 10px 10px;
+    padding-right: 10px;
+}
+
+.normalTextRed {
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: normal;
+    color: #D6195D;
+    width: max-content;
+    min-width: fit-content;
+    margin: 0px 0px 10px -5px
 }
 
 .picText {
@@ -77,7 +98,7 @@
     font-weight: normal;
     color: black;
     opacity: 30%;
-    margin-bottom: 10px;
+    margin-right: 10px;
 }
 
 .inputContainer {
@@ -100,7 +121,6 @@
 .rowContainer {
     display: flex;
     flex-direction: row;
-    /* background-color: #d8000c; */
 }
 
 .rowContainer2 {
@@ -112,12 +132,29 @@
     /* margin-right: 10px; */
 }
 
+.rowContainerCenter {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding-left: 10px;
+    align-items: center;
+    /* margin-right: 10px; */
+}
+
+.rowContainerCenter2 {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    padding-left: 10px;
+    align-items: center;
+    /* margin-right: 10px; */
+}
+
 .colContainer {
     width: 100%;
     display: flex;
     flex-direction: column;
-    padding: 20px 10px 0px 10px;
-    /* background-color: #203066; */
+    padding: 10px 0px 0px 10px;
 }
 
 .colTime {
@@ -183,19 +220,53 @@
 }
 
 .textfieldStyle {
-    height: 5vh;
+    height: 4vh;
     width: 100%;
     margin: 0px 0px 10px 10px;
-    /* background-color: #7f6b9b; */
-    background-color: #EEE2D8;
-    border: none;
+    background-color: #fff;
+    border-color: #000;
+    border-width: thin;
+    /* border: none; */
     border-radius: 5px;
-    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
     font-family: 'Poppins';
     font-size: 18px;
     font-weight: normal;
-    color: #233624;
+    color: #000;
     padding-left: 10px;
+}
+
+.textfieldStyleContact {
+    height: 4vh;
+    width: 100%;
+    /* margin: 0px 0px 10px 10px; */
+    background-color: transparent;
+    /* border-color: #000;
+    border-width: thin; */
+    border: none;
+    border-radius: 5px;
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-weight: normal;
+    color: #000;
+    padding-left: 10px;
+}
+
+.textfieldStyleContact:focus {
+    border: none;
+    outline: none;
+}
+
+.contactBox {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 4vh;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin: 0px 0px 10px 10px;
+    padding-left: 5px;
+    align-items: center;
+    /* background-color: #891F0C;    */
 }
 
 .textfieldStyleMini {
@@ -210,29 +281,26 @@
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
 }
 
 .ddTextfieldStyle {
     width: 100%;
-    height: 5vh;
+    height: 4vh;
     padding-left: 10px;
-    max-height: 10vh;
-    margin-left: 10px;
-    /* margin-right: 10px; */
+    margin-bottom: 10px;
     font-size: 18px;
-    color: #333;
-    background-color: #EEE2D8;
-    border: 1px solid #ccc;
+    color: black;
+    background-color: #fff;
+    border: 1px solid #000;
     border-radius: 5px;
     outline: none;
     cursor: pointer;
     transition: border-color 0.3s ease;
-    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
 }
 
 .ddTextfieldStyle:focus {
-    border-color: #7f7f7f;
+    border-color: #fff;
     height: 5vh;
 
 }
@@ -243,13 +311,13 @@
     top: 50%;
     transform: translateY(-50%);
     font-size: 40px;
-    color: #527853;
+    color: #000;
     pointer-events: none;
 }
 
 .mapContainer {
     width: 25vw;
-    height: 20vh;
+    height: 25vh;
     margin: 0px 0px 10px 20px;
     background-color: #EEE2D8;
     align-items: center;
@@ -268,9 +336,9 @@
 
 .pictureContainer {
     width: 15vw;
-    height: 23vh; 
+    height: 25vh; 
     margin-left: 10px;
-    background-color: #EEE2D8;
+    background-color: #E6E6E6;
     border-radius: 10px;
     box-shadow: 2px 2.5px 1px rgba(143, 142, 142, 0.45);
     display: flex;
@@ -283,9 +351,10 @@
 }
 
 .iconPicStyle {
-    font-size: 80px; 
-    color: black;
+    font-size: 100px; 
+    color: #5c5b5b;
     opacity: 13%;
+    padding-top: 10px;
 }
 
 .uploadedImage {
@@ -297,53 +366,67 @@
 
 .locationTextfield {
     width: 25vw;
-    height: 10vh;
+    height: 15vh;
     margin: -10px 10px 20px 20px;
-    background-color: #EEE2D8;
-    border: none;
+    background-color: #fff;
+    border: thin solid #000;
     border-radius: 5px;
-    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
-    color: #527853;
+    color: #000;
     padding-left: 10px;
 }
 
+/* icon call and line */
 .iconStyle {
-    font-size: 40px;
-    color: #3b573c;
-    margin-left: 20px;
-}
+    font-size: 26px;
+    color: #000;
+    border-right: 1.5px solid #000;
+    padding: 0px 4px 0px 0px;
+    /* background-color: #891F0C; */
 
+}
+ 
 .iconArrowStyle {
     font-size: 30px;
-    color: #3b573c;
+    width: 3vw;
+    height: 4vh;
+    color: #000;
     margin: 10px 0px 0px 20px;
-    background-color: transparent;
+    background-color: white;
     border: none;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.iconArrowStyle:hover {
+    color: #313131;
+    transform: scale(1.1);
 }
 
 .confirmButton {
-    background-color: #527853;
+    background: linear-gradient(90deg, #891F0C 0%, #E16813 100%);
     color: #FFF4EB;
     border-radius: 10px;
     font-family: 'Poppins';
     font-size: 20px;
     font-weight: normal;
-    padding: 10px 20px;
+    padding: 5px 10px;
     cursor: pointer;
     border: none;
     outline: none;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease transform 0.2s ease;
     text-align: center;
     width: max-content;
     align-self: center;
-    margin: 20px 0px 10px 0px;
+    margin: 10px 0px 10px 0px;
 }
 
 .confirmButton:hover {
-    background-color: #466A47;
+    background: linear-gradient(90deg, #891F0C 0%, #E16813 100%);
+    transform: scale(1.02);
 }
 
 .dropdown {
@@ -355,27 +438,27 @@
 
 .dropdownHeader {
     width: 100%;
-    height: 5vh;
-    background-color: #EEE2D8;
-    padding: 10px;
+    min-height: 4vh;
+    max-height: max-content;
+    background-color: #fff;
+    padding: 5px 10px 5px 10px;
     border-radius: 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 10px;
-    box-shadow: 2px 2.5px 1px 1px rgba(143, 142, 142, 0.45);
+    margin: 0px 0px 10px 0px;
     font-family: 'Poppins';
     font-size: 18px;
     font-weight: normal;
-    
+    border: 1px solid #000;
 }
 
 .dropdownList {
     position: absolute;
-    background-color: #EEE2D8;
-    border: 5px solid rgb(164, 159, 155)2D8;
+    background-color: #fff;
+    border: 1px solid black;
     border-radius: 5px;
-    margin: 5px 0px 0px 10px;
+    margin: 5px 0px 0px 0px;
     width: 100%;
     max-height: 30vh;
     overflow-y: auto;
@@ -389,10 +472,12 @@
     display: flex;
     align-items: center;
     padding: 10px;
+    border-bottom: 1px solid #ccc;
 }
 
 .checkbox input {
     margin-right: 10px;
+    accent-color: black;
 }
 
 .ErrorChecking {
@@ -400,14 +485,14 @@
     background-color: #ffcccb; 
     color: #d8000c; 
     padding: 10px;
-    margin-top: 10px;
+    margin-top: -25px;
     border: 1px solid #d8000c; 
     border-radius: 5px;
     display: flex;
     align-items: center;
     align-self: center;
     position: relative; 
-    top: 0; 
+    top: 10; 
     z-index: 10; 
   }
 

@@ -4,21 +4,16 @@ import styles from "./signupdetail.module.css";
 import { BsChevronDown } from "react-icons/bs";
 import { FaLine } from "react-icons/fa6";
 import { IoCall } from "react-icons/io5";
-import Topbar from "../../../components/Topbar";
+import Navbar from "../../../components/Navbar";
 import { useRouter } from "next/navigation";
 import { AiOutlinePicture } from "react-icons/ai";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa6";
 import Image from "next/image";
 
-import axios from 'axios';
-import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+import axios from "axios";
+import { NEXT_PUBLIC_BASE_API_URL } from "../../../src/app/config/supabaseClient.js";
 
-const categoryDropdown = ["Thai", "Japanese"]; //from backend
-const time_hr = Array.from({ length: 24 }, (_, i) =>
-  String(i).padStart(2, "0")
-);
-const time_min = ["00", "15", "30", "45"];
 const businessDays = [
   "Sunday",
   "Monday",
@@ -30,41 +25,25 @@ const businessDays = [
 ];
 
 export default function SignupDetail() {
-
-  const [category, setCategory] = useState('');
   const [userID, setuserID] = useState(null);
 
   useEffect(() => {
-    const fetchcategoryData = async () => {
-      try {
-        const category = await axios.get(`${NEXT_PUBLIC_BASE_API_URL}/category`);
-        // console.log(category.data);
-        setCategory(category.data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-    fetchcategoryData();
-  }, []);
-
-  useEffect(() => {
-    const storeduserID = sessionStorage.getItem('userID');
+    const storeduserID = sessionStorage.getItem("userID");
     if (storeduserID) {
       setuserID(JSON.parse(storeduserID));
       console.log(JSON.parse(storeduserID));
     } else {
-      router.push("/");  // Redirect to home if no user ID
+      // router.push("/");  // Redirect to home if no user ID
     }
   }, []);
 
   // if (!userID) return router.push("/");  // กลับหน้า Home
 
   const router = useRouter();
-  const [selectedOption, setSelectedOption] = useState(categoryDropdown[0]);
-  const [openTimeHR, setOpenTimeHR] = useState(time_hr[0]);
-  const [openTimeMIN, setOpenTimeMIN] = useState(time_min[0]);
-  const [closeTimeHR, setCloseTimeHR] = useState(time_hr[0]);
-  const [closeTimeMIN, setCloseTimeMIN] = useState(time_min[0]);
+  const [openTimeHR, setOpenTimeHR] = useState("00");
+  const [openTimeMIN, setOpenTimeMIN] = useState("00");
+  const [closeTimeHR, setCloseTimeHR] = useState("00");
+  const [closeTimeMIN, setCloseTimeMIN] = useState("00");
   const [selectedBusinessDays, setSelectedBusinessDays] = useState(
     new Array(businessDays.length).fill(true)
   );
@@ -78,11 +57,43 @@ export default function SignupDetail() {
   const [NameOwner, setNameOwner] = useState(""); //เก็บชื่อที่ตัวแปร NameOwner
   const [numberPhone, setNumberPhone] = useState(""); //เก็บเบอร์ที่ตัวแปร numberPhone
   const [LineContact, setLineContact] = useState(""); // เก็บไลน์ที่ตัวแปร numberPhone
+  const [loading, setLoading] = useState(false);
 
+  const convertImageToBase64 = async (imageUrl) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const reader = new FileReader();
 
-  const handleChangeCategory = (event) => {
-    setSelectedOption(event.target.value);
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        setProfileImage(base64data)
+      };
+
+      reader.readAsDataURL(blob);
+    } catch (error) {
+      console.error("Error converting image to Base64:", error);
+    }
   };
+
+  useEffect(() => {
+    if (userID?.role) {
+      if (userID.file) {
+        convertImageToBase64(userID.file);
+      }
+      setOpenTimeHR(userID.OpenTimeHr)
+      setOpenTimeMIN(userID.OpenTimeMin)
+      setCloseTimeHR(userID.CloseTimeHr)
+      setCloseTimeMIN(userID.CloseTimeMin)
+      const businessDaysArray = userID.BusinessDay.split(',').map(day => day.trim());
+      const updatedSelectedBusinessDays = businessDaysArray.map(day => day === 'true');
+      setSelectedBusinessDays(updatedSelectedBusinessDays);
+      setLocation(userID.Location)
+      setNameOwner(userID.Name)
+      setNumberPhone(userID.Tel)
+      setLineContact(userID.Line)
+    }
+  }, [userID]);
 
   const handleChangeOpenTimeHR = (event) => {
     setOpenTimeHR(event.target.value);
@@ -94,9 +105,6 @@ export default function SignupDetail() {
 
   const handleChangeCloseTimeHR = (event) => {
     const newCloseTimeHR = event.target.value;
-    if (parseInt(newCloseTimeHR) < parseInt(openTimeHR)) {
-      setOpenTimeHR(newCloseTimeHR);
-    }
     setCloseTimeHR(newCloseTimeHR);
   };
 
@@ -116,9 +124,19 @@ export default function SignupDetail() {
   };
 
   const validateInputs = () => {
-    if (!location || !selectedOption) {
+    const phonePattern = /^\d{10}$/;
+    if (numberPhone && !phonePattern.test(numberPhone)) {
+      return "Phone number must be a 10-digit number.";
+    }
+
+    if (
+      !location ||
+      !profileImage ||
+      !NameOwner
+    ) {
       return "Please fill in all required fields.";
     }
+
     return "";
   };
 
@@ -134,44 +152,131 @@ export default function SignupDetail() {
     }
   };
 
-  const handleConfirmClick = () => {
-    const error = validateInputs();
-    if (error) {
-      setErrorMessage(error);
+  const handleConfirmClick = async () => {
+
+    if (parseInt(closeTimeHR) < parseInt(openTimeHR)) {
+      setErrorMessage("Close time cannot be earlier than open time.");
       return;
     }
 
+    const error = validateInputs();
+    if (error) {
+      setErrorMessage(error);
+      setTimeout(() => setErrorMessage(""), 5000);
+      return;
+    }
+
+    setLoading(true);
+
+    // ตรวจสอบตำแหน่งจาก OpenStreetMap Nominatim API
+    let latitude = null;
+    let longitude = null;
+
+    try {
+      const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+        params: {
+          q: location,
+          format: 'json',
+          addressdetails: 1,
+        }
+      });
+
+      if (response.data.length > 0) {
+        latitude = response.data[0].lat;
+        longitude = response.data[0].lon;
+        console.log('la:', latitude)
+        console.log('long: ', longitude)
+      } else {
+        setErrorMessage("Could not find location coordinates.");
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      console.error("Error fetching location data:", error);
+      setErrorMessage("Error fetching location data.");
+      setLoading(false);
+      return;
+    }
     // console.log("Confirm button clicked");
     // console.log("Selected business days:", selectedBusinessDays);
     // console.log("Location:", location);
     // console.log('image',Imagefile)
-    const displayOpenTime = `${openTimeHR}:${openTimeMIN}`;
-    const displayCloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
-    
+    // const displayOpenTime = `${openTimeHR}:${openTimeMIN}`;
+    // const displayCloseTime = `${closeTimeHR}:${closeTimeMIN}`; 
+
+    // แปลงรูปภาพ
+    let newfile = null
+    if (Imagefile) {
+      const formData = new FormData();
+      formData.append("file", Imagefile); // selectedFile คือไฟล์ที่เลือกจาก input
+      formData.append("user", userID.id);
+
+      try {
+        const res = await axios.post(`${NEXT_PUBLIC_BASE_API_URL}/user-profile`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+
+        })
+        newfile = res.data.profile;
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+    }
+
+
     const id = userID.id;
-    const role = 'owner';
+    const role = "owner";
     const email = userID.email;
-    const file = profileImage;
-    const Name = NameOwner || "-";
-    const OpenTime = displayOpenTime === "00:00" ? "-" : displayOpenTime;
-    const CloseTime = displayCloseTime === "00:00" ? "-" : displayCloseTime; 
-    const Location = location || "-"; 
-    const Latitude = 0; 
-    const Longitude = 0; 
+    const Name = NameOwner;
+    const file = newfile || userID?.file || null;
+    // const OpenTime = displayOpenTime === "00:00" ? "-" : displayOpenTime;
+    // const CloseTime = displayCloseTime === "00:00" ? "-" : displayCloseTime; 
+    const OpenTimeHr = openTimeHR;
+    const CloseTimeHr = closeTimeHR;
+    const OpenTimeMin = openTimeMIN;
+    const CloseTimeMin = closeTimeMIN;
+    const Location = location;
+    const Latitude = 0;
+    const Longitude = 0;
     const BusinessDay = selectedBusinessDays.join(',');
-    const Tel = numberPhone || "-";
-    const Line = LineContact || "-";
+    const Tel = numberPhone;
+    const Line = LineContact;
     sessionStorage.removeItem('userID');
-    const newUserID = {  email, role, id, file,
-      Name, OpenTime, CloseTime, Location, Latitude, Longitude, BusinessDay, Tel, Line };
+    const newUserID = {
+      email, role, id, file,
+      Name, OpenTimeHr, CloseTimeHr, OpenTimeMin, CloseTimeMin,Location, Latitude: latitude,
+      Longitude: longitude, BusinessDay, Tel, Line
+    };
     console.log("signup successful navigate to verify", newUserID);
-    sessionStorage.setItem('userID', JSON.stringify(newUserID)); 
-    router.push('/verify');
+    sessionStorage.setItem("userID", JSON.stringify(newUserID));
+    router.push("/verify");
+    setLoading(false);
   };
+
+  const openday = [];
+
+  const beforeshow_open = [];
+  const beforeshow_close = [];
+  selectedBusinessDays.forEach((day, index) => {
+    if (day) {
+      beforeshow_open.push(businessDays[index]);
+    } else {
+      beforeshow_close.push(businessDays[index]);
+    }
+  });
+  if (beforeshow_open.length === 7) {
+    openday.push('Everyday');
+  } else if (beforeshow_open.length < 4) {
+    openday.push(beforeshow_open.join(', '));
+  } else if (beforeshow_open.length >= 4) {
+    openday.push("Everyday except " + beforeshow_close.join(', '));
+  }
 
   return (
     <div className={styles.mainBg}>
-      <Topbar />
+      <Navbar></Navbar>
       <div className={styles.bigContainer}>
         <div className={styles.topContainer}>
           <button
@@ -196,7 +301,10 @@ export default function SignupDetail() {
                   {!profileImage ? (
                     <div>
                       <AiOutlinePicture className={styles.iconPicStyle} />
-                      <h2 className={styles.picText}>click to upload</h2>
+                      <div className={styles.rowContainer}>
+                        <h2 className={styles.picText}>click to upload </h2>
+                        <h2 className={styles.normalTextRed}>*</h2>
+                      </div>
                     </div>
                   ) : (
                     <Image
@@ -210,37 +318,52 @@ export default function SignupDetail() {
                 </label>
               </div>
               <div className={styles.colContainer}>
-                <h2 className={styles.normalText}>Name</h2>
+                <div className={styles.rowContainer}>
+                  <h2 className={styles.normalText}>Name</h2>
+                  <h2 className={styles.normalTextRed}>*</h2>
+                </div>
+                <div className={styles.rowContainer}>
+                  <input
+                    name="Name"
+                    value={NameOwner}
+                    className={styles.textfieldStyle}
+                    onChange={(e) => setNameOwner(e.target.value)}
+                  />
+                </div>
 
-                <input name="Name"
-                  value={NameOwner}
-                  className={styles.textfieldStyle}
-                  onChange={(e) => setNameOwner(e.target.value)}
-                />
+                <h2 className={styles.normalText}>Contact</h2>
+                <div className={styles.rowContainer}>
+                  <div className={styles.contactBox}>
+                    <IoCall className={styles.iconStyle} />
 
-                <h2 className={styles.normalText}>Category</h2>
-                <select
-                  className={styles.ddTextfieldStyle}
-                  value={selectedOption}
-                  onChange={handleChangeCategory}
-                >
-                  <option value="" disabled>Select Type</option>
-                  {category && category.map((items, index) => (
-                    <option key={index} value={items.Id}>
-                      {items.Name}
-                    </option>
-                  ))}
-                </select>
+                    <input
+                      name="Phone"
+                      value={numberPhone}
+                      className={styles.textfieldStyleContact}
+                      onChange={(e) => setNumberPhone(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className={styles.rowContainer}>
+                  <div className={styles.contactBox}>
+                    <FaLine className={styles.iconStyle} />
+
+                    <input
+                      name="Line"
+                      value={LineContact}
+                      className={styles.textfieldStyleContact}
+                      onChange={(e) => setLineContact(e.target.value)}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className={styles.colContainer2}>
+            <div className={styles.rowContainerCenter}>
               <h2 className={styles.normalText}>Business days</h2>
-              <div className={styles.dropdown} onClick={toggleDropdown}>
-                <div className={styles.dropdownHeader}>
-                  {selectedBusinessDays.every(Boolean)
-                    ? "Everyday"
-                    : "Selected Day(s)"}
+              <div className={styles.dropdown} >
+                <div className={styles.dropdownHeader} onClick={toggleDropdown}>
+                  {openday}
                   <BsChevronDown />
                 </div>
                 {dropdownOpen && (
@@ -260,69 +383,62 @@ export default function SignupDetail() {
                 )}
               </div>
             </div>
-            <div className={styles.rowContainer}>
-              <div className={styles.colTime}>
-                <h2 className={styles.normalText}>Open time</h2>
-                <div className={styles.textfieldSubContainer}>
-                  <select
-                    className={styles.ddTextfieldStyle}
-                    value={openTimeHR}
-                    onChange={handleChangeOpenTimeHR}
-                  >
-                    {time_hr.map((hr, index) => (
-                      <option key={index} value={hr}>
-                        {hr}
-                      </option>
-                    ))}
-                  </select>
-                  <h2 className={styles.normalText}> : </h2>
-                  <select
-                    className={styles.ddTextfieldStyle}
-                    value={openTimeMIN}
-                    onChange={handleChangeOpenTimeMIN}
-                  >
-                    {time_min.map((min, index) => (
-                      <option key={index} value={min}>
-                        {min}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+            <div className={styles.rowContainerCenter2}>
+              <h2 className={styles.normalText}>Open time</h2>
+              <div className={styles.textfieldSubContainer}>
+                <input
+                  className={styles.ddTextfieldStyle}
+                  type="number"
+                  value={openTimeHR}
+                  min="0"
+                  max="23"
+                  step="01"
+                  onChange={handleChangeOpenTimeHR}
+                />
+                <h2 className={styles.normalText}> : </h2>
+                <input
+                  className={styles.ddTextfieldStyle}
+                  type="number"
+                  value={openTimeMIN}
+                  min="0"
+                  max="45"
+                  step="15"
+                  onChange={handleChangeOpenTimeMIN}
+                />
               </div>
-              <div className={styles.colTime}>
-                <h2 className={styles.normalText}>Close time</h2>
-                <div className={styles.textfieldSubContainer}>
-                  <select
-                    className={styles.ddTextfieldStyle}
-                    value={closeTimeHR}
-                    onChange={handleChangeCloseTimeHR}
-                  >
-                    {time_hr.map((hr, index) => (
-                      <option key={index} value={hr}>
-                        {hr}
-                      </option>
-                    ))}
-                  </select>
-                  <h2 className={styles.normalText}> : </h2>
-                  <select
-                    className={styles.ddTextfieldStyle}
-                    value={closeTimeMIN}
-                    onChange={handleChangeCloseTimeMIN}
-                  >
-                    {time_min.map((min, index) => (
-                      <option key={index} value={min}>
-                        {min}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+            </div>
+            <div className={styles.rowContainerCenter2}>
+              <h2 className={styles.normalText}>Close time</h2>
+              <div className={styles.textfieldSubContainer}>
+                <input
+                  className={styles.ddTextfieldStyle}
+                  type="number"
+                  value={closeTimeHR}
+                  min="0"
+                  max="23"
+                  step="1"
+                  onChange={handleChangeCloseTimeHR}
+                />
+                <h2 className={styles.normalText}> : </h2>
+                <input
+                  className={styles.ddTextfieldStyle}
+                  type="number"
+                  value={closeTimeMIN}
+                  min="0"
+                  max="45"
+                  step="15"
+                  onChange={handleChangeCloseTimeMIN}
+                />
               </div>
             </div>
           </div>
 
           <div className={styles.textfieldBigContainerR}>
             <div className={styles.textfieldSubContainer}>
-              <h2 className={styles.normalText}>Location</h2>
+              <div className={styles.rowContainer}>
+                <h2 className={styles.normalText}>Location</h2>
+                <h2 className={styles.normalTextRed}>*</h2>
+              </div>
             </div>
             <textarea
               name="Location"
@@ -343,35 +459,13 @@ export default function SignupDetail() {
                 ></iframe>
               </div>
             </div>
-            <div className={styles.rowContainer2}>
-              <h2 className={styles.normalText}>Contact</h2>
-              <div className={styles.colContact}>
-                <div className={styles.rowContainer}>
-                  <IoCall className={styles.iconStyle} />
-
-                  <input name="Phone"
-                    value={numberPhone}
-                    className={styles.textfieldStyle}
-                    onChange={(e) => setNumberPhone(e.target.value)}
-                  />
-
-                </div>
-                <div className={styles.rowContainer}>
-                  <FaLine className={styles.iconStyle} />
-
-                  <input name="Line"
-                    value={LineContact}
-                    className={styles.textfieldStyle}
-                    onChange={(e) => setLineContact(e.target.value)}
-                  />
-
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-        <button className={styles.confirmButton} onClick={handleConfirmClick}>
-          Confirm
+        <button onClick={handleConfirmClick}
+          disabled={loading}
+          className={`${styles.confirmButton} ${loading ? styles.loading : ""}`}
+        >
+          {loading ? "Loading..." : "Confirm"}
         </button>
         <div className={styles.bottomContainer}>
           <h2 className={styles.bottomText}>Already have an account?</h2>

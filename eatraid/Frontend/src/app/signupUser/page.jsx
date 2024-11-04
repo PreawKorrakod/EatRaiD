@@ -1,13 +1,12 @@
 "use client";
 import styles from "./signupUser.module.css";
-import image1 from "../../../public/DecPic1.png";
-import Topbar from "../../../components/Topbar";
+import image1 from '../../../public/LOGO.png';
+import Navbar from "../../../components/Navbar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { BsX, BsCheck, BsArrowLeft, BsExclamationCircle } from "react-icons/bs";
 import { useRouter } from "next/navigation";
-
 import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
 
@@ -17,7 +16,7 @@ export default function SignupUser() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState('');
     const minPasswordLength = 6;
-
+    const [loading, setLoading] = useState(false);
 
     const router = useRouter();
 
@@ -55,8 +54,10 @@ export default function SignupUser() {
         }
 
         setError('');
+        setLoading(true)
 
         if (isPasswordMatching) {
+            setLoading(true)
             try {
                 axios.post(`${NEXT_PUBLIC_BASE_API_URL}/signup`, {
                     email: email,
@@ -70,25 +71,29 @@ export default function SignupUser() {
                     console.log("signup successful navigate to verify", userID);
                     sessionStorage.setItem('userID', JSON.stringify(userID));
                     router.push('/verify');
+                    setLoading(false)
 
                 }).catch(error => {
                     console.error('Error during signup:', error);
                     if (error.response.data.message == "AuthApiError: email rate limit exceeded") {
                         setError('Cannot send OTP multiple times');
+                        setLoading(false)
                     } else {
                         setError('This email already register. Please try again.');
+                        setLoading(false)
                     }
                     // alert('This email already register. Please try again.')
                 });
             } catch (error) {
                 console.log("Error:", error);
+                setLoading(false)
             }
         }
     };
 
     return (
         <div className={styles.main}>
-            <Topbar />
+            <Navbar></Navbar>
             <div className={styles.content_wrapper}>
                 <div className={styles.container}>
                     <Link href={`/signUpRole`}>
@@ -176,9 +181,10 @@ export default function SignupUser() {
                             <div className={styles.Loginbtn_wrapper}>
                                 <button
                                     type="submit"
-                                    className={styles.Loginbtn}
+                                    className={`${styles.Loginbtn} ${loading ? styles.loading : ''}`}
+                                    disabled={loading}
                                 >
-                                    Sign up
+                                    {loading ? 'Loading...' : 'Sign up'}
                                 </button>
                             </div>
                         </form>
@@ -187,8 +193,14 @@ export default function SignupUser() {
                             <Link href={`/login`} className={styles.Signup_link}>Log in</Link>
                         </div>
                     </div>
-                    <div className={styles.Login_Picture}>
-                        <Image src={image1} alt="Sign-up illustration" className={styles.imageSide} />
+                    <div className={styles.Login_pic_wrapper}>
+                        <div className={styles.logoPicture}>
+                            <Image src={image1}
+                                width={800}
+                                height={500}
+                                className={styles.logoimg} 
+                                alt="Logo"/>
+                        </div>
                     </div>
                 </div>
             </div>

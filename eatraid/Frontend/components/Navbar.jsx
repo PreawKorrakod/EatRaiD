@@ -9,6 +9,7 @@ import axios from 'axios';
 import { NEXT_PUBLIC_BASE_API_URL } from "../src/app/config/supabaseClient";
 import imgTest from '../../Frontend/public/TestProfile.jpg';
 import { useRouter } from "next/navigation";
+import logo from '../public/LOGO.png';
 
 
 export default function Navbar() {
@@ -20,9 +21,7 @@ export default function Navbar() {
 
 
     const profileRef = useRef(null);
-    const profileImage = '';
     const router = useRouter();
-
 
 
     useEffect(() => {
@@ -63,6 +62,12 @@ export default function Navbar() {
         };
     }, []);
 
+    function getInitials(isUserEmail) {
+        const name = isUserEmail.split('@')[0]; // ตัดเอาส่วนชื่อก่อน @
+        const initials = name.split('.').map(n => n[0].toUpperCase()).join(''); // ดึงตัวแรกของแต่ละส่วน
+        return initials;
+    }
+
     // ฟังก์ชัน Logout ตรงนี้เลยคับ
     const handleLogout = async () => {
         try {
@@ -76,7 +81,7 @@ export default function Navbar() {
                 setIsUserLoggedIn(false);
                 setIsEmailUser('');
                 setIsOwnerLoggedIn(false);
-               
+                router.push(`/`);
             } else {
                 console.error('Logout failed');
             }
@@ -117,9 +122,9 @@ export default function Navbar() {
                                 Cancel
                             </button>
                             <button
-                                type="button" 
+                                type="button"
                                 className={styles.Logoutbtn}
-                                onClick={handleLogout} 
+                                onClick={handleLogout}
                             >
                                 Sign out
                             </button>
@@ -133,15 +138,20 @@ export default function Navbar() {
     return (
         <div className={styles.AllBar}>
             <div className={styles.Leftside}>
-                <Link href={`/`} className={styles.Logo}>
-                    EatRaiD
+                <Link href={isOwnerLoggedIn ? `/info` : `/`} className={styles.logotitle}>
+                    <div className={styles.Logo}>
+                        <Image src={logo} alt='logoEatraiD' width={1000} height={1000} className={styles.logoImage} />
+                    </div>
+                </Link>
+                <Link href={isOwnerLoggedIn ? `/info` : `/`} className={styles.LinkText}>
+                    <h1 className={styles.logotext}>EaiRaiD</h1>
                 </Link>
             </div>
             <div className={styles.Rightside}>
                 {isUserLoggedIn ? (
                     isOwnerLoggedIn ? (
                         <div className={styles.Rightside_Owner}>
-                            <Link href={`/`} className={styles.homebtn_User}>
+                            <Link href={`/info`} className={styles.homebtn_User}>
                                 Info
                             </Link>
                             <Link href={`/menu`} className={styles.favouritebtn}>
@@ -160,48 +170,47 @@ export default function Navbar() {
                             <Link href={`/`} className={styles.homebtn_User}>
                                 Home
                             </Link>
-                            <Link href={`/Favourite`} className={styles.favouritebtn}>
+                            <Link href={`/favoriteList`} className={styles.favouritebtn}>
                                 Favourite List
                             </Link>
-                            <div
-                                className={styles.profilebtn}
-                                onClick={() => setIsOpen_Profile(!isOpen_Profile)}
-                                ref={profileRef}
-                            >
-                                {profileImage ? (
-                                    <Image
-                                        src={imgTest}
-                                        alt="Profile Picture"
-                                        className={styles.profilePic}
-                                    />
-                                ) : (
-                                    <BsPersonCircle className={styles.profileicon} />
-                                )}
-                                {isOpen_Profile && (
-                                    <div className={styles.profile_content}>
-                                        <div className={styles.profileImage}>
-                                            {profileImage ? (
-                                                <Image
-                                                    src={imgTest}
-                                                    alt="Profile Picture"
-                                                    className={styles.profileicon}
-                                                />
-                                            ) : (
-                                                <BsPersonCircle className={styles.profileicon_Content} />
-                                            )}
+                            <div className={styles.btnContainer}>
+                                <div
+                                    className={styles.profilebtn}
+                                    onClick={() => setIsOpen_Profile(!isOpen_Profile)}
+                                    ref={profileRef}
+                                >
+                                    {isUserEmail ? (
+                                        <div className={styles.profileInitials}>
+                                            {getInitials(isUserEmail)}
                                         </div>
-                                        <div className={styles.profileDetail}>
-                                            Email: {isUserEmail}
-                                            <div className={styles.SignOutSide}>
-                                                <button className={styles.SignOutbtn_Profile} onClick={() => setIsLogoutModalOpen(true)}>
-                                                    <BsBoxArrowRight size={25} className={styles.SignOuticon_Profile} />
-                                                    Sign out
-                                                </button>
+                                    ) : (
+                                        <BsPersonCircle className={styles.profileicon} />
+                                    )}
+                                    {isOpen_Profile && (
+                                        <div className={styles.profile_content}>
+                                            <div className={styles.profileImage}>
+                                                {isUserEmail ? (
+                                                    <div className={styles.profileInitials2}>
+                                                        {getInitials(isUserEmail)}
+                                                    </div>
+                                                ) : (
+                                                    <BsPersonCircle className={styles.profileicon_Content} />
+                                                )}
+                                            </div>
+                                            <div className={styles.profileDetail}>
+                                                Email: {isUserEmail}
+                                                <div className={styles.SignOutSide}>
+                                                    <button className={styles.SignOutbtn_Profile} onClick={() => setIsLogoutModalOpen(true)}>
+                                                        <BsBoxArrowRight size={25} className={styles.SignOuticon_Profile} />
+                                                        Sign out
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
+
                         </div>
                     )
                 ) : (

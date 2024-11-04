@@ -1,15 +1,15 @@
 "use client";
 import styles from "./verify.module.css";
 import React, { useState, useRef, useEffect } from "react";
-import Topbar from "../../../components/Topbar";
+import Navbar from "../../../components/Navbar";
 import { MdMarkEmailUnread } from "react-icons/md";
 import { FaArrowLeft } from "react-icons/fa6";
 import { BsExclamationCircle } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import axios from 'axios';
-import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
+import axios from "axios";
+import { NEXT_PUBLIC_BASE_API_URL } from "../../../src/app/config/supabaseClient.js";
 
 export default function Verify() {
   const [userID, setUserID] = useState(null);
@@ -18,22 +18,19 @@ export default function Verify() {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [error, setError] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const storedUserID = sessionStorage.getItem('userID');
+    const storedUserID = sessionStorage.getItem("userID");
     if (storedUserID) {
       const parsedUserID = JSON.parse(storedUserID);
       setUserID(parsedUserID); // Store in state
       console.log("Data:", parsedUserID, parsedUserID.file);
-
     } else {
-      sessionStorage.removeItem('userID');
+      sessionStorage.removeItem("userID");
       router.push("/"); // Redirect to home if no user ID
     }
   }, [router]);
-
-
 
   const handleInputChange = (e, index) => {
     const value = e.target.value;
@@ -55,64 +52,85 @@ export default function Verify() {
   };
 
   const handleVerify = () => {
+    setLoading(true);
     if (otp.some((digit) => digit === "")) {
       setError("Please enter all 6 digits of the OTP before verifying.");
+      setLoading(false);
     } else {
       // Implement verification logic here
       console.log("Verifying OTP:", otp.join(""));
+      setLoading(false);
+
+      if (
+        userID.OpenTimeHr === '00' &&
+        userID.CloseTimeHr === '00' &&
+        userID.OpenTimeMin === '00' &&
+        userID.CloseTimeMin === '00'
+      ) {
+        userID.OpenTimeHr = '-';
+        userID.CloseTimeHr = '-';
+        userID.OpenTimeMin = '-';
+        userID.CloseTimeMin = '-';
+      }
 
       try {
+        setLoading(true);
         axios.post(`${NEXT_PUBLIC_BASE_API_URL}/verify-OTP`, {
           email: userID.email,
           OTP: otp.join(""),
           role: userID.role,
           profilePic: userID.file,
           user: userID.id,
-          Name: userID.Name, 
-          OpenTime: userID.OpenTime, 
-          CloseTime: userID.CloseTime, 
-          Location: userID.Location, 
-          Latitude: userID.Latitude, 
+          Name: userID.Name || "-",
+          OpenTimeHr: userID.OpenTimeHr,
+          CloseTimeHr: userID.CloseTimeHr,
+          OpenTimeMin: userID.OpenTimeMin,
+          CloseTimeMin: userID.CloseTimeMin,
+          Location: userID.Location || "-",
+          Latitude: userID.Latitude,
           Longitude: userID.Longitude,
-          BusinessDay: userID.BusinessDay, 
-          Tel: userID.Tel, 
-          Line: userID.Line
+          BusinessDay: userID.BusinessDay,
+          Tel: userID.Tel || "-",
+          Line: userID.Line || "-"
 
         }).then(async res => {
           console.log("Navigate based on role", res)
           // Navigate based on role
 
           if (userID.role === "customer") {
-            router.push("/"); // Redirect to home page
+            router.push("/login"); // Redirect to home page
+            setLoading(false);
           } else if (userID.role === "owner") {
-            sessionStorage.removeItem('userData');
-            router.push("/info");
+            sessionStorage.removeItem('userID');
+            router.push("/login");
+            setLoading(false);
           }
         }).catch(error => {
           console.error('Error during verify OTP:', error);
-          if (error.status == 400){
-            setError(error.response.data.message);
-          }
+          setError("Wrong OTP. Try again.");
         });
       } catch (error) {
         console.log(error);
       }
 
       setError("");
+      setLoading(false);
     }
   };
 
   const handleResend = () => {
     try {
-      axios.post(`${NEXT_PUBLIC_BASE_API_URL}/resend-OTP`, {
-        email: userID.email,
-
-      }).then(async res => {
-        console.log('resend OTP successfully')
-      }).catch(error => {
-        console.error('Error during resend OTP:', error);
-        setError("Can't resend OTP. Try again.");
-      });
+      axios
+        .post(`${NEXT_PUBLIC_BASE_API_URL}/resend-OTP`, {
+          email: userID.email,
+        })
+        .then(async (res) => {
+          console.log("resend OTP successfully");
+        })
+        .catch((error) => {
+          console.error("Error during resend OTP:", error);
+          setError("Can't resend OTP. Try again.");
+        });
     } catch (error) {
       console.log(error);
     }
@@ -120,7 +138,7 @@ export default function Verify() {
 
   return (
     <div className={styles.mainBg}>
-      <Topbar />
+      <Navbar></Navbar>
       <div className={styles.bg}>
         <div className={styles.bigContainer}>
           <div className={styles.topContainer}>
@@ -131,11 +149,15 @@ export default function Verify() {
               <FaArrowLeft />
             </button>
           </div>
-          <MdMarkEmailUnread className={styles.iconStyle} />
+          <div className={styles.iconCon}>
+            <MdMarkEmailUnread className={styles.iconStyle} />
+          </div>
           <h1 className={styles.title}>Please check your email</h1>
           <h2 className={styles.normalText}>
             We've sent a code to{" "}
-            <span className={styles.emailText}>{userID ? userID.email : 'loading...'}</span>
+            <span className={styles.emailText}>
+              {userID ? userID.email : "loading..."}
+            </span>
           </h2>
           <div className={styles.otpBox}>
             {[...Array(6)].map((_, index) => (
@@ -164,8 +186,16 @@ export default function Verify() {
             >
               Cancel
             </button>
-            <button className={styles.verifyButton} onClick={handleVerify}>
+            {/* <button className={styles.verifyButton} onClick={handleVerify}>
               Verify
+            </button> */}
+            <button
+              type="submit"
+              className={`${styles.verifyButton} ${loading ? styles.loading : ''}`}
+              disabled={loading}
+              onClick={handleVerify}
+            >
+              {loading ? 'Loading...' : 'Verify'}
             </button>
           </div>
         </div>
