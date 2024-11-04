@@ -317,7 +317,12 @@ app.get("/allrestaurant", async (req, res) => {
       ),
       Location,
       Latitude,
-      Longitude
+      Longitude,
+      OpenTimeHr,
+      OpenTimeMin,
+      CloseTimeHr,
+      CloseTimeMin,
+      BusinessDay
     `);
   if (error) {
     res.status(500).json(error);
@@ -338,7 +343,12 @@ app.get("/allrestaurant", async (req, res) => {
         Latitude: restaurant.Latitude,
         Longitude: restaurant.Longitude,
         FoodNames: restaurant.Menu.map(menuItem => menuItem.NameFood),
-        Types: restaurant.Menu.map(menuItem => menuItem.Type.Name)
+        Types: restaurant.Menu.map(menuItem => menuItem.Type.Name),
+        OpenTimeHr: restaurant.OpenTimeHr,
+        OpenTimeMin: restaurant.OpenTimeMin,
+        CloseTimeHr: restaurant.CloseTimeHr,
+        CloseTimeMin: restaurant.CloseTimeMin,
+        BusinessDay: restaurant.BusinessDay
       };
     });
     
