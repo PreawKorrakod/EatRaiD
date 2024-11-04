@@ -59,6 +59,8 @@
     width: 100%;
     justify-content: flex-start;
     padding-bottom: 0.2rem;
+    text-overflow: ellipsis; 
+    white-space: nowrap;
 }
 
 .destText p{ 
@@ -76,9 +78,14 @@
     width: 100%;
     display: flex;
     justify-content: flex-start;
+    align-items: center;
 }
 
 .typeComponent{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
     margin-right: 0.5rem ;
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
