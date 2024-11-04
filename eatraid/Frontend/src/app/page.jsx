@@ -171,9 +171,11 @@ export default function Home() {
   const [groupSelected, setGroupSelected] = useState(["All"]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredResults, setFilteredResults] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 300]);
-  const [distanceValue, setDistanceValue] = useState(1000); // ระยะทางเริ่มต้น
-  const [maxDistance, setMaxDistance] = useState(10000); // ค่าเริ่มต้นก่อนการคำนวณ
+  const [maxPrice, setMaxPrice] = useState(300);
+  const [priceRange, setPriceRange] = useState([0, maxPrice]);
+  const [maxDistance, setMaxDistance] = useState(1000); // ค่าเริ่มต้นก่อนการคำนวณ
+  const [newDistance, setNewDistance] = useState(maxDistance);
+  const [distanceValue, setDistanceValue] = useState(maxDistance); // ระยะทางเริ่มต้น
   const [userLocation, setUserLocation] = useState({ latitude: 0, longitude: 0 });
   const [locationFetched, setLocationFetched] = useState(false);
   const [randomResult, setRandomResult] = useState(null);
@@ -182,6 +184,7 @@ export default function Home() {
   const [shuffledCards, setShuffledCards] = useState([]); // เก็บรายการที่ถูกสลับ
   const [shufflingCards, setShufflingCards] = useState([]); // เก็บการ์ดที่แสดงในขณะสุ่ม
   const [data, setData] = useState([])
+
 
   useEffect(() => {
     try {
@@ -196,7 +199,7 @@ export default function Home() {
           );
 
           const transformedData = filteredData.map((restaurant, index) => ({
-            IDindex: index+1,
+            IDindex: index + 1,
             id: restaurant.RestaurantId,
             name: restaurant.Name,
             image: restaurant.ProfilePic,
@@ -205,7 +208,7 @@ export default function Home() {
             price: { min: restaurant.minPrice, max: restaurant.maxPrice },
             coordinates: { latitude: restaurant.Latitude, longitude: restaurant.Longitude },
             menu: restaurant.FoodNames,
-            
+
           }));
           console.log(transformedData)
           setData(transformedData);
@@ -223,6 +226,15 @@ export default function Home() {
   useEffect(() => {
     console.log('data is', data)
   }, [data])
+
+  useEffect(() => {
+    if (data.length > 0) {
+      // คำนวณราคาสูงสุดจากข้อมูล
+      const highestPrice = Math.max(...data.map(restaurant => restaurant.price.max));
+      setMaxPrice(highestPrice); // อัพเดตค่าราคาสูงสุด
+      setPriceRange([0, highestPrice]); // อัพเดตช่วงราคาใน SliderPrice
+    }
+  }, [data]);
 
   const handleClearRandom = () => {
     setRandomResult(null);
@@ -282,6 +294,7 @@ export default function Home() {
       });
       const maxDist = Math.max(...distances); // หาค่ามากที่สุด
       setMaxDistance(Math.ceil(maxDist * 1000)); // ปัดขึ้นและบวก 1
+      setNewDistance(maxDistance);
     };
 
     if (locationFetched) {
@@ -427,6 +440,7 @@ export default function Home() {
         <div className={styles.CategoryContainer}>
           <SliderPrice
             value={priceRange}
+            maxPrice={maxPrice}
             onChange={setPriceRange}
             disabled={!!randomResult} // Disable if randomResult has a value
           />
@@ -435,9 +449,10 @@ export default function Home() {
           <SliderDistance
             distanceValue={distanceValue}
             setDistanceValue={(newDistance) => {
-              setDistanceValue(newDistance);
+              setDistanceValue(newDistance); // อัปเดตค่า distanceValue
+
               if (!locationFetched) {
-                getUserLocation(); // Request location only when slider is moved
+                getUserLocation(); // ขอให้เข้าถึงตำแหน่งเฉพาะเมื่อมีการเลื่อนสไลด์
               }
             }}
             maxDistance={maxDistance}
@@ -447,20 +462,20 @@ export default function Home() {
       </div>
     );
   };
-  
+
 
 
   useEffect(() => {
     const filterData = () => {
       let filtered = [...data];
-  
+
       // กรองตามประเภท (groupSelected)
       if (!groupSelected.includes("All")) {
         filtered = filtered.filter(item =>
           groupSelected.some(category => item.type.includes(category))
         );
       }
-  
+
       // กรองตามคำค้นหา (searchTerm) โดยตรวจสอบทั้งชื่อร้านและเมนู
       if (searchTerm.length > 0) {
         filtered = filtered.filter(item => {
@@ -471,12 +486,12 @@ export default function Home() {
           return isNameMatch || isMenuMatch;
         });
       }
-  
+
       // กรองตามช่วงราคา (priceRange)
       filtered = filtered.filter(item =>
         item.price.min >= priceRange[0] && item.price.max <= priceRange[1]
       );
-  
+
       // กรองตามระยะทาง (locationFetched และ distanceValue)
       if (locationFetched) {
         filtered = filtered.filter(item => {
@@ -490,13 +505,13 @@ export default function Home() {
           return distance <= distanceValue / 1000;
         });
       }
-  
+
       setFilteredResults(filtered);
     };
-  
+
     filterData();
   }, [searchTerm, groupSelected, priceRange, distanceValue, userLocation, locationFetched, data]);
-  
+
 
 
   return (
@@ -569,6 +584,8 @@ export default function Home() {
                     ? getDistance(userLocation.latitude, userLocation.longitude, randomResult.coordinates.latitude, randomResult.coordinates.longitude).toFixed(2)
                     : "N/A"}
                 />
+              ) : currentItems.length === 0 ? (
+                <p className={styles.notfoundError}>No results found</p> // เปลี่ยนข้อความตามที่ต้องการ
               ) : (
                 currentItems.map((item) => (
                   <HomeCard
@@ -578,7 +595,12 @@ export default function Home() {
                     name={item.name}
                     type={item.type}
                     distance={locationFetched
-                      ? getDistance(userLocation.latitude, userLocation.longitude, item.coordinates.latitude, item.coordinates.longitude).toFixed(2)
+                      ? getDistance(
+                        userLocation.latitude,
+                        userLocation.longitude,
+                        item.coordinates.latitude,
+                        item.coordinates.longitude
+                      ).toFixed(2)
                       : "N/A"}
                   />
                 ))

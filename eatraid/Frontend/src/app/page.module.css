@@ -5,6 +5,13 @@
   background-color: #fdfdfd;
 }
 
+.notfoundError{
+  font-size: larger;
+  font-style: italic;
+  color: #6b7280;
+
+}
+
 .ClearRandombtn{
   width: fit-content;
   margin-left: 1rem;

@@ -246,7 +246,7 @@ export default function SignupDetail() {
     sessionStorage.removeItem('userID');
     const newUserID = {
       email, role, id, file,
-      Name, OpenTimeHr, CloseTimeHr, OpenTimeMin, CloseTimeMin, Latitude: latitude,
+      Name, OpenTimeHr, CloseTimeHr, OpenTimeMin, CloseTimeMin,Location, Latitude: latitude,
       Longitude: longitude, BusinessDay, Tel, Line
     };
     console.log("signup successful navigate to verify", newUserID);

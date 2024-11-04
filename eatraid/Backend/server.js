@@ -360,7 +360,7 @@ app.get("/allrestaurant", async (req, res) => {
 app.put("/editprofile", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
-    const { id, RestaurantId, name, contactCall, contactLine, openTimeHR, openTimeMin, closeTimeHR, closeTimeMin, location, businessDay } = req.body;
+    const { id, RestaurantId, name, contactCall, contactLine, openTimeHR, openTimeMin, closeTimeHR, closeTimeMin, location, businessDay,Latitude,Longitude } = req.body;
     console.log(req.body);
     const newminetype = "image/jpeg";
     const newfilename = `profile_${id}_${uuid4()}.jpeg`;
@@ -375,6 +375,8 @@ app.put("/editprofile", upload.single("file"), async (req, res) => {
         OpenTimeMin: openTimeMin,
         CloseTimeHr: closeTimeHR,
         CloseTimeMin: closeTimeMin,
+        Latitude: Latitude,
+        Longitude: Longitude,
       })
       .eq('RestaurantId', RestaurantId)
       .select("*")
@@ -666,7 +668,7 @@ app.get("/showinfo", async (req, res) => {
   const { RestaurantId } = req.query;
 
   const { data, error } = await supabase.from("Restaurant")
-    .select('id , RestaurantId , Name , Location, BusinessDay, Tel, Line, OpenTimeHr , OpenTimeMin , CloseTimeHr , CloseTimeMin , User(ProfilePic),toggle_status')
+    .select('id , RestaurantId , Name , Location, BusinessDay, Tel, Line, OpenTimeHr , OpenTimeMin , CloseTimeHr , CloseTimeMin , User(ProfilePic),toggle_status,Latitude,Longitude') 
     .eq("RestaurantId", RestaurantId);
 
   if (error) {

@@ -123,95 +123,108 @@ const Editinfo = ({
 
 
   const handleSaveClick = async () => {
-    console.log("formData:", formData.Id);
+    console.log("formData:", formData.location);
     setIsPopupVisible(true);
 
+    // Close the popup after 2 seconds
     setTimeout(() => {
-      setIsModalOpen(false);
-      setIsPopupVisible(false);
+        setIsModalOpen(false);
+        setIsPopupVisible(false);
     }, 2000);
+
     const businessDayString = selectedBusinessDays.map(day => day ? 'true' : 'false').join(',');
 
-    const updateData = new FormData();
-    updateData.append('id', formData.Id);
-    updateData.append('RestaurantId', userId);
-    updateData.append('name', formData.name);
-    updateData.append('file', imageFile || formData.profileImage);
-    updateData.append('businessDay', businessDayString);
-    updateData.append('openTimeHR', formData.openTimeHR);
-    updateData.append('openTimeMin', formData.openTimeMin);
-    updateData.append('closeTimeHR', formData.closeTimeHR);
-    updateData.append('closeTimeMin', formData.closeTimeMin);
-    updateData.append('contactCall', formData.contactCall);
-    updateData.append('contactLine', formData.contactLine);
-    updateData.append('location', formData.location);
-
-
-    try {
-      const res = await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editprofile`, updateData, {
-
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-      });
-      console.log("Profile", res.data.data[0].ProfilePic);
-      console.log("Data saved successfully:", res.data.RestaurantData[0]);
-      const updatedInfoData = res.data.RestaurantData[0];
-      const updateprofileImage = res.data.data[0].ProfilePic;
-      setInfoData({
-        Id: updatedInfoData.id,
-        Name: updatedInfoData.Name,
-        BusinessDay: updatedInfoData.BusinessDay,
-        OpenTimeHr: updatedInfoData.OpenTimeHr,
-        OpenTimeMin: updatedInfoData.OpenTimeMin,
-        CloseTimeHr: updatedInfoData.CloseTimeHr,
-        CloseTimeMin: updatedInfoData.CloseTimeMin,
-        Tel: updatedInfoData.Tel,
-        Line: updatedInfoData.Line,
-        Location: updatedInfoData.Location,
-        ProfilePic: updateprofileImage,
-      });
-
-      let latitude = null;
-      let longitude = null;
-      console.log(infoData);
-
-      try {
+    // Step 1: Get latitude and longitude from location before updating
+  
         const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
-          params: {
-            q: infoData.Location,
-            format: 'json',
-            addressdetails: 1,
-          }
+            params: {
+                q: formData.location,
+                format: 'json',
+                addressdetails: 1,
+            }
         });
-        console.log(response)
-        if (response.data.length > 0) {
-          latitude = response.data[0].lat;
-          longitude = response.data[0].lon;
-          console.log('la:', latitude);
-          console.log('long:', longitude);
 
-          // Update formData with latitude and longitude
-          setFormData(prevFormData => ({
-            ...prevFormData,
-            latitude: latitude,
-            longitude: longitude,
-          }));
+        // Check if we received a valid response
+        if (response.data.length > 0) {
+            const Latitude = response.data[0].lat;
+            const Longitude = response.data[0].lon;
+            console.log('Latitude:', Latitude);
+            console.log('Longitude:', Longitude);
+
+            // Update formData with the fetched latitude and longitude
+            const updatedFormData = {
+                ...formData,
+                Latitude: Latitude,
+                Longitude: Longitude,
+            };
+            console.log("Updated formData with coordinates:", updatedFormData);
+
+            // Step 2: Prepare data for saving using updated coordinates
+            const updateData = new FormData();
+            updateData.append('id', updatedFormData.Id);
+            updateData.append('RestaurantId', userId);
+            updateData.append('name', updatedFormData.name);
+            updateData.append('file', imageFile || updatedFormData.profileImage);
+            updateData.append('businessDay', businessDayString);
+            updateData.append('openTimeHR', updatedFormData.openTimeHR);
+            updateData.append('openTimeMin', updatedFormData.openTimeMin);
+            updateData.append('closeTimeHR', updatedFormData.closeTimeHR);
+            updateData.append('closeTimeMin', updatedFormData.closeTimeMin);
+            updateData.append('contactCall', updatedFormData.contactCall);
+            updateData.append('contactLine', updatedFormData.contactLine);
+            updateData.append('Latitude', Latitude); // Use updated latitude
+            updateData.append('Longitude', Longitude); // Use updated longitude
+            updateData.append('location', updatedFormData.location);
+
+            // Step 3: Save data with updated latitude and longitude
+            try {
+                const res = await axios.put(`${NEXT_PUBLIC_BASE_API_URL}/editprofile`, updateData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    withCredentials: true,
+                });
+
+                console.log("Profile", res.data.data[0].ProfilePic);
+                console.log("Data saved successfully:", res.data.RestaurantData[0]);
+
+                const updatedInfoData = res.data.RestaurantData[0];
+                const updateprofileImage = res.data.data[0].ProfilePic;
+
+                setInfoData({
+                    Id: updatedInfoData.id,
+                    Name: updatedInfoData.Name,
+                    BusinessDay: updatedInfoData.BusinessDay,
+                    OpenTimeHr: updatedInfoData.OpenTimeHr,
+                    OpenTimeMin: updatedInfoData.OpenTimeMin,
+                    CloseTimeHr: updatedInfoData.CloseTimeHr,
+                    CloseTimeMin: updatedInfoData.CloseTimeMin,
+                    Tel: updatedInfoData.Tel,
+                    Line: updatedInfoData.Line,
+                    Location: updatedInfoData.Location,
+                    Latitude: updatedInfoData.Latitude,
+                    Longitude: updatedInfoData.Longitude,
+                    ProfilePic: updateprofileImage,
+                });
+
+                console.log('YOWW_FORM', updatedFormData);
+                console.log('YOWW_INFO', infoData);
+
+            } catch (error) {
+                console.error("Error saving data:", error);
+                setErrorMessage("Failed to save data. Please try again.");
+            }
+
         } else {
-          setErrorMessage("Could not find location coordinates.");
-          return;
+            setErrorMessage("Could not find location coordinates.");
+            return;
         }
-      } catch (error) {
-        console.error("Error fetching location data:", error);
-        setErrorMessage("Error fetching location data.");
-        return;
-      }
-    } catch (error) {
-      console.error("Error saving data:", error);
-      setErrorMessage("Failed to save data. Please try again.");
-    }
-  };
+        
+};
+
+
+
+
 
   const renderPopup = () => {
     if (!isPopupVisible) return null;

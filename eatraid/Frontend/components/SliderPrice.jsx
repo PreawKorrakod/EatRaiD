@@ -2,18 +2,28 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import styles from './SliderPrice.module.css';
-import { orange} from '@mui/material/colors';
-
+import { orange } from '@mui/material/colors';
 
 function valuetext(value) {
   return `${value} บาท`;
 }
 
 const primary = orange[800];
-
 const minDistance = 10;
 
-export default function SliderPrice({ value, onChange }) {
+export default function SliderPrice({ value, maxPrice, onChange }) {
+  // ฟังก์ชันเพื่อคำนวณค่า step ตาม maxPrice
+  const getStepValue = (maxPrice) => {
+    if (maxPrice <= 100) {
+      return 1; // สำหรับราคาต่ำสุด
+    } else if (maxPrice <= 1000) {
+      return 10; // สำหรับราคาไม่เกิน 1000 บาท
+    } else if (maxPrice <= 10000) {
+      return 100; // สำหรับราคาไม่เกิน 10000 บาท
+    }
+    return 1000; // สำหรับราคาเกิน 10000 บาท
+  };
+
   const handleChange = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
       return;
@@ -40,9 +50,9 @@ export default function SliderPrice({ value, onChange }) {
         getAriaValueText={valuetext}
         disableSwap
         min={0} // Adjust this if necessary
-        max={300} // Adjust this to match your data's price range
-        step={10}
-        color= {primary}
+        max={maxPrice} // Adjust this to match your data's price range
+        step={getStepValue(maxPrice)} // ใช้ฟังก์ชันเพื่อกำหนดค่า step
+        color={primary}
         className={styles.Range}
       />
     </Box>
