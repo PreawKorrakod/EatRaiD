@@ -185,7 +185,6 @@ export default function Home() {
   const [shufflingCards, setShufflingCards] = useState([]); // เก็บการ์ดที่แสดงในขณะสุ่ม
   const [data, setData] = useState([])
 
-
   useEffect(() => {
     try {
       axios
@@ -238,8 +237,33 @@ export default function Home() {
       const highestPrice = Math.max(...data.map(restaurant => restaurant.price.max));
       setMaxPrice(highestPrice); // อัพเดตค่าราคาสูงสุด
       setPriceRange([0, highestPrice]); // อัพเดตช่วงราคาใน SliderPrice
+
     }
   }, [data]);
+
+  const isOpen = (restaurant) => {
+    const now = new Date();
+    const currentDay = now.getDay(); // 0 for Sunday, 6 for Saturday
+    const currentTime = now.getHours() * 60 + now.getMinutes(); // Current time in minutes
+
+    // Check toggle_status
+    if (restaurant.toggle_status === true) return true; // Always open
+    if (restaurant.toggle_status === false) return false; // Always closed
+
+    // Check business day
+    const isBusinessDayOpen = restaurant.BusinessDay.split(",")[currentDay] === "true";
+    if (!isBusinessDayOpen) return false; // Closed on this day
+
+    // Convert opening and closing times to minutes
+    const openTime = parseInt(restaurant.OpenTimeHr, 10) * 60 + parseInt(restaurant.OpenTimeMin, 10);
+    const closeTime = parseInt(restaurant.CloseTimeHr, 10) * 60 + parseInt(restaurant.CloseTimeMin, 10);
+
+    // Check if current time falls within open and close hours
+    return currentTime >= openTime && currentTime < closeTime;
+  };
+
+  // Filter open restaurants for random selection
+  const openRestaurants = filteredResults.filter(isOpen);
 
   const handleClearRandom = () => {
     setRandomResult(null);
@@ -247,11 +271,11 @@ export default function Home() {
   };
 
   const handleRandomize = () => {
-    if (filteredResults.length === 0) return; // ตรวจสอบว่ามีผลลัพธ์หรือไม่
+    if (filteredResults.length === 0) return; // ตรวจสอบว่ามีการ์ดที่ผ่านการกรองหรือไม่
     setIsShuffling(true);
     setIsRandomizing(true);
 
-    const shuffleCards = [...filteredResults];
+    const shuffleCards = [...filteredResults]; // ใช้การ์ดทั้งหมดที่ผ่านการกรอง
     setShufflingCards(shuffleCards); // ตั้งค่า shufflingCards ให้มีการ์ดทั้งหมด
 
     // ฟังก์ชันสุ่มสลับตำแหน่งแบบ Fisher-Yates
@@ -279,8 +303,11 @@ export default function Home() {
     // หยุดการสลับและแสดงผลลัพธ์สุ่มหลังจาก 2 วินาที
     setTimeout(() => {
       clearInterval(shuffleInterval);
-      const randomCard = shuffleCards[Math.floor(Math.random() * shuffleCards.length)];
+
+      // สุ่มการ์ดที่เปิดอยู่จาก openRestaurants
+      const randomCard = openRestaurants[Math.floor(Math.random() * openRestaurants.length)];
       setRandomResult(randomCard);
+
       setIsShuffling(false);
       setIsRandomizing(false);
     }, 2000); // เวลาสุ่มที่ต้องการ
