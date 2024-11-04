@@ -208,7 +208,12 @@ export default function Home() {
             price: { min: restaurant.minPrice, max: restaurant.maxPrice },
             coordinates: { latitude: restaurant.Latitude, longitude: restaurant.Longitude },
             menu: restaurant.FoodNames,
-
+            BusinessDay: restaurant.BusinessDay,
+            CloseTimeHr: restaurant.CloseTimeHr,
+            CloseTimeMin: restaurant.CloseTimeMin,
+            OpenTimeHr: restaurant.OpenTimeHr,
+            OpenTimeMin: restaurant.OpenTimeMin,
+            toggle_status: restaurant.toggle_status
           }));
           console.log(transformedData)
           setData(transformedData);

@@ -322,7 +322,8 @@ app.get("/allrestaurant", async (req, res) => {
       OpenTimeMin,
       CloseTimeHr,
       CloseTimeMin,
-      BusinessDay
+      BusinessDay,
+      toggle_status
     `);
   if (error) {
     res.status(500).json(error);
@@ -348,7 +349,8 @@ app.get("/allrestaurant", async (req, res) => {
         OpenTimeMin: restaurant.OpenTimeMin,
         CloseTimeHr: restaurant.CloseTimeHr,
         CloseTimeMin: restaurant.CloseTimeMin,
-        BusinessDay: restaurant.BusinessDay
+        BusinessDay: restaurant.BusinessDay,
+        toggle_status : restaurant.toggle_status
       };
     });
     
