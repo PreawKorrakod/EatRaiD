@@ -7,7 +7,7 @@
 
 .container {
     width: 100%;
-    padding-top: 4vh;
+    padding-top: 2vh;
     padding-left: 6.5vw;
     padding-right: 6.5vw;
     padding-bottom: 4vh;
@@ -16,6 +16,9 @@
 
 .Favourite_wrapper {
     width: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1.5rem;
 }
 
 .header {

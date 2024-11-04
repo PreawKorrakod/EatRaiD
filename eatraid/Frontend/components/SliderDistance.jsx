@@ -15,7 +15,7 @@ export default function SliderDistance({ distanceValue, setDistanceValue, maxDis
     };
 
     // กำหนดค่า step ตามระยะ maxDistance
-    const step = maxDistance < 1000 ? 100 : maxDistance <= 5000 ? 500 : 1000;
+    // const step = maxDistance < 1000 ? 10 : maxDistance <= 5000 ? 500 : 1000;
 
     return (
         <Box className={styles.DistanceRange}>
@@ -30,10 +30,11 @@ export default function SliderDistance({ distanceValue, setDistanceValue, maxDis
                 onChange={handleChange}
                 getAriaValueText={valuetext}
                 valueLabelDisplay="auto"
-                step={step}
+                step={100}
                 marks
                 min={100} // เริ่มจาก 100 เมตรถ้าระยะทางสั้น
-                max={maxDistance} // กำหนดค่า max ตาม maxDistance ที่คำนวณได้
+                // max={maxDistance} // กำหนดค่า max ตาม maxDistance ที่คำนวณได้
+                max={1000}
                 color={primary}
                 className={styles.range}
             />
