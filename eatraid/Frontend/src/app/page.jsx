@@ -173,10 +173,10 @@ export default function Home() {
   const [filteredResults, setFilteredResults] = useState([]);
   const [maxPrice, setMaxPrice] = useState(300);
   const [priceRange, setPriceRange] = useState([0, maxPrice]);
-  const [maxDistance, setMaxDistance] = useState(1000); // ค่าเริ่มต้นก่อนการคำนวณ
+  const [maxDistance, setMaxDistance] = useState(5000); // ค่าเริ่มต้นก่อนการคำนวณ
   const [newDistance, setNewDistance] = useState(maxDistance);
   const [distanceValue, setDistanceValue] = useState(maxDistance); // ระยะทางเริ่มต้น
-  const [userLocation, setUserLocation] = useState({ latitude: 0, longitude: 0 });
+  const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
   const [locationFetched, setLocationFetched] = useState(false);
   const [randomResult, setRandomResult] = useState(null);
   const [isRandomizing, setIsRandomizing] = useState(false);
@@ -313,26 +313,26 @@ export default function Home() {
     }, 2000); // เวลาสุ่มที่ต้องการ
   };
 
-  useEffect(() => {
-    // ฟังก์ชันสำหรับคำนวณ maxDistance จากระยะทางที่ไกลที่สุด
-    const calculateMaxDistance = () => {
-      const distances = data.map((item) => {
-        return getDistance(
-          userLocation.latitude,
-          userLocation.longitude,
-          item.coordinates.latitude,
-          item.coordinates.longitude
-        );
-      });
-      const maxDist = Math.max(...distances); // หาค่ามากที่สุด
-      setMaxDistance(Math.ceil(maxDist * 1000)); // ปัดขึ้นและบวก 1
-      setNewDistance(maxDistance);
-    };
+  // useEffect(() => {
+  //   // ฟังก์ชันสำหรับคำนวณ maxDistance จากระยะทางที่ไกลที่สุด
+  //   const calculateMaxDistance = () => {
+  //     const distances = data.map((item) => {
+  //       return getDistance(
+  //         userLocation.latitude,
+  //         userLocation.longitude,
+  //         item.coordinates.latitude,
+  //         item.coordinates.longitude
+  //       );
+  //     });
+  //     const maxDist = Math.max(...distances); // หาค่ามากที่สุด
+  //     setMaxDistance(Math.ceil(maxDist * 1000)); // ปัดขึ้นและบวก 1
+  //     setNewDistance(maxDistance);
+  //   };
 
-    if (locationFetched) {
-      calculateMaxDistance(); // คำนวณ maxDistance หลังจากขอ location
-    }
-  }, [locationFetched, userLocation]);
+  //   if (locationFetched) {
+  //     calculateMaxDistance(); // คำนวณ maxDistance หลังจากขอ location
+  //   }
+  // }, [locationFetched, userLocation]);
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -480,8 +480,8 @@ export default function Home() {
         <div className={styles.CategoryContainer}>
           <SliderDistance
             distanceValue={distanceValue}
-            setDistanceValue={(newDistance) => {
-              setDistanceValue(newDistance); // อัปเดตค่า distanceValue
+            setDistanceValue={(distanceValue) => {
+              setDistanceValue(distanceValue); // อัปเดตค่า distanceValue
 
               if (!locationFetched) {
                 getUserLocation(); // ขอให้เข้าถึงตำแหน่งเฉพาะเมื่อมีการเลื่อนสไลด์
@@ -534,7 +534,7 @@ export default function Home() {
             item.coordinates.longitude
           );
           console.log("dis ", item.name, distance);
-          return distance <= distanceValue / 1000;
+          return distance <= distanceValue/1000;
         });
       }
 

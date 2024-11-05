@@ -30,11 +30,11 @@ export default function SliderDistance({ distanceValue, setDistanceValue, maxDis
                 onChange={handleChange}
                 getAriaValueText={valuetext}
                 valueLabelDisplay="auto"
-                step={100}
+                step={1000}
                 marks
-                min={100} // เริ่มจาก 100 เมตรถ้าระยะทางสั้น
+                min={1000} // เริ่มจาก 100 เมตรถ้าระยะทางสั้น
                 // max={maxDistance} // กำหนดค่า max ตาม maxDistance ที่คำนวณได้
-                max={1000}
+                max={maxDistance}
                 color={primary}
                 className={styles.range}
             />
