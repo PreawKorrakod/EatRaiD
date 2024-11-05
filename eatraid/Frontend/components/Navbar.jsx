@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import styles from './Navbar.module.css';
+import styles from './NavBar.module.css';
 import Link from 'next/link';
 import { BsPersonCircle, BsBoxArrowRight, BsExclamationCircle, BsXSquareFill } from "react-icons/bs";
 import Image from 'next/image';
