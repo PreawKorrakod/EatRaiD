@@ -13,6 +13,7 @@ import { FiEdit3 } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
 import ToggleGroup from "../../../components/toggleGroup";
 import Editinfo from "../../../components/Editinfo";
+import Footer from "../../../components/footer";
 
 import axios from "axios";
 import { NEXT_PUBLIC_BASE_API_URL } from '../../../src/app/config/supabaseClient.js';
@@ -339,6 +340,7 @@ export default function Info() {
           </div>
         </div>
       </div>
+      <Footer></Footer>
     </div>
   );
 }
